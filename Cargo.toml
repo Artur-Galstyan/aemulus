@@ -2,7 +2,6 @@
 resolver = "3"
 members = [
     "crates/aemulus",
-    "crates/aemulus-devices",
     "crates/aemulus-proto",
     "crates/aemulus-servers",
     "crates/aemulus-sila",

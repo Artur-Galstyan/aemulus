@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Feature SiLA2Version="1.0" FeatureVersion="1.0" Originator="dev.arturgalstyan" Category="robots"
+         xmlns="http://www.sila-standard.org"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>Pf400</Identifier>
+  <DisplayName>PF400</DisplayName>
+  <Description>Controls a PF400 robot arm.</Description>
+  <Command>
+    <Identifier>MoveZ</Identifier>
+    <DisplayName>Move Z</DisplayName>
+    <Description>Moves the Z axis to a height.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Height</Identifier>
+      <DisplayName>Height</DisplayName>
+      <Description>The target height in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Property>
+    <Identifier>PositionZ</Identifier>
+    <DisplayName>Position Z</DisplayName>
+    <Description>The current height of the Z axis in meters.</Description>
+    <Observable>Yes</Observable>
+    <DataType>
+      <Basic>Real</Basic>
+    </DataType>
+  </Property>
+</Feature>

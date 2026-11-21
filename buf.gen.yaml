@@ -1,10 +1,10 @@
 version: v2
 plugins:
   - local: protoc-gen-py
-    out: python
+    out: python/aemulus
     opt: init_files=false
   - local: protoc-gen-connectrpc
-    out: python
+    out: python/aemulus
   - local: protoc-gen-prost
     out: crates/aemulus-proto/src/gen
   - local: protoc-gen-tonic

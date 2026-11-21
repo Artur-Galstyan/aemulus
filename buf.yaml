@@ -1,3 +1,9 @@
 version: v2
 modules:
   - path: proto
+lint:
+  except:
+    - PACKAGE_DIRECTORY_MATCH
+  ignore:
+    - proto/sila2
+    - proto/SiLAFramework.proto

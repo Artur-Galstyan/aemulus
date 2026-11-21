@@ -1,4 +1,4 @@
-use aemulus_proto::aemulus::sim::v1::{
+use aemulus_proto::sim::v1::{
     GetJointRequest, SetActuatorRequest, sim_service_client::SimServiceClient,
 };
 
