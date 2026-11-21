@@ -1,0 +1,10 @@
+[package]
+name = "aemulus"
+description = "A digital twin for lab automation (early work in progress)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+

@@ -1,0 +1,95 @@
+<!-- PF400, standard reach, 400 mm Z, no rail.
+     Dimensions and joint ranges are from the Brooks datasheet 661423 Rev A:
+     base 235 x 201 mm, robot height 679 mm, inner link 225 mm, gripper 134 mm wide,
+     finger gap 80 to 140 mm, gripper bottom 39 mm above the base at the low end of Z.
+     The outer link (210 mm) is calculated from the 500.8 mm reach.
+     Origin: center of the base footprint, on the mount surface. +x is FRONT.
+     Meshes: scripts/pf400_meshes.py makes them. Each mesh is convex, so it is also the collision shape.
+     Masses and link cross-sections are estimates, not vendor CAD values. -->
+<mujoco model="pf400">
+  <compiler angle="degree" autolimits="true" meshdir="meshes"/>
+
+  <default>
+    <joint damping="1" armature="0.1"/>
+    <geom type="mesh" material="pf400_white"/>
+    <mesh scale="0.001 0.001 0.001"/>
+    <position inheritrange="1"/>
+    <default class="pf400_decor">
+      <geom contype="0" conaffinity="0" mass="0"/>
+    </default>
+  </default>
+
+  <asset>
+    <material name="pf400_white" rgba="0.93 0.93 0.94 1" specular="0.3" shininess="0.4"/>
+    <material name="pf400_dark" rgba="0.12 0.12 0.13 1" specular="0.2"/>
+    <material name="pf400_grey" rgba="0.62 0.63 0.65 1" specular="0.3"/>
+    <material name="pf400_blue" rgba="0.2 0.55 1 1" emission="0.6"/>
+    <mesh file="base_plate.stl"/>
+    <mesh file="column.stl"/>
+    <mesh file="carriage.stl"/>
+    <mesh file="inner_link.stl"/>
+    <mesh file="outer_link.stl"/>
+    <mesh file="gripper.stl"/>
+    <mesh file="finger.stl"/>
+  </asset>
+
+  <worldbody>
+    <body name="pf400_base">
+      <geom name="base_plate" mesh="base_plate" material="pf400_grey" mass="2"/>
+      <geom name="column" mesh="column" mass="12"/>
+      <geom name="slot_left" class="pf400_decor" type="box" size="0.0005 0.005 0.27" pos="-0.0055 0.03 0.38" material="pf400_dark"/>
+      <geom name="slot_right" class="pf400_decor" type="box" size="0.0005 0.005 0.27" pos="-0.0055 -0.03 0.38" material="pf400_dark"/>
+
+      <!-- The J2 axis is 146 mm from the rear edge of the base. -->
+      <body name="carriage" pos="0.0455 0 0.179" gravcomp="1">
+        <joint name="j1_z" type="slide" axis="0 0 1" range="0 0.4"/>
+        <geom name="carriage" mesh="carriage" contype="0" conaffinity="0" mass="2"/>
+
+        <body name="inner_link" gravcomp="1">
+          <joint name="j2_shoulder" axis="0 0 1" range="-93 93"/>
+          <geom name="inner_link" mesh="inner_link" mass="2"/>
+          <geom name="status_ring" class="pf400_decor" type="cylinder" size="0.0505 0.004" pos="0 0 0.04" material="pf400_blue"/>
+
+          <!-- J3 = 0 is a straight arm, as on the real robot. The body is drawn at J3 = 180 (folded). -->
+          <body name="outer_link" pos="0.225 0 -0.035" euler="0 0 180" gravcomp="1">
+            <joint name="j3_elbow" axis="0 0 1" range="12 348" ref="180"/>
+            <geom name="outer_link" mesh="outer_link" mass="1.5"/>
+
+            <body name="gripper" pos="0.210 0 -0.045" gravcomp="1">
+              <joint name="j4_wrist" axis="0 0 1" range="-960 960"/>
+              <geom name="palm" mesh="gripper" material="pf400_grey" mass="0.5"/>
+              <site name="tcp" pos="0.0682 0 -0.045" size="0.004" rgba="1 0 0 1"/>
+
+              <body name="finger_left" pos="0.0682 0.043 -0.045" gravcomp="1">
+                <joint name="finger_left" type="slide" axis="0 1 0" range="0 0.03"/>
+                <geom name="finger_left" mesh="finger" material="pf400_dark" mass="0.05" friction="1.5"/>
+              </body>
+              <body name="finger_right" pos="0.0682 -0.043 -0.045" gravcomp="1">
+                <joint name="finger_right" type="slide" axis="0 -1 0" range="0 0.03"/>
+                <geom name="finger_right" mesh="finger" material="pf400_dark" mass="0.05" friction="1.5"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <equality>
+    <joint joint1="finger_right" joint2="finger_left"/>
+  </equality>
+
+  <!-- Position control. Units of ctrl: m for j1 and gripper, rad for j2-j4. -->
+  <actuator>
+    <position name="j1_z" joint="j1_z" kp="2000" kv="200"/>
+    <position name="j2_shoulder" joint="j2_shoulder" kp="200" kv="20"/>
+    <position name="j3_elbow" joint="j3_elbow" kp="200" kv="20"/>
+    <position name="j4_wrist" joint="j4_wrist" kp="50" kv="5"/>
+    <position name="gripper" joint="finger_left" kp="500" kv="20"/>
+  </actuator>
+
+  <!-- Folded arm, gripper to the front. With J4 = 0 the folded gripper hits the column. -->
+  <keyframe>
+    <key name="home" qpos="0 0 3.14159 3.14159 0 0" ctrl="0 0 3.14159 3.14159 0"/>
+  </keyframe>
+</mujoco>

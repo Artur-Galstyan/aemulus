@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+tasks:
+  setup:
+    desc: Install the code generator plugins
+    cmds:
+      - uv sync
+      - cargo install protoc-gen-prost protoc-gen-tonic
+
+  gen:
+    desc: Generate Python and Rust code from proto/
+    cmds:
+      - uv run buf generate

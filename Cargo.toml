@@ -1,0 +1,16 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/aemulus",
+    "crates/aemulus-devices",
+    "crates/aemulus-proto",
+    "crates/aemulus-servers",
+    "crates/aemulus-sila",
+]
+
+[workspace.package]
+version = "0.0.2"
+edition = "2024"
+license = "PolyForm-Noncommercial-1.0.0"
+repository = "https://github.com/Artur-Galstyan/aemulus"
+readme = "README.md"

@@ -1,0 +1,10 @@
+[package]
+name = "aemulus-sila"
+description = "SiLA 2 core for aemulus (early work in progress)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+

@@ -1,0 +1,26 @@
+# Rust
+target/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# MuJoCo
+MUJOCO_LOG.TXT
+
+# Secrets
+.env
+.env.*
+
+# OS and editors
+.DS_Store
+.idea/
+.vscode/
+*.swp

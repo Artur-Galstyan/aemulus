@@ -1,0 +1,25 @@
+// proto/aemulus/pf400/v1/pf400.proto
+syntax = "proto3";
+
+package aemulus.pf400.v1;
+
+message MoveZRequest {
+  double height = 1;
+}
+
+message MoveZResponse {
+  double position = 1;
+}
+
+message ReadZRequest {
+
+}
+
+message ReadZResponse {
+  double position = 1;
+}
+
+service Pf400Service {
+  rpc MoveZ(MoveZRequest) returns (MoveZResponse);
+  rpc ReadZ(ReadZRequest) returns (ReadZResponse);
+}

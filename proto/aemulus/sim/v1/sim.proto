@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package aemulus.sim.v1;
+
+message GetJointRequest {
+  string joint = 1;
+}
+
+message GetJointResponse {
+  double position = 1;
+}
+
+message SetActuatorRequest {
+  string actuator = 1;
+  double value = 2;
+}
+
+message SetActuatorResponse {}
+
+service SimService {
+  rpc GetJoint(GetJointRequest) returns (GetJointResponse);
+  rpc SetActuator(SetActuatorRequest) returns (SetActuatorResponse);
+}
