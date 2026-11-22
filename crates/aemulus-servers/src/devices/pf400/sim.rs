@@ -29,6 +29,7 @@ use uuid::Uuid;
 struct Pf400Sim {
     sim: SimServiceClient<Channel>,
     moves: Arc<Mutex<HashMap<String, (CommandStatus, f64)>>>,
+    device_name: String,
 }
 
 #[tonic::async_trait]
@@ -48,14 +49,14 @@ impl Pf400 for Pf400Sim {
         let mut sim = self.sim.clone();
 
         let get_start_pos_request = GetJointRequest {
-            joint: "j1_z".to_string(),
+            joint: format!("{}/j1_z", self.device_name),
         };
         let get_start_pos_response = sim.get_joint(get_start_pos_request).await?;
         let start_pos = get_start_pos_response.into_inner().position;
 
         info!("Request height: {}", height.value);
         let set_actuator_request = SetActuatorRequest {
-            actuator: "j1_z".to_string(),
+            actuator: format!("{}/j1_z", self.device_name),
             value: height.value,
         };
         sim.set_actuator(set_actuator_request).await?;
@@ -68,10 +69,12 @@ impl Pf400 for Pf400Sim {
 
         let moves = Arc::clone(&self.moves);
         let id = move_uuid.to_string();
+        let device_name = self.device_name.clone();
+
         tokio::spawn(async move {
             loop {
                 let get_joint_request = GetJointRequest {
-                    joint: "j1_z".to_string(),
+                    joint: format!("{}/j1_z", device_name),
                 };
 
                 let Ok(response) = sim.get_joint(get_joint_request).await else {
@@ -186,10 +189,12 @@ impl Pf400 for Pf400Sim {
     ) -> Result<tonic::Response<Self::Subscribe_PositionZStream>, tonic::Status> {
         let (tx, rx) = tokio::sync::mpsc::channel(16);
         let mut sim = self.sim.clone();
+        let device_name = self.device_name.clone();
+
         tokio::spawn(async move {
             loop {
                 let get_joint_request = GetJointRequest {
-                    joint: "j1_z".to_string(),
+                    joint: format!("{}/j1_z", device_name),
                 };
 
                 let response = match sim.get_joint(get_joint_request).await {
@@ -218,19 +223,32 @@ impl Pf400 for Pf400Sim {
     }
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tracing_subscriber::fmt::init();
+pub async fn serve_pf400_sim(device_name: String) -> Result<(), Box<dyn std::error::Error>> {
     let channel = Channel::from_static("http://127.0.0.1:50051").connect_lazy();
     let pf400 = Pf400Sim {
         sim: SimServiceClient::new(channel),
         moves: Arc::default(),
+        device_name,
     };
 
     Server::builder()
         .add_service(Pf400Server::new(pf400).accept_compressed(CompressionEncoding::Gzip))
         .serve("127.0.0.1:50052".parse()?)
         .await?;
+
+    Ok(())
+}
+
+pub fn start_sim_server(device_name: String) -> std::io::Result<()> {
+    let runtime = tokio::runtime::Runtime::new()?;
+
+    std::thread::spawn(move || {
+        let result: Result<(), Box<dyn std::error::Error>> =
+            runtime.block_on(async { serve_pf400_sim(device_name).await });
+        if let Err(e) = result {
+            tracing::error!("sim server error: {e}");
+        }
+    });
 
     Ok(())
 }

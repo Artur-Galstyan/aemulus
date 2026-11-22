@@ -24,3 +24,8 @@ tasks:
       - rm -rf proto/sila2 && mkdir -p proto/sila2
       - for f in features/*.sila.xml; do n=$(basename "$f"); xsltproc -o "proto/sila2/${n%%-*}.proto" xslt/fdl2proto.xsl "$f"; done
       - uv run buf generate
+
+  build:
+    desc: Rebuild the Rust Python extension and verify the import
+    cmds:
+      - uv sync --reinstall-package aemulus

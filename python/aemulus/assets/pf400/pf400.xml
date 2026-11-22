@@ -55,8 +55,9 @@
             <joint name="j3_elbow" axis="0 0 1" range="12 348" ref="180"/>
             <geom name="outer_link" mesh="outer_link" mass="1.5"/>
 
-            <body name="gripper" pos="0.210 0 -0.045" gravcomp="1">
-              <joint name="j4_wrist" axis="0 0 1" range="-960 960"/>
+            <!-- The body is drawn at J4 = 180 (gripper to the front), so the default pose is the home pose. -->
+            <body name="gripper" pos="0.210 0 -0.045" euler="0 0 180" gravcomp="1">
+              <joint name="j4_wrist" axis="0 0 1" range="-960 960" ref="180"/>
               <geom name="palm" mesh="gripper" material="pf400_grey" mass="0.5"/>
               <site name="tcp" pos="0.0682 0 -0.045" size="0.004" rgba="1 0 0 1"/>
 
@@ -88,7 +89,7 @@
     <position name="gripper" joint="finger_left" kp="500" kv="20"/>
   </actuator>
 
-  <!-- Folded arm, gripper to the front. With J4 = 0 the folded gripper hits the column. -->
+  <!-- Folded arm, gripper to the front. This is also the default pose. With J4 = 0 the folded gripper hits the column. -->
   <keyframe>
     <key name="home" qpos="0 0 3.14159 3.14159 0 0" ctrl="0 0 3.14159 3.14159 0"/>
   </keyframe>
