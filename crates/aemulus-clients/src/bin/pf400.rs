@@ -10,7 +10,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut pf400_client = Pf400Client::new(channel);
 
     let move_z_request = MoveZParameters {
-        height: Some(Real { value: 0.0 }),
+        height: Some(Real { value: 0.2 }),
     };
 
     let cmd_uuid = pf400_client.move_z(move_z_request).await?;

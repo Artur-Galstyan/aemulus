@@ -6,4 +6,3 @@ lint:
     - PACKAGE_DIRECTORY_MATCH
   ignore:
     - proto/sila2
-    - proto/SiLAFramework.proto

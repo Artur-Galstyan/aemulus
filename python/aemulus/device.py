@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import ClassVar
 
-from aemulus._native import start_sim_server
+from aemulus._rust._native import start_sim_server
 
 
 @dataclass(frozen=True)

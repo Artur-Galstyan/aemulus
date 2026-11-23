@@ -25,7 +25,7 @@ build-backend = "maturin"
 [tool.maturin]
 manifest-path = "crates/aemulus/Cargo.toml"
 python-source = "python"
-module-name = "aemulus._native"
+module-name = "aemulus._rust._native"
 
 
 [dependency-groups]

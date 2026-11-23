@@ -16,13 +16,14 @@ tasks:
       - mkdir -p xslt
       - for: [fdl2proto, fdl2proto-messages, fdl2proto-service, fdl-validation]
         cmd: curl -sfL {{.BASE}}/xslt/{{.ITEM}}.xsl -o xslt/{{.ITEM}}.xsl
-      - curl -sfL {{.BASE}}/protobuf/SiLAFramework.proto -o proto/SiLAFramework.proto
+      - mkdir -p proto/sila2
+      - curl -sfL {{.BASE}}/protobuf/SiLAFramework.proto -o proto/sila2/SiLAFramework.proto
 
   gen:
     desc: Generate Python and Rust code from the proto directory
     cmds:
-      - rm -rf proto/sila2 && mkdir -p proto/sila2
-      - for f in features/*.sila.xml; do n=$(basename "$f"); xsltproc -o "proto/sila2/${n%%-*}.proto" xslt/fdl2proto.xsl "$f"; done
+      - find proto/sila2 -name '*.proto' ! -name SiLAFramework.proto -delete
+      - for f in features/*.sila.xml; do n=$(basename "$f"); xsltproc xslt/fdl2proto.xsl "$f" | sed 's|import "SiLAFramework.proto"|import "sila2/SiLAFramework.proto"|' > "proto/sila2/${n%%-*}.proto"; done
       - uv run buf generate
 
   build:

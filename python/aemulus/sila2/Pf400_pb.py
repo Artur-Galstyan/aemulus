@@ -14,12 +14,12 @@ from typing import Literal, NoReturn, TYPE_CHECKING, TypeAlias
 from protobuf import Message
 from protobuf._codegen import file_desc
 
-from .. import SiLAFramework_pb
+from . import SiLAFramework_pb
 
 if TYPE_CHECKING:
     from protobuf import DescFile
 
-    from ..SiLAFramework_pb import Real
+    from .SiLAFramework_pb import Real
 
 
 _MoveZ_ParametersFields: TypeAlias = Literal["Height"]
@@ -128,7 +128,7 @@ class Subscribe_PositionZ_Responses(Message[_Subscribe_PositionZ_ResponsesFields
 
 
 _DESC = file_desc(
-    b'\n\x11sila2/Pf400.proto\x12\'sila2.dev.arturgalstyan.robots.pf400.v1\x1a\x13SiLAFramework.proto"H\n\x10MoveZ_Parameters\x124\n\x06Height\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x06Height"\x11\n\x0fMoveZ_Responses" \n\x1eSubscribe_PositionZ_Parameters"[\n\x1dSubscribe_PositionZ_Responses\x12:\n\tPositionZ\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\tPositionZ2\x88\x04\n\x05Pf400\x12q\n\x05MoveZ\x129.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12e\n\nMoveZ_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12x\n\x0cMoveZ_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a8.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Responses"\x00\x12\xaa\x01\n\x13Subscribe_PositionZ\x12G.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Parameters\x1aF.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Responses"\x000\x01b\x06proto3',
+    b'\n\x11sila2/Pf400.proto\x12\'sila2.dev.arturgalstyan.robots.pf400.v1\x1a\x19sila2/SiLAFramework.proto"H\n\x10MoveZ_Parameters\x124\n\x06Height\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x06Height"\x11\n\x0fMoveZ_Responses" \n\x1eSubscribe_PositionZ_Parameters"[\n\x1dSubscribe_PositionZ_Responses\x12:\n\tPositionZ\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\tPositionZ2\x88\x04\n\x05Pf400\x12q\n\x05MoveZ\x129.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12e\n\nMoveZ_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12x\n\x0cMoveZ_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a8.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Responses"\x00\x12\xaa\x01\n\x13Subscribe_PositionZ\x12G.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Parameters\x1aF.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Responses"\x000\x01b\x06proto3',
     [
         SiLAFramework_pb.desc(),
     ],

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "SiLAFramework.proto";
+import "sila2/SiLAFramework.proto";
 
 package sila2.dev.arturgalstyan.robots.pf400.v1;
 

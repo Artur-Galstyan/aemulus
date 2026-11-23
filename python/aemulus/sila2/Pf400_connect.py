@@ -19,8 +19,8 @@ from connectrpc.server import ConnectASGIApplication, ConnectWSGIApplication, DE
 from protobuf import DescService
 
 from . import Pf400_pb
-from ..SiLAFramework_pb import CommandConfirmation, CommandExecutionUUID, ExecutionInfo
 from .Pf400_pb import MoveZ_Parameters, MoveZ_Responses, Subscribe_PositionZ_Parameters, Subscribe_PositionZ_Responses
+from .SiLAFramework_pb import CommandConfirmation, CommandExecutionUUID, ExecutionInfo
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator, Iterable, Iterator, Mapping
