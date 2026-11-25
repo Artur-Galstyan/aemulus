@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Feature SiLA2Version="1.0" FeatureVersion="1.0" Originator="dev.arturgalstyan" Category="shakers"
+         xmlns="http://www.sila-standard.org"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>Bioshake</Identifier>
+  <DisplayName>BioShake</DisplayName>
+  <Description>Controls a BioShake 3000 elm orbital shaker.</Description>
+  <Command>
+    <Identifier>StartShaking</Identifier>
+    <DisplayName>Start Shaking</DisplayName>
+    <Description>Starts to shake at a speed.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>Speed</Identifier>
+      <DisplayName>Speed</DisplayName>
+      <Description>The target speed in rpm.</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>200</MinimalInclusive>
+            <MaximalInclusive>3000</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>StopShaking</Identifier>
+    <DisplayName>Stop Shaking</DisplayName>
+    <Description>Stops the shaking.</Description>
+    <Observable>No</Observable>
+  </Command>
+  <Command>
+    <Identifier>LockPlate</Identifier>
+    <DisplayName>Lock Plate</DisplayName>
+    <Description>Closes the edge locking mechanism to hold the microplate.</Description>
+    <Observable>No</Observable>
+  </Command>
+  <Command>
+    <Identifier>UnlockPlate</Identifier>
+    <DisplayName>Unlock Plate</DisplayName>
+    <Description>Opens the edge locking mechanism to release the microplate.</Description>
+    <Observable>No</Observable>
+  </Command>
+  <Property>
+    <Identifier>Speed</Identifier>
+    <DisplayName>Speed</DisplayName>
+    <Description>The current speed in rpm.</Description>
+    <Observable>Yes</Observable>
+    <DataType>
+      <Basic>Real</Basic>
+    </DataType>
+  </Property>
+  <Property>
+    <Identifier>PlateLocked</Identifier>
+    <DisplayName>Plate Locked</DisplayName>
+    <Description>True when the edge locking mechanism holds the microplate.</Description>
+    <Observable>Yes</Observable>
+    <DataType>
+      <Basic>Boolean</Basic>
+    </DataType>
+  </Property>
+</Feature>
