@@ -1,0 +1,45 @@
+<!-- Hamilton Microlab STARlet liquid handler: outer housing and deck surface only.
+     Units: SI (meters, kg).
+     Origin: center of the footprint on the floor (bench). +x is along the long side (left to right),
+     -y is front (open side), +y is back, +z is up.
+     Simple box geoms are both the visual and collision shapes. The deck is one box.
+     Sourced values:
+       - Overall dimensions: 1124 x 795 x 903 mm (W x D x H), Hamilton Microlab STARlet data sheet.
+       - Free work area: 675 x 465 x 136 mm (30 tracks x 22.5 mm pitch = 675 mm), Hamilton data sheet and PyLabRobot:
+         https://raw.githubusercontent.com/PyLabRobot/pylabrobot/main/pylabrobot/resources/hamilton/hamilton_decks.py
+       - Carrier front edge offset: 63 mm, plus reference chassis depth 785.79 mm, modelled deck depth 773 mm,
+         and deck resource 1005 x 653.5 mm from PyLabRobot (hamilton_decks.py above, and
+         https://raw.githubusercontent.com/PyLabRobot/pylabrobot/main/pylabrobot/resources/hamilton/star_decks.py).
+     Estimated values (not vendor values):
+       - Total mass: 110 kg (base 65, deck 15, back wall 14, side walls 8 each).
+       - Deck top surface height above floor/bench: 0.200 m (base block z = 0 to 0.190 m, deck box 0.010 m thick).
+       - Deck box position: centered in x; front edge 0.063 m behind housing front (y = -0.3345 to +0.1305 m).
+       - Housing shell: full-footprint base block with no separate feet; back and side walls 0.030 m thick from
+         z = 0.190 to 0.903 m; open front and open top (top cover omitted). -->
+<mujoco model="hamilton_starlet">
+  <compiler angle="degree" autolimits="true"/>
+
+  <default>
+    <geom type="box" contype="1" conaffinity="1" material="starlet_housing"/>
+  </default>
+
+  <asset>
+    <material name="starlet_housing" rgba="0.9 0.9 0.91 1" specular="0.3" shininess="0.4"/>
+    <material name="starlet_deck" rgba="0.75 0.76 0.78 1" specular="0.6" shininess="0.7"/>
+  </asset>
+
+  <worldbody>
+    <body name="starlet_housing">
+      <!-- Full-footprint base block: x [-0.562, 0.562], y [-0.3975, 0.3975], z [0, 0.190]. -->
+      <geom name="base" size="0.562 0.3975 0.095" pos="0 0 0.095" mass="65"/>
+
+      <!-- Deck surface box (0.675 x 0.465 m): top at z = 0.200, front edge 0.063 m behind housing front. -->
+      <geom name="deck" size="0.3375 0.2325 0.005" pos="0 -0.102 0.195" mass="15" material="starlet_deck"/>
+
+      <!-- Back and side walls (0.030 m thick): z [0.190, 0.903], open at front (-y) and top. -->
+      <geom name="back_wall" size="0.562 0.015 0.3565" pos="0 0.3825 0.5465" mass="14"/>
+      <geom name="left_wall" size="0.015 0.3825 0.3565" pos="-0.547 -0.015 0.5465" mass="8"/>
+      <geom name="right_wall" size="0.015 0.3825 0.3565" pos="0.547 -0.015 0.5465" mass="8"/>
+    </body>
+  </worldbody>
+</mujoco>
