@@ -1,0 +1,33 @@
+<!-- Reagent reservoir (SBS footprint, single cavity).
+     Vendor: unknown (Agilent 201280-100 is a possible but unconfirmed match).
+     Measured/given dimensions: 127.5 x 86 x 19 mm (outer).
+     Origin: center of the footprint, on the bottom surface. x is the long side.
+     Units: SI (meters, kilograms).
+     Estimates, not vendor values: empty mass (45 g), wall and floor thickness (2 mm), and material color.
+     The hollow trough boxes are for display only. A single outer box is the collision shape. -->
+<mujoco model="reservoir">
+  <compiler angle="degree" autolimits="true"/>
+
+  <default>
+    <geom type="box" contype="0" conaffinity="0" mass="0" material="reservoir_pp"/>
+    <default class="reservoir_collision">
+      <geom type="box" contype="1" conaffinity="1" group="3"/>
+    </default>
+  </default>
+
+  <asset>
+    <material name="reservoir_pp" rgba="0.9 0.92 0.94 1" specular="0.2" shininess="0.3"/>
+  </asset>
+
+  <worldbody>
+    <body name="reservoir">
+      <!-- Outer 127.5 x 86 x 19 mm, 2 mm floor and walls (estimates). -->
+      <geom name="bottom" size="0.06375 0.043 0.001" pos="0 0 0.001"/>
+      <geom name="wall_pos_y" size="0.06375 0.001 0.0085" pos="0 0.042 0.0105"/>
+      <geom name="wall_neg_y" size="0.06375 0.001 0.0085" pos="0 -0.042 0.0105"/>
+      <geom name="wall_pos_x" size="0.001 0.041 0.0085" pos="0.06275 0 0.0105"/>
+      <geom name="wall_neg_x" size="0.001 0.041 0.0085" pos="-0.06275 0 0.0105"/>
+      <geom name="reservoir_collision" class="reservoir_collision" size="0.06375 0.043 0.0095" pos="0 0 0.0095" mass="0.045"/>
+    </body>
+  </worldbody>
+</mujoco>
