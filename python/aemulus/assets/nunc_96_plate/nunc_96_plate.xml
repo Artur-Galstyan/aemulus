@@ -1,0 +1,16 @@
+<!-- Thermo Nunc flat-bottom 96-well plate, without lid.
+     Source: Thermo drawing D03012, outer dimensions 127.76 x 85.47 x 14.4 mm.
+     Estimate, not a vendor value: empty plate mass 35 g.
+     Units: meters and kilograms. Origin: center of the footprint on the bottom surface;
+     x is the long side, y is the short side, and z points up.
+     Shape: one box represents the outer envelope for display and collision.
+     Individual wells, wall thickness, and corner details are omitted. -->
+<mujoco model="nunc_96_plate">
+  <worldbody>
+    <body name="nunc_96_plate">
+      <geom name="nunc_96_plate_collision" type="box"
+            size="0.06388 0.042735 0.0072" pos="0 0 0.0072"
+            mass="0.035" rgba="0.85 0.88 0.9 1" group="3"/>
+    </body>
+  </worldbody>
+</mujoco>
