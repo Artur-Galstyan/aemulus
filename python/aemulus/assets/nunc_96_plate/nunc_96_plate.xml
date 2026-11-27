@@ -10,7 +10,7 @@
     <body name="nunc_96_plate">
       <geom name="nunc_96_plate_collision" type="box"
             size="0.06388 0.042735 0.0072" pos="0 0 0.0072"
-            mass="0.035" rgba="0.85 0.88 0.9 1" group="3"/>
+            mass="0.035" rgba="0.85 0.88 0.9 1"/>
     </body>
   </worldbody>
 </mujoco>
