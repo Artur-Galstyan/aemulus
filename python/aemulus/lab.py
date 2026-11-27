@@ -114,8 +114,10 @@ class SimServer(SimService):
         self.state = next_state
 
     async def get_joint(self, request: GetJointRequest, ctx, /) -> GetJointResponse:
-        index = 1 + self.model.joint(request.joint).qposadr[0]
-        return GetJointResponse(position=self.state[index])
+        joint = self.model.joint(request.joint)
+        position = self.state[1 + joint.qposadr[0]]
+        velocity = self.state[1 + self.model.nq + joint.dofadr[0]]
+        return GetJointResponse(position=position, velocity=velocity)
 
     async def set_actuator(
         self, request: SetActuatorRequest, ctx, /

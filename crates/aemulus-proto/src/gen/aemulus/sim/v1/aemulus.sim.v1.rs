@@ -9,6 +9,8 @@ pub struct GetJointRequest {
 pub struct GetJointResponse {
     #[prost(double, tag="1")]
     pub position: f64,
+    #[prost(double, tag="2")]
+    pub velocity: f64,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetActuatorRequest {

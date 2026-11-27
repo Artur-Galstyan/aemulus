@@ -7,8 +7,7 @@ use aemulus_proto::{
     sila2::{
         dev::arturgalstyan::robots::pf400::v1::{
             MoveZParameters, MoveZResponses, SubscribePositionZParameters,
-            SubscribePositionZResponses,
-            pf400_server::{Pf400, Pf400Server},
+            SubscribePositionZResponses, pf400_server::Pf400,
         },
         org::silastandard::{
             CommandConfirmation, CommandExecutionUuid, ExecutionInfo, Real,
@@ -18,18 +17,14 @@ use aemulus_proto::{
     sim::v1::{GetJointRequest, SetActuatorRequest, sim_service_client::SimServiceClient},
 };
 use tokio_stream::wrappers::ReceiverStream;
-use tonic::{
-    Response,
-    codec::CompressionEncoding,
-    transport::{Channel, Server},
-};
+use tonic::{Response, transport::Channel};
 use tracing::info;
 use uuid::Uuid;
 
-struct Pf400Sim {
-    sim: SimServiceClient<Channel>,
-    moves: Arc<Mutex<HashMap<String, (CommandStatus, f64)>>>,
-    device_name: String,
+pub(crate) struct Pf400Sim {
+    pub sim: SimServiceClient<Channel>,
+    pub moves: Arc<Mutex<HashMap<String, (CommandStatus, f64)>>>,
+    pub device_name: String,
 }
 
 #[tonic::async_trait]
@@ -221,34 +216,4 @@ impl Pf400 for Pf400Sim {
 
         Ok(Response::new(Box::pin(ReceiverStream::new(rx))))
     }
-}
-
-pub async fn serve_pf400_sim(device_name: String) -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Channel::from_static("http://127.0.0.1:50051").connect_lazy();
-    let pf400 = Pf400Sim {
-        sim: SimServiceClient::new(channel),
-        moves: Arc::default(),
-        device_name,
-    };
-
-    Server::builder()
-        .add_service(Pf400Server::new(pf400).accept_compressed(CompressionEncoding::Gzip))
-        .serve("127.0.0.1:50052".parse()?)
-        .await?;
-
-    Ok(())
-}
-
-pub fn start_sim_server(device_name: String) -> std::io::Result<()> {
-    let runtime = tokio::runtime::Runtime::new()?;
-
-    std::thread::spawn(move || {
-        let result: Result<(), Box<dyn std::error::Error>> =
-            runtime.block_on(async { serve_pf400_sim(device_name).await });
-        if let Err(e) = result {
-            tracing::error!("sim server error: {e}");
-        }
-    });
-
-    Ok(())
 }

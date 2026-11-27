@@ -8,6 +8,7 @@ message GetJointRequest {
 
 message GetJointResponse {
   double position = 1;
+  double velocity = 2;
 }
 
 message SetActuatorRequest {
