@@ -3,7 +3,7 @@
      plate bottom 280 mm above the mount surface, total mass 2 kg.
      Units: meters and kilograms. Origin: center of the footprint on the bottom surface;
      x is the plate long side, y is the short side, and z points up.
-     The narrow support leaves the plate's short sides clear for the gripper fingers. -->
+     The narrow support leaves the plate's sides clear for the gripper fingers. -->
 <mujoco model="plate_nest">
   <worldbody>
     <body name="plate_nest">
