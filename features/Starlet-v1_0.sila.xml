@@ -23,12 +23,28 @@
   <Command>
     <Identifier>MoveY</Identifier>
     <DisplayName>Move Y</DisplayName>
-    <Description>Moves the gripper Y axis to a target position.</Description>
+    <Description>Moves a channel along the Y axis to a target position.</Description>
     <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
     <Parameter>
       <Identifier>Position</Identifier>
       <DisplayName>Position</DisplayName>
-      <Description>The target gripper Y position in meters.</Description>
+      <Description>The target Y position in meters.</Description>
       <DataType>
         <Basic>Real</Basic>
       </DataType>
@@ -37,26 +53,28 @@
   <Command>
     <Identifier>MoveZ</Identifier>
     <DisplayName>Move Z</DisplayName>
-    <Description>Moves the gripper Z axis to a target position.</Description>
+    <Description>Moves a channel along the Z axis to a target position.</Description>
     <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
     <Parameter>
       <Identifier>Position</Identifier>
       <DisplayName>Position</DisplayName>
-      <Description>The target gripper Z position in meters.</Description>
-      <DataType>
-        <Basic>Real</Basic>
-      </DataType>
-    </Parameter>
-  </Command>
-  <Command>
-    <Identifier>SetGripperWidth</Identifier>
-    <DisplayName>Set Gripper Width</DisplayName>
-    <Description>Sets the gripper opening width.</Description>
-    <Observable>Yes</Observable>
-    <Parameter>
-      <Identifier>Width</Identifier>
-      <DisplayName>Width</DisplayName>
-      <Description>The target gripper opening width in meters.</Description>
+      <Description>The target Z position in meters.</Description>
       <DataType>
         <Basic>Real</Basic>
       </DataType>

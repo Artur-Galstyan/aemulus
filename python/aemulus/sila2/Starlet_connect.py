@@ -20,7 +20,7 @@ from protobuf import DescService
 
 from . import Starlet_pb
 from .SiLAFramework_pb import CommandConfirmation, CommandExecutionUUID, ExecutionInfo
-from .Starlet_pb import MoveX_Parameters, MoveX_Responses, MoveY_Parameters, MoveY_Responses, MoveZ_Parameters, MoveZ_Responses, SetGripperWidth_Parameters, SetGripperWidth_Responses
+from .Starlet_pb import MoveX_Parameters, MoveX_Responses, MoveY_Parameters, MoveY_Responses, MoveZ_Parameters, MoveZ_Responses
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator, Iterable, Iterator, Mapping
@@ -55,7 +55,7 @@ class Starlet(Protocol):
 
     async def move_y(self, request: MoveY_Parameters, ctx: RequestContext[MoveY_Parameters, CommandConfirmation], /) -> CommandConfirmation:
         """
-        Moves the gripper Y axis to a target position.
+        Moves a channel along the Y axis to a target position.
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -73,7 +73,7 @@ class Starlet(Protocol):
 
     async def move_z(self, request: MoveZ_Parameters, ctx: RequestContext[MoveZ_Parameters, CommandConfirmation], /) -> CommandConfirmation:
         """
-        Moves the gripper Z axis to a target position.
+        Moves a channel along the Z axis to a target position.
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -86,24 +86,6 @@ class Starlet(Protocol):
     async def move_z_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveZ_Responses], /) -> MoveZ_Responses:
         """
         Retrieve result of MoveZ
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    async def set_gripper_width(self, request: SetGripperWidth_Parameters, ctx: RequestContext[SetGripperWidth_Parameters, CommandConfirmation], /) -> CommandConfirmation:
-        """
-        Sets the gripper opening width.
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def set_gripper_width_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
-        """
-        Monitor the state of SetGripperWidth
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    async def set_gripper_width_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, SetGripperWidth_Responses], /) -> SetGripperWidth_Responses:
-        """
-        Retrieve result of SetGripperWidth
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -224,39 +206,6 @@ class StarletASGIApplication(ConnectASGIApplication[Starlet]):
                     ),
                     function=svc.move_z_result,
                 ),
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth": Endpoint.unary(
-                    method=MethodInfo(
-                        name="SetGripperWidth",
-                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        input=SetGripperWidth_Parameters,
-                        output=CommandConfirmation,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=svc.set_gripper_width,
-                ),
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Info": Endpoint.server_stream(
-                    method=MethodInfo(
-                        name="SetGripperWidth_Info",
-                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        input=CommandExecutionUUID,
-                        output=ExecutionInfo,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.SERVER_STREAM,
-                    ),
-                    function=svc.set_gripper_width_info,
-                ),
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Result": Endpoint.unary(
-                    method=MethodInfo(
-                        name="SetGripperWidth_Result",
-                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        input=CommandExecutionUUID,
-                        output=SetGripperWidth_Responses,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=svc.set_gripper_width_result,
-                ),
             },
             interceptors=interceptors,
             read_max_bytes=read_max_bytes,
@@ -351,7 +300,7 @@ class StarletClient(ConnectClient):
         timeout_ms: int | None = None,
     ) -> CommandConfirmation:
         """
-        Moves the gripper Y axis to a target position.
+        Moves a channel along the Y axis to a target position.
         """
         return await self.execute_unary(
             request=request,
@@ -420,7 +369,7 @@ class StarletClient(ConnectClient):
         timeout_ms: int | None = None,
     ) -> CommandConfirmation:
         """
-        Moves the gripper Z axis to a target position.
+        Moves a channel along the Z axis to a target position.
         """
         return await self.execute_unary(
             request=request,
@@ -481,75 +430,6 @@ class StarletClient(ConnectClient):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    async def set_gripper_width(
-        self,
-        request: SetGripperWidth_Parameters,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> CommandConfirmation:
-        """
-        Sets the gripper opening width.
-        """
-        return await self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="SetGripperWidth",
-                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                input=SetGripperWidth_Parameters,
-                output=CommandConfirmation,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def set_gripper_width_info(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> AsyncIterator[ExecutionInfo]:
-        """
-        Monitor the state of SetGripperWidth
-        """
-        return self.execute_server_stream(
-            request=request,
-            method=MethodInfo(
-                name="SetGripperWidth_Info",
-                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                input=CommandExecutionUUID,
-                output=ExecutionInfo,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.SERVER_STREAM,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    async def set_gripper_width_result(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> SetGripperWidth_Responses:
-        """
-        Retrieve result of SetGripperWidth
-        """
-        return await self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="SetGripperWidth_Result",
-                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                input=CommandExecutionUUID,
-                output=SetGripperWidth_Responses,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
 
 class StarletSync(Protocol):
     """
@@ -575,7 +455,7 @@ class StarletSync(Protocol):
 
     def move_y(self, request: MoveY_Parameters, ctx: RequestContext[MoveY_Parameters, CommandConfirmation], /) -> CommandConfirmation:
         """
-        Moves the gripper Y axis to a target position.
+        Moves a channel along the Y axis to a target position.
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -593,7 +473,7 @@ class StarletSync(Protocol):
 
     def move_z(self, request: MoveZ_Parameters, ctx: RequestContext[MoveZ_Parameters, CommandConfirmation], /) -> CommandConfirmation:
         """
-        Moves the gripper Z axis to a target position.
+        Moves a channel along the Z axis to a target position.
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -606,24 +486,6 @@ class StarletSync(Protocol):
     def move_z_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveZ_Responses], /) -> MoveZ_Responses:
         """
         Retrieve result of MoveZ
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def set_gripper_width(self, request: SetGripperWidth_Parameters, ctx: RequestContext[SetGripperWidth_Parameters, CommandConfirmation], /) -> CommandConfirmation:
-        """
-        Sets the gripper opening width.
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def set_gripper_width_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
-        """
-        Monitor the state of SetGripperWidth
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def set_gripper_width_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, SetGripperWidth_Responses], /) -> SetGripperWidth_Responses:
-        """
-        Retrieve result of SetGripperWidth
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -742,39 +604,6 @@ class StarletWSGIApplication(ConnectWSGIApplication):
                     ),
                     function=service.move_z_result,
                 ),
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth": EndpointSync.unary(
-                    method=MethodInfo(
-                        name="SetGripperWidth",
-                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        input=SetGripperWidth_Parameters,
-                        output=CommandConfirmation,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=service.set_gripper_width,
-                ),
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Info": EndpointSync.server_stream(
-                    method=MethodInfo(
-                        name="SetGripperWidth_Info",
-                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        input=CommandExecutionUUID,
-                        output=ExecutionInfo,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.SERVER_STREAM,
-                    ),
-                    function=service.set_gripper_width_info,
-                ),
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Result": EndpointSync.unary(
-                    method=MethodInfo(
-                        name="SetGripperWidth_Result",
-                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        input=CommandExecutionUUID,
-                        output=SetGripperWidth_Responses,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=service.set_gripper_width_result,
-                ),
             },
             interceptors=interceptors,
             read_max_bytes=read_max_bytes,
@@ -869,7 +698,7 @@ class StarletClientSync(ConnectClientSync):
         timeout_ms: int | None = None,
     ) -> CommandConfirmation:
         """
-        Moves the gripper Y axis to a target position.
+        Moves a channel along the Y axis to a target position.
         """
         return self.execute_unary(
             request=request,
@@ -938,7 +767,7 @@ class StarletClientSync(ConnectClientSync):
         timeout_ms: int | None = None,
     ) -> CommandConfirmation:
         """
-        Moves the gripper Z axis to a target position.
+        Moves a channel along the Z axis to a target position.
         """
         return self.execute_unary(
             request=request,
@@ -993,75 +822,6 @@ class StarletClientSync(ConnectClientSync):
                 service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
                 input=CommandExecutionUUID,
                 output=MoveZ_Responses,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def set_gripper_width(
-        self,
-        request: SetGripperWidth_Parameters,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> CommandConfirmation:
-        """
-        Sets the gripper opening width.
-        """
-        return self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="SetGripperWidth",
-                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                input=SetGripperWidth_Parameters,
-                output=CommandConfirmation,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def set_gripper_width_info(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> Iterator[ExecutionInfo]:
-        """
-        Monitor the state of SetGripperWidth
-        """
-        return self.execute_server_stream(
-            request=request,
-            method=MethodInfo(
-                name="SetGripperWidth_Info",
-                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                input=CommandExecutionUUID,
-                output=ExecutionInfo,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.SERVER_STREAM,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def set_gripper_width_result(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> SetGripperWidth_Responses:
-        """
-        Retrieve result of SetGripperWidth
-        """
-        return self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="SetGripperWidth_Result",
-                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                input=CommandExecutionUUID,
-                output=SetGripperWidth_Responses,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
             ),

@@ -188,7 +188,7 @@ pub mod starlet_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Moves the gripper Y axis to a target position.
+        /// Moves a channel along the Y axis to a target position.
         pub async fn move_y(
             &mut self,
             request: impl tonic::IntoRequest<super::MoveYParameters>,
@@ -285,7 +285,7 @@ pub mod starlet_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Moves the gripper Z axis to a target position.
+        /// Moves a channel along the Z axis to a target position.
         pub async fn move_z(
             &mut self,
             request: impl tonic::IntoRequest<super::MoveZParameters>,
@@ -353,7 +353,6 @@ pub mod starlet_client {
                 );
             self.inner.server_streaming(req, path, codec).await
         }
-        /// Retrieve result of MoveZ
         pub async fn move_z_result(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -378,103 +377,6 @@ pub mod starlet_client {
                     GrpcMethod::new(
                         "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
                         "MoveZ_Result",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set_gripper_width(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SetGripperWidthParameters>,
-        ) -> std::result::Result<
-            tonic::Response<
-                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        "SetGripperWidth",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
-        pub async fn set_gripper_width_info(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-            >,
-        ) -> std::result::Result<
-            tonic::Response<
-                tonic::codec::Streaming<
-                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
-                >,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Info",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        "SetGripperWidth_Info",
-                    ),
-                );
-            self.inner.server_streaming(req, path, codec).await
-        }
-        pub async fn set_gripper_width_result(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-            >,
-        ) -> std::result::Result<
-            tonic::Response<super::SetGripperWidthResponses>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic_prost::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Result",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
-                        "SetGripperWidth_Result",
                     ),
                 );
             self.inner.unary(req, path, codec).await
@@ -527,7 +429,7 @@ pub mod starlet_server {
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<super::MoveXResponses>, tonic::Status>;
-        /// Moves the gripper Y axis to a target position.
+        /// Moves a channel along the Y axis to a target position.
         async fn move_y(
             &self,
             request: tonic::Request<super::MoveYParameters>,
@@ -560,7 +462,7 @@ pub mod starlet_server {
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<super::MoveYResponses>, tonic::Status>;
-        /// Moves the gripper Z axis to a target position.
+        /// Moves a channel along the Z axis to a target position.
         async fn move_z(
             &self,
             request: tonic::Request<super::MoveZParameters>,
@@ -586,49 +488,12 @@ pub mod starlet_server {
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<Self::MoveZ_InfoStream>, tonic::Status>;
-        /// Retrieve result of MoveZ
         async fn move_z_result(
             &self,
             request: tonic::Request<
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<super::MoveZResponses>, tonic::Status>;
-        async fn set_gripper_width(
-            &self,
-            request: tonic::Request<super::SetGripperWidthParameters>,
-        ) -> std::result::Result<
-            tonic::Response<
-                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
-            >,
-            tonic::Status,
-        >;
-        /// Server streaming response type for the SetGripperWidth_Info method.
-        type SetGripperWidth_InfoStream: tonic::codegen::tokio_stream::Stream<
-                Item = std::result::Result<
-                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
-                    tonic::Status,
-                >,
-            >
-            + std::marker::Send
-            + 'static;
-        async fn set_gripper_width_info(
-            &self,
-            request: tonic::Request<
-                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-            >,
-        ) -> std::result::Result<
-            tonic::Response<Self::SetGripperWidth_InfoStream>,
-            tonic::Status,
-        >;
-        async fn set_gripper_width_result(
-            &self,
-            request: tonic::Request<
-                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-            >,
-        ) -> std::result::Result<
-            tonic::Response<super::SetGripperWidthResponses>,
-            tonic::Status,
-        >;
     }
     /// Controls a Hamilton Microlab STARlet liquid handler.
     #[derive(Debug)]
@@ -1112,150 +977,6 @@ pub mod starlet_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = MoveZ_ResultSvc(inner);
-                        let codec = tonic_prost::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.unary(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth" => {
-                    #[allow(non_camel_case_types)]
-                    struct SetGripperWidthSvc<T: Starlet>(pub Arc<T>);
-                    impl<
-                        T: Starlet,
-                    > tonic::server::UnaryService<super::SetGripperWidthParameters>
-                    for SetGripperWidthSvc<T> {
-                        type Response = super::super::super::super::super::super::org::silastandard::CommandConfirmation;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<super::SetGripperWidthParameters>,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as Starlet>::set_gripper_width(&inner, request).await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let method = SetGripperWidthSvc(inner);
-                        let codec = tonic_prost::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.unary(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Info" => {
-                    #[allow(non_camel_case_types)]
-                    struct SetGripperWidth_InfoSvc<T: Starlet>(pub Arc<T>);
-                    impl<
-                        T: Starlet,
-                    > tonic::server::ServerStreamingService<
-                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-                    > for SetGripperWidth_InfoSvc<T> {
-                        type Response = super::super::super::super::super::super::org::silastandard::ExecutionInfo;
-                        type ResponseStream = T::SetGripperWidth_InfoStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<
-                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-                            >,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as Starlet>::set_gripper_width_info(&inner, request)
-                                    .await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let method = SetGripperWidth_InfoSvc(inner);
-                        let codec = tonic_prost::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.server_streaming(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
-                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/SetGripperWidth_Result" => {
-                    #[allow(non_camel_case_types)]
-                    struct SetGripperWidth_ResultSvc<T: Starlet>(pub Arc<T>);
-                    impl<
-                        T: Starlet,
-                    > tonic::server::UnaryService<
-                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-                    > for SetGripperWidth_ResultSvc<T> {
-                        type Response = super::SetGripperWidthResponses;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<
-                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
-                            >,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as Starlet>::set_gripper_width_result(&inner, request)
-                                    .await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let method = SetGripperWidth_ResultSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

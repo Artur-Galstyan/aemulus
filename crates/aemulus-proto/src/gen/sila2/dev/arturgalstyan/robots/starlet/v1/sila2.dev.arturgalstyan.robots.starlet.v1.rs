@@ -14,8 +14,12 @@ pub struct MoveXResponses {
 /// Parameters for MoveY 
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct MoveYParameters {
-    /// The target gripper Y position in meters. 
     #[prost(message, optional, tag="1")]
+    pub channel: ::core::option::Option<super::super::super::super::super::org::silastandard::Integer>,
+    /// The channel index (0 to 7). 
+    ///
+    /// The target Y position in meters. 
+    #[prost(message, optional, tag="2")]
     pub position: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
 }
 /// Responses of MoveY 
@@ -25,24 +29,17 @@ pub struct MoveYResponses {
 /// Parameters for MoveZ 
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct MoveZParameters {
-    /// The target gripper Z position in meters. 
     #[prost(message, optional, tag="1")]
+    pub channel: ::core::option::Option<super::super::super::super::super::org::silastandard::Integer>,
+    /// The channel index (0 to 7). 
+    ///
+    /// The target Z position in meters. 
+    #[prost(message, optional, tag="2")]
     pub position: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
 }
 /// Responses of MoveZ 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MoveZResponses {
-}
-/// Parameters for SetGripperWidth 
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct SetGripperWidthParameters {
-    /// The target gripper opening width in meters. 
-    #[prost(message, optional, tag="1")]
-    pub width: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
-}
-/// Responses of SetGripperWidth 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct SetGripperWidthResponses {
 }
 include!("sila2.dev.arturgalstyan.robots.starlet.v1.tonic.rs");
 // @@protoc_insertion_point(module)
