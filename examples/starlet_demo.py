@@ -33,16 +33,16 @@ SITE_0_Y = -0.283
 PLATE_SITE_Z = 0.28615
 TIP_SITE_Z = 0.31495
 # The off-deck nest sits in front of the STARlet, reached by the PF400.
-NEST = (0.10, -0.70, 0.0)
+NEST = (0.12, -0.46, 0.0)
 NEST_Z = 0.280
 # PF400 joint poses (shoulder, elbow, wrist) in rad. The grip poses add the Z height that puts
 # the TCP 16 mm above the plate bottom, so the 30 mm fingers clear the carrier site.
-# The wrist angles keep the gripper along +x, so the fingers hold the long sides of the plate.
+# The wrist angles point the gripper along +y, so the fingers hold the short ends of the plate.
 PF400_HOME = (0.0, np.pi, np.pi)
-PF400_SAFE_Z = 0.3332
-NEST_POSE = (0.2420, -1.4879, 1.9532, 5.8179)
-SITE_A_POSE = (0.24815, 0.8629, 1.6931, 3.7272)
-SITE_B_POSE = (0.24815, 0.3600, 1.0640, 4.8592)
+PF400_SAFE_Z = 0.2700
+NEST_POSE = (0.242, -0.64065778, 1.63695580, 6.85768362)
+SITE_A_POSE = (0.24815, 0.25391750, 2.00449014, 5.59557399)
+SITE_B_POSE = (0.24815, 0.08184838, 1.18548687, 6.58664639)
 
 
 async def wait(confirmation, info, result):
@@ -116,10 +116,11 @@ async def transfer(client, start, end):
     # Poses contain (Z, shoulder, elbow, wrist). The arm starts above start.
     # Lift clear of each support before traversing the deck with a friction grip.
     await move_joints(client, start)
-    await move_gripper(client, 0.0019)
+    await move_gripper(client, 0.0)
     await move_joints(client, (PF400_SAFE_Z, *start[1:]))
     await move_joints(client, (PF400_SAFE_Z, *end[1:]))
-    await move_joints(client, end)
+    # Keep the fingertips above the pad as the plate settles onto the support.
+    await move_joints(client, (end[0] + 0.009, *end[1:]))
     await asyncio.sleep(0.5)
     await move_gripper(client, 0.030)
     await move_joints(client, (PF400_SAFE_Z, *end[1:]))
@@ -142,11 +143,11 @@ async def main(view=False):
     pf400 = PF400(device_name="pf400", pos=(-0.22, -0.57, 0))
     # Carriers stand on the deck tracks, front edge on the deck front (y = -0.3345 m).
     # Track n has its left edge at x = -0.3375 + (n - 1) * 0.0225 m; each carrier is 6 tracks wide.
-    # The PF400 palm reaches 108 mm to the left of a plate it grips, so the tip carrier
-    # stands right of both plate carriers, and the reservoir stays below the palm.
+    # Leave space beside the plate carriers for the PF400 fingers to open.
+    # The reservoir uses site 1 to clear the fingers at carrier A.
     reservoir_carrier = (-0.270, -0.086, 0.20)  # tracks 1 to 6
-    carrier_a = (-0.135, -0.086, 0.20)  # tracks 7 to 12
-    carrier_b = (0.135, -0.086, 0.20)  # tracks 19 to 24
+    carrier_a = (-0.090, -0.086, 0.20)  # tracks 9 to 14
+    carrier_b = (0.1125, -0.086, 0.20)  # tracks 18 to 23
     tip_carrier = (0.270, -0.086, 0.20)  # tracks 25 to 30
     lab = create_lab(
         [starlet, pf400],
@@ -174,7 +175,7 @@ async def main(view=False):
             Labware(
                 "reservoir",
                 str(assets / "reservoir/reservoir.xml"),
-                (reservoir_carrier[0], SITE_0_Y, PLATE_SITE_Z),
+                (reservoir_carrier[0], SITE_0_Y + 0.096, PLATE_SITE_Z),
             ),
         ],
     )
@@ -251,8 +252,8 @@ async def main(view=False):
         if not np.isclose(total, 1000.0, rtol=0.0, atol=1e-6):
             raise RuntimeError(f"Liquid was lost during transfer: {total} uL")
 
-        # Eject onto the free tracks 13 to 18.
-        await move_x(client, 0.0)
+        # Eject onto the free tracks 15 to 17.
+        await move_x(client, 0.01)
         await move_y(client, -0.10, 5)
         await move_eject(client, 0.010, 5)
         await move_eject(client, 0.0, 5)
