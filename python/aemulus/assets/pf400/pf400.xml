@@ -91,7 +91,7 @@
     <position name="j2_shoulder" joint="j2_shoulder" kp="200" kv="20"/>
     <position name="j3_elbow" joint="j3_elbow" kp="200" kv="20"/>
     <position name="j4_wrist" joint="j4_wrist" kp="50" kv="5"/>
-    <position name="gripper" joint="finger_left" kp="500" kv="20"/>
+    <position name="gripper" joint="finger_left" kp="2000" kv="40"/>
   </actuator>
 
   <!-- Folded arm, gripper to the front. This is also the default pose. With J4 = 0 the folded gripper hits the column. -->
