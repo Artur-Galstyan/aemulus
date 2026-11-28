@@ -3,6 +3,7 @@
 import argparse
 import asyncio
 import sys
+from contextlib import aclosing
 from importlib.resources import files
 
 import mujoco.viewer
@@ -49,8 +50,8 @@ async def wait(confirmation, info, result):
     command = confirmation.commandExecutionUUID
     if command is None:
         raise RuntimeError("Missing command execution UUID")
-    async with asyncio.timeout(20):
-        async for status in info(command):
+    async with asyncio.timeout(20), aclosing(info(command)) as statuses:
+        async for status in statuses:
             if status.commandStatus == ExecutionInfo.CommandStatus.finishedWithError:
                 raise RuntimeError("Move failed")
             if status.commandStatus == ExecutionInfo.CommandStatus.finishedSuccessfully:
