@@ -151,7 +151,7 @@ class SimServer(SimService):
 
     def __init__(self, lab: Lab):
         self.model = lab.model
-        self.devices = lab.devices
+        self.devices = [device for device in lab.devices if device.address is None]
         self.data = MjData(self.model)
         self.state = self.reset()
         joints = self.model.actuator_trnid[:, 0]

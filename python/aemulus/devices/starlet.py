@@ -9,7 +9,6 @@ from mujoco import MjData, MjModel
 from aemulus.device import Device
 
 TIP_50UL_LENGTH = 0.0504
-TIP_300UL_LENGTH = 0.0599
 PLUNGER_UL_PER_M = 1000.0
 
 _CHANNELS = 8
