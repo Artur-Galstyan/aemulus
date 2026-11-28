@@ -1,8 +1,10 @@
 <!-- Hamilton tip rack, 96 tips of 300 uL in a grid of 8 x 12 with a 9 mm pitch.
-     Sources: the rack body (122.4 x 82.6 x 20 mm) is from PyLabRobot. The tip length (59.9 mm) is from Hamilton.
+     Sources: rack body (122.4 x 82.6 x 20 mm) from PyLabRobot (tip_racks.py);
+     tip length (59.9 mm) and collar height (8.0 mm) from Hamilton and PyLabRobot (tip_creators.py).
      Origin: center of the footprint, on the bottom of the rack. x is the long side.
-     The tips are one box over the 8 x 12 grid. The tips stand on the plane of the rack bottom, so the top of the tips is at 59.9 mm.
-     Estimates, not vendor values: the mass of the loaded rack (150 g), the tip collar diameter (7 mm), and the height of the tips in the rack.
+     The tips are one box over the 8 x 12 grid with the 8 mm collar resting on the rack top (z = 20 to 28 mm)
+     and the 59.9 mm tips hanging down to z = -31.9 mm inside the open tip carrier.
+     Estimates, not vendor values: the mass of the loaded rack (150 g) and the tip box footprint (106 x 70 mm).
      All geoms are boxes. They are also the collision shapes. -->
 <mujoco model="hamilton_tip_rack_300ul">
   <default>
@@ -17,7 +19,7 @@
   <worldbody>
     <body name="hamilton_tip_rack_300ul">
       <geom name="rack" size="0.0612 0.0413 0.01" pos="0 0 0.01" mass="0.15" material="hamilton_tip_rack_body"/>
-      <geom name="tips" size="0.053 0.035 0.02995" pos="0 0 0.02995" mass="0" material="hamilton_tip"/>
+      <geom name="tips" size="0.053 0.035 0.02995" pos="0 0 -0.00195" mass="0" material="hamilton_tip"/>
     </body>
   </worldbody>
 </mujoco>
