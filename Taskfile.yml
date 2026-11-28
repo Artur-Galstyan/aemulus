@@ -25,6 +25,7 @@ tasks:
       - find proto/sila2 -name '*.proto' ! -name SiLAFramework.proto -delete
       - for f in features/*.sila.xml; do n=$(basename "$f"); xsltproc xslt/fdl2proto.xsl "$f" | sed 's|import "SiLAFramework.proto"|import "sila2/SiLAFramework.proto"|' > "proto/sila2/${n%%-*}.proto"; done
       - uv run buf generate
+      - buf generate --template buf.gen.browser.yaml
 
   build:
     desc: Rebuild the Rust Python extension and verify the import

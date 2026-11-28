@@ -182,7 +182,7 @@ class SimServer(SimService):
     ) -> AsyncIterator[StreamStateResponse]:
         while True:
             qpos = self.state[1 : 1 + self.lab.model.nq]
-            yield StreamStateResponse(qpos=list(qpos))
+            yield StreamStateResponse(qpos=qpos.tolist())
             await asyncio.sleep(1 / 60)
 
 

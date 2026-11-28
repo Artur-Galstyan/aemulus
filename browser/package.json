@@ -1,0 +1,24 @@
+{
+  "name": "aemulus-browser",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "license": "MIT",
+  "packageManager": "pnpm@12.23.0",
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.17.0",
+    "@connectrpc/connect": "^2.3.0",
+    "@connectrpc/connect-web": "^2.3.0",
+    "@mujoco/mujoco": "^4.0.1",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@bufbuild/protoc-gen-es": "^2.17.0",
+    "vite": "^8.4.0"
+  }
+}

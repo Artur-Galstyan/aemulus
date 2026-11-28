@@ -12,6 +12,9 @@ build/
 .ruff_cache/
 .mypy_cache/
 
+# JavaScript
+node_modules/
+
 # MuJoCo
 MUJOCO_LOG.TXT
 

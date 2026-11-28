@@ -1,0 +1,11 @@
+version: v2
+inputs:
+  - directory: proto
+    paths:
+      - proto/sim
+plugins:
+  - local: browser/node_modules/.bin/protoc-gen-es
+    out: browser/src/gen
+    opt:
+      - target=js+dts
+      - import_extension=js

@@ -11,7 +11,7 @@ def main():
         ]
     )
     # lab.keep_alive()
-    lab.view()
+    # lab.view()
     lab.keep_alive()
 
 
