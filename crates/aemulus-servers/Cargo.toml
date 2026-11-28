@@ -6,7 +6,11 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 
+[features]
+python = ["dep:pyo3"]
+
 [dependencies]
+pyo3 = { version = "0.30.1", optional = true }
 aemulus-proto = { version = "0.0.3", path = "../aemulus-proto" }
 clap = { version = "4.6.9", features = ["derive"] }
 tokio = { version = "1.54.1", features = ["macros", "rt-multi-thread"] }

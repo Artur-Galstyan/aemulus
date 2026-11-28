@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+import "sila2/SiLAFramework.proto";
+
+package sila2.dev.arturgalstyan.shakers.shakercontroller.v1;
+
+/* Controls a microplate shaker with a plate lock. */
+service ShakerController {
+  /* Starts to shake and returns when the shaker reaches the target speed. The speed must be between MinSpeed and MaxSpeed. */
+  rpc StartShaking (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.StartShaking_Parameters) returns (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.StartShaking_Responses) {}
+  /* Stops the shaking. */
+  rpc StopShaking (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.StopShaking_Parameters) returns (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.StopShaking_Responses) {}
+  /* Closes the plate lock to hold the microplate. */
+  rpc LockPlate (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.LockPlate_Parameters) returns (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.LockPlate_Responses) {}
+  /* Opens the plate lock to release the microplate. */
+  rpc UnlockPlate (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.UnlockPlate_Parameters) returns (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.UnlockPlate_Responses) {}
+  /* The lowest target speed of this shaker in rpm. */
+  rpc Get_MinSpeed (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Get_MinSpeed_Parameters) returns (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Get_MinSpeed_Responses) {}
+  /* The highest target speed of this shaker in rpm. */
+  rpc Get_MaxSpeed (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Get_MaxSpeed_Parameters) returns (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Get_MaxSpeed_Responses) {}
+  /* The current speed in rpm. */
+  rpc Subscribe_Speed (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Subscribe_Speed_Parameters) returns (stream sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Subscribe_Speed_Responses) {}
+  /* True when the plate lock holds the microplate. */
+  rpc Subscribe_PlateLocked (sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Subscribe_PlateLocked_Parameters) returns (stream sila2.dev.arturgalstyan.shakers.shakercontroller.v1.Subscribe_PlateLocked_Responses) {}
+}
+
+/* Parameters for StartShaking */
+message StartShaking_Parameters {
+  sila2.org.silastandard.Integer Speed = 1;  /* The target speed in rpm. */
+}
+
+/* Responses of StartShaking */
+message StartShaking_Responses {
+}
+
+/* Parameters for StopShaking */
+message StopShaking_Parameters {
+}
+
+/* Responses of StopShaking */
+message StopShaking_Responses {
+}
+
+/* Parameters for LockPlate */
+message LockPlate_Parameters {
+}
+
+/* Responses of LockPlate */
+message LockPlate_Responses {
+}
+
+/* Parameters for UnlockPlate */
+message UnlockPlate_Parameters {
+}
+
+/* Responses of UnlockPlate */
+message UnlockPlate_Responses {
+}
+
+/* Parameters for MinSpeed */
+message Get_MinSpeed_Parameters {
+}
+
+/* Responses of MinSpeed */
+message Get_MinSpeed_Responses {
+  sila2.org.silastandard.Integer MinSpeed = 1;  /* The lowest target speed of this shaker in rpm. */
+}
+
+/* Parameters for MaxSpeed */
+message Get_MaxSpeed_Parameters {
+}
+
+/* Responses of MaxSpeed */
+message Get_MaxSpeed_Responses {
+  sila2.org.silastandard.Integer MaxSpeed = 1;  /* The highest target speed of this shaker in rpm. */
+}
+
+/* Parameters for Speed */
+message Subscribe_Speed_Parameters {
+}
+
+/* Responses of Speed */
+message Subscribe_Speed_Responses {
+  sila2.org.silastandard.Real Speed = 1;  /* The current speed in rpm. */
+}
+
+/* Parameters for PlateLocked */
+message Subscribe_PlateLocked_Parameters {
+}
+
+/* Responses of PlateLocked */
+message Subscribe_PlateLocked_Responses {
+  sila2.org.silastandard.Boolean PlateLocked = 1;  /* True when the plate lock holds the microplate. */
+}

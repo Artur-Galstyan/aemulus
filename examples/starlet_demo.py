@@ -144,8 +144,8 @@ async def main(view=False):
             "On macOS use: uv run mjpython examples/starlet_demo.py --view"
         )
     assets = files("aemulus") / "assets"
-    starlet = STARlet(device_name="starlet", pos=(0, 0, 0))
-    pf400 = PF400(device_name="pf400", pos=(-0.22, -0.57, 0))
+    starlet = STARlet(device_name="starlet", port=50053, pos=(0, 0, 0))
+    pf400 = PF400(device_name="pf400", port=50052, pos=(-0.22, -0.57, 0))
     # Carriers stand on the deck tracks, front edge on the deck front (y = -0.3345 m).
     # Track n has its left edge at x = -0.3375 + (n - 1) * 0.0225 m; each carrier is 6 tracks wide.
     # Leave space beside the plate carriers for the PF400 fingers to open.

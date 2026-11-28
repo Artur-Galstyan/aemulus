@@ -9,7 +9,7 @@ use aemulus_proto::{
             MoveEjectParameters, MoveEjectResponses, MovePlungerParameters, MovePlungerResponses,
             MoveXParameters, MoveXResponses, MoveYParameters, MoveYResponses, MoveZParameters,
             MoveZResponses,
-            starlet_server::{Starlet, StarletServer},
+            starlet_server::Starlet,
         },
         org::silastandard::{
             CommandConfirmation, CommandExecutionUuid, ExecutionInfo, Integer, Real,
@@ -19,18 +19,14 @@ use aemulus_proto::{
     sim::v1::{GetJointRequest, SetActuatorRequest, sim_service_client::SimServiceClient},
 };
 use tokio_stream::wrappers::ReceiverStream;
-use tonic::{
-    Response,
-    codec::CompressionEncoding,
-    transport::{Channel, Server},
-};
+use tonic::{Response, transport::Channel};
 use tracing::info;
 use uuid::Uuid;
 
-struct StarletSim {
-    sim: SimServiceClient<Channel>,
-    moves: Arc<Mutex<HashMap<String, (CommandStatus, f64)>>>,
-    device_name: String,
+pub(crate) struct StarletSim {
+    pub(crate) sim: SimServiceClient<Channel>,
+    pub(crate) moves: Arc<Mutex<HashMap<String, (CommandStatus, f64)>>>,
+    pub(crate) device_name: String,
 }
 
 fn channel_index(channel: Option<Integer>) -> Result<i64, tonic::Status> {
@@ -330,34 +326,4 @@ impl Starlet for StarletSim {
     ) -> Result<tonic::Response<MoveEjectResponses>, tonic::Status> {
         self.move_result(request)
     }
-}
-
-pub async fn serve_starlet_sim(device_name: String) -> Result<(), Box<dyn std::error::Error>> {
-    let channel = Channel::from_static("http://127.0.0.1:50051").connect_lazy();
-    let starlet = StarletSim {
-        sim: SimServiceClient::new(channel),
-        moves: Arc::default(),
-        device_name,
-    };
-
-    Server::builder()
-        .add_service(StarletServer::new(starlet).accept_compressed(CompressionEncoding::Gzip))
-        .serve("127.0.0.1:50053".parse()?)
-        .await?;
-
-    Ok(())
-}
-
-pub fn start_sim_server(device_name: String) -> std::io::Result<()> {
-    let runtime = tokio::runtime::Runtime::new()?;
-
-    std::thread::spawn(move || {
-        let result: Result<(), Box<dyn std::error::Error>> =
-            runtime.block_on(async { serve_starlet_sim(device_name).await });
-        if let Err(e) = result {
-            tracing::error!("sim server error: {e}");
-        }
-    });
-
-    Ok(())
 }

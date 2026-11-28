@@ -46,7 +46,7 @@ class GetJointRequest(Message[_GetJointRequestFields]):
 
         joint: str
 
-_GetJointResponseFields: TypeAlias = Literal["position"]
+_GetJointResponseFields: TypeAlias = Literal["position", "velocity"]
 
 class GetJointResponse(Message[_GetJointResponseFields]):
     """
@@ -59,9 +59,13 @@ class GetJointResponse(Message[_GetJointResponseFields]):
             ```proto
             double position = 1;
             ```
+        velocity:
+            ```proto
+            double velocity = 2;
+            ```
     """
 
-    __slots__ = ("position",)
+    __slots__ = ("position", "velocity")
 
     if TYPE_CHECKING:
 
@@ -69,10 +73,12 @@ class GetJointResponse(Message[_GetJointResponseFields]):
             self,
             *,
             position: float = 0,
+            velocity: float = 0,
         ) -> None:
             pass
 
         position: float
+        velocity: float
 
 _SetActuatorRequestFields: TypeAlias = Literal["actuator", "value"]
 
@@ -128,7 +134,7 @@ class SetActuatorResponse(Message[_SetActuatorResponseFields]):
 
 
 _DESC = file_desc(
-    b'\n\x10sim/v1/sim.proto\x12\x0eaemulus.sim.v1"\'\n\x0fGetJointRequest\x12\x14\n\x05joint\x18\x01 \x01(\tR\x05joint".\n\x10GetJointResponse\x12\x1a\n\x08position\x18\x01 \x01(\x01R\x08position"F\n\x12SetActuatorRequest\x12\x1a\n\x08actuator\x18\x01 \x01(\tR\x08actuator\x12\x14\n\x05value\x18\x02 \x01(\x01R\x05value"\x15\n\x13SetActuatorResponse2\xb3\x01\n\nSimService\x12M\n\x08GetJoint\x12\x1f.aemulus.sim.v1.GetJointRequest\x1a .aemulus.sim.v1.GetJointResponse\x12V\n\x0bSetActuator\x12".aemulus.sim.v1.SetActuatorRequest\x1a#.aemulus.sim.v1.SetActuatorResponseb\x06proto3',
+    b'\n\x10sim/v1/sim.proto\x12\x0eaemulus.sim.v1"\'\n\x0fGetJointRequest\x12\x14\n\x05joint\x18\x01 \x01(\tR\x05joint"J\n\x10GetJointResponse\x12\x1a\n\x08position\x18\x01 \x01(\x01R\x08position\x12\x1a\n\x08velocity\x18\x02 \x01(\x01R\x08velocity"F\n\x12SetActuatorRequest\x12\x1a\n\x08actuator\x18\x01 \x01(\tR\x08actuator\x12\x14\n\x05value\x18\x02 \x01(\x01R\x05value"\x15\n\x13SetActuatorResponse2\xb3\x01\n\nSimService\x12M\n\x08GetJoint\x12\x1f.aemulus.sim.v1.GetJointRequest\x1a .aemulus.sim.v1.GetJointResponse\x12V\n\x0bSetActuator\x12".aemulus.sim.v1.SetActuatorRequest\x1a#.aemulus.sim.v1.SetActuatorResponseb\x06proto3',
     [],
     {
         "GetJointRequest": GetJointRequest,

@@ -6,6 +6,7 @@ from importlib.resources import files
 
 from mujoco import MjData, MjModel, mjtGeom
 
+from aemulus._rust._native import ModelIdentifier
 from aemulus.device import Device
 from aemulus.lab import sbs_96_offset
 
@@ -37,7 +38,7 @@ class _StarletState:
 @dataclass(frozen=True)
 class STARlet(Device):
     mjcf = str(files("aemulus") / "assets/hamilton_starlet/starlet.xml")
-    sim_server_name = "starlet"
+    device_id = ModelIdentifier.HamiltonStarlet
     _state: _StarletState = field(
         default_factory=_StarletState, init=False, repr=False, compare=False
     )
