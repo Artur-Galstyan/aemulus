@@ -35,6 +35,28 @@ pub struct UnlockPlateParameters {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct UnlockPlateResponses {
 }
+/// Parameters for MinSpeed 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMinSpeedParameters {
+}
+/// Responses of MinSpeed 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMinSpeedResponses {
+    /// The lowest target speed of this shaker in rpm. 
+    #[prost(message, optional, tag="1")]
+    pub min_speed: ::core::option::Option<super::super::super::super::super::org::silastandard::Integer>,
+}
+/// Parameters for MaxSpeed 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMaxSpeedParameters {
+}
+/// Responses of MaxSpeed 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetMaxSpeedResponses {
+    /// The highest target speed of this shaker in rpm. 
+    #[prost(message, optional, tag="1")]
+    pub max_speed: ::core::option::Option<super::super::super::super::super::org::silastandard::Integer>,
+}
 /// Parameters for Speed 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SubscribeSpeedParameters {
@@ -53,9 +75,9 @@ pub struct SubscribePlateLockedParameters {
 /// Responses of PlateLocked 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SubscribePlateLockedResponses {
-    /// True when the edge locking mechanism holds the microplate. 
+    /// True when the plate lock holds the microplate. 
     #[prost(message, optional, tag="1")]
     pub plate_locked: ::core::option::Option<super::super::super::super::super::org::silastandard::Boolean>,
 }
-include!("sila2.dev.arturgalstyan.shakers.bioshake.v1.tonic.rs");
+include!("sila2.dev.arturgalstyan.shakers.shakercontroller.v1.tonic.rs");
 // @@protoc_insertion_point(module)

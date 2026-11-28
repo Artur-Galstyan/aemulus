@@ -1,28 +1,54 @@
 use aemulus_proto::{
     sila2::{
-        dev::arturgalstyan::robots::bioshake::v1::{
-            LockPlateParameters, LockPlateResponses, StartShakingParameters, StartShakingResponses,
-            StopShakingParameters, StopShakingResponses, SubscribePlateLockedParameters,
-            SubscribePlateLockedResponses, SubscribeSpeedParameters, SubscribeSpeedResponses,
-            UnlockPlateParameters, UnlockPlateResponses, bioshake_server::Bioshake,
+        dev::arturgalstyan::shakers::shakercontroller::v1::{
+            GetMaxSpeedParameters, GetMaxSpeedResponses, GetMinSpeedParameters,
+            GetMinSpeedResponses, LockPlateParameters, LockPlateResponses, StartShakingParameters,
+            StartShakingResponses, StopShakingParameters, StopShakingResponses,
+            SubscribePlateLockedParameters, SubscribePlateLockedResponses,
+            SubscribeSpeedParameters, SubscribeSpeedResponses, UnlockPlateParameters,
+            UnlockPlateResponses, shaker_controller_server::ShakerController,
         },
-        org::silastandard::{Boolean, Real},
+        org::silastandard::{Boolean, Integer, Real},
     },
     sim::v1::{GetJointRequest, SetActuatorRequest, sim_service_client::SimServiceClient},
 };
-
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::{Response, Status, transport::Channel};
 
-pub(crate) struct BioshakeSim {
+use crate::{devices::shaker::ShakerModel, models::ShakerSpec};
+
+pub(crate) struct ShakerSim {
     pub sim: SimServiceClient<Channel>,
     pub device_name: String,
+    pub spec: ShakerSpec,
 }
 
 #[tonic::async_trait]
-impl Bioshake for BioshakeSim {
+impl ShakerController for ShakerSim {
     type Subscribe_SpeedStream = tonic::codegen::BoxStream<SubscribeSpeedResponses>;
     type Subscribe_PlateLockedStream = tonic::codegen::BoxStream<SubscribePlateLockedResponses>;
+
+    async fn get_min_speed(
+        &self,
+        _: tonic::Request<GetMinSpeedParameters>,
+    ) -> Result<Response<GetMinSpeedResponses>, Status> {
+        Ok(Response::new(GetMinSpeedResponses {
+            min_speed: Some(Integer {
+                value: self.spec.min_rpm,
+            }),
+        }))
+    }
+
+    async fn get_max_speed(
+        &self,
+        _: tonic::Request<GetMaxSpeedParameters>,
+    ) -> Result<Response<GetMaxSpeedResponses>, Status> {
+        Ok(Response::new(GetMaxSpeedResponses {
+            max_speed: Some(Integer {
+                value: self.spec.max_rpm,
+            }),
+        }))
+    }
 
     async fn start_shaking(
         &self,
@@ -32,7 +58,7 @@ impl Bioshake for BioshakeSim {
             return Err(Status::invalid_argument("speed is required"));
         };
 
-        if !(200..=3000).contains(&target_rpm.value) {
+        if !(self.spec.min_rpm..=self.spec.max_rpm).contains(&target_rpm.value) {
             return Err(Status::invalid_argument(
                 "speed must be between 200 and 3000 rpm",
             ));

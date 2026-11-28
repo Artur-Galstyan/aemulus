@@ -1,6 +1,6 @@
 // @generated
 /// Generated client implementations.
-pub mod bioshake_client {
+pub mod shaker_controller_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -11,10 +11,10 @@ pub mod bioshake_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
-    pub struct BioshakeClient<T> {
+    pub struct ShakerControllerClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl BioshakeClient<tonic::transport::Channel> {
+    impl ShakerControllerClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -25,7 +25,7 @@ pub mod bioshake_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> BioshakeClient<T>
+    impl<T> ShakerControllerClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -43,7 +43,7 @@ pub mod bioshake_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> BioshakeClient<InterceptedService<T, F>>
+        ) -> ShakerControllerClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -57,7 +57,7 @@ pub mod bioshake_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            BioshakeClient::new(InterceptedService::new(inner, interceptor))
+            ShakerControllerClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -107,13 +107,13 @@ pub mod bioshake_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/StartShaking",
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/StartShaking",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake",
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
                         "StartShaking",
                     ),
                 );
@@ -136,13 +136,13 @@ pub mod bioshake_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/StopShaking",
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/StopShaking",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake",
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
                         "StopShaking",
                     ),
                 );
@@ -165,13 +165,13 @@ pub mod bioshake_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/LockPlate",
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/LockPlate",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake",
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
                         "LockPlate",
                     ),
                 );
@@ -194,14 +194,72 @@ pub mod bioshake_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/UnlockPlate",
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/UnlockPlate",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake",
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
                         "UnlockPlate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_min_speed(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetMinSpeedParameters>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMinSpeedResponses>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Get_MinSpeed",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
+                        "Get_MinSpeed",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_max_speed(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetMaxSpeedParameters>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMaxSpeedResponses>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Get_MaxSpeed",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
+                        "Get_MaxSpeed",
                     ),
                 );
             self.inner.unary(req, path, codec).await
@@ -223,13 +281,13 @@ pub mod bioshake_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/Subscribe_Speed",
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Subscribe_Speed",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake",
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
                         "Subscribe_Speed",
                     ),
                 );
@@ -254,13 +312,13 @@ pub mod bioshake_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/Subscribe_PlateLocked",
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Subscribe_PlateLocked",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new(
-                        "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake",
+                        "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController",
                         "Subscribe_PlateLocked",
                     ),
                 );
@@ -269,7 +327,7 @@ pub mod bioshake_client {
     }
 }
 /// Generated server implementations.
-pub mod bioshake_server {
+pub mod shaker_controller_server {
     #![allow(
         unused_variables,
         dead_code,
@@ -278,9 +336,9 @@ pub mod bioshake_server {
         clippy::let_unit_value,
     )]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with BioshakeServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with ShakerControllerServer.
     #[async_trait]
-    pub trait Bioshake: std::marker::Send + std::marker::Sync + 'static {
+    pub trait ShakerController: std::marker::Send + std::marker::Sync + 'static {
         async fn start_shaking(
             &self,
             request: tonic::Request<super::StartShakingParameters>,
@@ -307,6 +365,20 @@ pub mod bioshake_server {
             request: tonic::Request<super::UnlockPlateParameters>,
         ) -> std::result::Result<
             tonic::Response<super::UnlockPlateResponses>,
+            tonic::Status,
+        >;
+        async fn get_min_speed(
+            &self,
+            request: tonic::Request<super::GetMinSpeedParameters>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMinSpeedResponses>,
+            tonic::Status,
+        >;
+        async fn get_max_speed(
+            &self,
+            request: tonic::Request<super::GetMaxSpeedParameters>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetMaxSpeedResponses>,
             tonic::Status,
         >;
         /// Server streaming response type for the Subscribe_Speed method.
@@ -340,14 +412,14 @@ pub mod bioshake_server {
         >;
     }
     #[derive(Debug)]
-    pub struct BioshakeServer<T> {
+    pub struct ShakerControllerServer<T> {
         inner: Arc<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
         max_decoding_message_size: Option<usize>,
         max_encoding_message_size: Option<usize>,
     }
-    impl<T> BioshakeServer<T> {
+    impl<T> ShakerControllerServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -398,9 +470,9 @@ pub mod bioshake_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for BioshakeServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for ShakerControllerServer<T>
     where
-        T: Bioshake,
+        T: ShakerController,
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
@@ -415,11 +487,11 @@ pub mod bioshake_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/StartShaking" => {
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/StartShaking" => {
                     #[allow(non_camel_case_types)]
-                    struct StartShakingSvc<T: Bioshake>(pub Arc<T>);
+                    struct StartShakingSvc<T: ShakerController>(pub Arc<T>);
                     impl<
-                        T: Bioshake,
+                        T: ShakerController,
                     > tonic::server::UnaryService<super::StartShakingParameters>
                     for StartShakingSvc<T> {
                         type Response = super::StartShakingResponses;
@@ -433,7 +505,8 @@ pub mod bioshake_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as Bioshake>::start_shaking(&inner, request).await
+                                <T as ShakerController>::start_shaking(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -460,11 +533,11 @@ pub mod bioshake_server {
                     };
                     Box::pin(fut)
                 }
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/StopShaking" => {
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/StopShaking" => {
                     #[allow(non_camel_case_types)]
-                    struct StopShakingSvc<T: Bioshake>(pub Arc<T>);
+                    struct StopShakingSvc<T: ShakerController>(pub Arc<T>);
                     impl<
-                        T: Bioshake,
+                        T: ShakerController,
                     > tonic::server::UnaryService<super::StopShakingParameters>
                     for StopShakingSvc<T> {
                         type Response = super::StopShakingResponses;
@@ -478,7 +551,7 @@ pub mod bioshake_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as Bioshake>::stop_shaking(&inner, request).await
+                                <T as ShakerController>::stop_shaking(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -505,11 +578,11 @@ pub mod bioshake_server {
                     };
                     Box::pin(fut)
                 }
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/LockPlate" => {
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/LockPlate" => {
                     #[allow(non_camel_case_types)]
-                    struct LockPlateSvc<T: Bioshake>(pub Arc<T>);
+                    struct LockPlateSvc<T: ShakerController>(pub Arc<T>);
                     impl<
-                        T: Bioshake,
+                        T: ShakerController,
                     > tonic::server::UnaryService<super::LockPlateParameters>
                     for LockPlateSvc<T> {
                         type Response = super::LockPlateResponses;
@@ -523,7 +596,7 @@ pub mod bioshake_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as Bioshake>::lock_plate(&inner, request).await
+                                <T as ShakerController>::lock_plate(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -550,11 +623,11 @@ pub mod bioshake_server {
                     };
                     Box::pin(fut)
                 }
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/UnlockPlate" => {
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/UnlockPlate" => {
                     #[allow(non_camel_case_types)]
-                    struct UnlockPlateSvc<T: Bioshake>(pub Arc<T>);
+                    struct UnlockPlateSvc<T: ShakerController>(pub Arc<T>);
                     impl<
-                        T: Bioshake,
+                        T: ShakerController,
                     > tonic::server::UnaryService<super::UnlockPlateParameters>
                     for UnlockPlateSvc<T> {
                         type Response = super::UnlockPlateResponses;
@@ -568,7 +641,7 @@ pub mod bioshake_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as Bioshake>::unlock_plate(&inner, request).await
+                                <T as ShakerController>::unlock_plate(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -595,11 +668,103 @@ pub mod bioshake_server {
                     };
                     Box::pin(fut)
                 }
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/Subscribe_Speed" => {
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Get_MinSpeed" => {
                     #[allow(non_camel_case_types)]
-                    struct Subscribe_SpeedSvc<T: Bioshake>(pub Arc<T>);
+                    struct Get_MinSpeedSvc<T: ShakerController>(pub Arc<T>);
                     impl<
-                        T: Bioshake,
+                        T: ShakerController,
+                    > tonic::server::UnaryService<super::GetMinSpeedParameters>
+                    for Get_MinSpeedSvc<T> {
+                        type Response = super::GetMinSpeedResponses;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetMinSpeedParameters>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ShakerController>::get_min_speed(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = Get_MinSpeedSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Get_MaxSpeed" => {
+                    #[allow(non_camel_case_types)]
+                    struct Get_MaxSpeedSvc<T: ShakerController>(pub Arc<T>);
+                    impl<
+                        T: ShakerController,
+                    > tonic::server::UnaryService<super::GetMaxSpeedParameters>
+                    for Get_MaxSpeedSvc<T> {
+                        type Response = super::GetMaxSpeedResponses;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetMaxSpeedParameters>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ShakerController>::get_max_speed(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = Get_MaxSpeedSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Subscribe_Speed" => {
+                    #[allow(non_camel_case_types)]
+                    struct Subscribe_SpeedSvc<T: ShakerController>(pub Arc<T>);
+                    impl<
+                        T: ShakerController,
                     > tonic::server::ServerStreamingService<
                         super::SubscribeSpeedParameters,
                     > for Subscribe_SpeedSvc<T> {
@@ -615,7 +780,8 @@ pub mod bioshake_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as Bioshake>::subscribe_speed(&inner, request).await
+                                <T as ShakerController>::subscribe_speed(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -642,11 +808,11 @@ pub mod bioshake_server {
                     };
                     Box::pin(fut)
                 }
-                "/sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake/Subscribe_PlateLocked" => {
+                "/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController/Subscribe_PlateLocked" => {
                     #[allow(non_camel_case_types)]
-                    struct Subscribe_PlateLockedSvc<T: Bioshake>(pub Arc<T>);
+                    struct Subscribe_PlateLockedSvc<T: ShakerController>(pub Arc<T>);
                     impl<
-                        T: Bioshake,
+                        T: ShakerController,
                     > tonic::server::ServerStreamingService<
                         super::SubscribePlateLockedParameters,
                     > for Subscribe_PlateLockedSvc<T> {
@@ -664,7 +830,10 @@ pub mod bioshake_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as Bioshake>::subscribe_plate_locked(&inner, request)
+                                <T as ShakerController>::subscribe_plate_locked(
+                                        &inner,
+                                        request,
+                                    )
                                     .await
                             };
                             Box::pin(fut)
@@ -714,7 +883,7 @@ pub mod bioshake_server {
             }
         }
     }
-    impl<T> Clone for BioshakeServer<T> {
+    impl<T> Clone for ShakerControllerServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -727,8 +896,8 @@ pub mod bioshake_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "sila2.dev.arturgalstyan.shakers.bioshake.v1.Bioshake";
-    impl<T> tonic::server::NamedService for BioshakeServer<T> {
+    pub const SERVICE_NAME: &str = "sila2.dev.arturgalstyan.shakers.shakercontroller.v1.ShakerController";
+    impl<T> tonic::server::NamedService for ShakerControllerServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }
 }

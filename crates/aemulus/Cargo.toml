@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-aemulus-servers = { version = "0.0.3", path = "../aemulus-servers" }
+aemulus-servers = { version = "0.0.3", path = "../aemulus-servers", features = ["python"] }
 pyo3 = { version = "0.30.1", features = ["extension-module"] }
 tokio = { version = "1.54.1", features = ["rt-multi-thread"] }
 tracing = "0.1.44"

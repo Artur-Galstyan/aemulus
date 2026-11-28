@@ -20,10 +20,12 @@ pub mod sila2 {
                         );
                     }
                 }
-                pub mod bioshake {
+            }
+            pub mod shakers {
+                pub mod shakercontroller {
                     pub mod v1 {
                         include!(
-                            "gen/sila2/dev/arturgalstyan/shakers/bioshake/v1/sila2.dev.arturgalstyan.shakers.bioshake.v1.rs"
+                            "gen/sila2/dev/arturgalstyan/shakers/shakercontroller/v1/sila2.dev.arturgalstyan.shakers.shakercontroller.v1.rs"
                         );
                     }
                 }

@@ -3,28 +3,20 @@
          xmlns="http://www.sila-standard.org"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
-  <Identifier>Bioshake</Identifier>
-  <DisplayName>BioShake</DisplayName>
-  <Description>Controls a BioShake 3000 elm orbital shaker.</Description>
+  <Identifier>ShakerController</Identifier>
+  <DisplayName>Shaker Controller</DisplayName>
+  <Description>Controls a microplate shaker with a plate lock.</Description>
   <Command>
     <Identifier>StartShaking</Identifier>
     <DisplayName>Start Shaking</DisplayName>
-    <Description>Starts to shake at a speed.</Description>
+    <Description>Starts to shake and returns when the shaker reaches the target speed. The speed must be between MinSpeed and MaxSpeed.</Description>
     <Observable>No</Observable>
     <Parameter>
       <Identifier>Speed</Identifier>
       <DisplayName>Speed</DisplayName>
       <Description>The target speed in rpm.</Description>
       <DataType>
-        <Constrained>
-          <DataType>
-            <Basic>Integer</Basic>
-          </DataType>
-          <Constraints>
-            <MinimalInclusive>200</MinimalInclusive>
-            <MaximalInclusive>3000</MaximalInclusive>
-          </Constraints>
-        </Constrained>
+        <Basic>Integer</Basic>
       </DataType>
     </Parameter>
   </Command>
@@ -37,15 +29,33 @@
   <Command>
     <Identifier>LockPlate</Identifier>
     <DisplayName>Lock Plate</DisplayName>
-    <Description>Closes the edge locking mechanism to hold the microplate.</Description>
+    <Description>Closes the plate lock to hold the microplate.</Description>
     <Observable>No</Observable>
   </Command>
   <Command>
     <Identifier>UnlockPlate</Identifier>
     <DisplayName>Unlock Plate</DisplayName>
-    <Description>Opens the edge locking mechanism to release the microplate.</Description>
+    <Description>Opens the plate lock to release the microplate.</Description>
     <Observable>No</Observable>
   </Command>
+  <Property>
+    <Identifier>MinSpeed</Identifier>
+    <DisplayName>Min Speed</DisplayName>
+    <Description>The lowest target speed of this shaker in rpm.</Description>
+    <Observable>No</Observable>
+    <DataType>
+      <Basic>Integer</Basic>
+    </DataType>
+  </Property>
+  <Property>
+    <Identifier>MaxSpeed</Identifier>
+    <DisplayName>Max Speed</DisplayName>
+    <Description>The highest target speed of this shaker in rpm.</Description>
+    <Observable>No</Observable>
+    <DataType>
+      <Basic>Integer</Basic>
+    </DataType>
+  </Property>
   <Property>
     <Identifier>Speed</Identifier>
     <DisplayName>Speed</DisplayName>
@@ -58,7 +68,7 @@
   <Property>
     <Identifier>PlateLocked</Identifier>
     <DisplayName>Plate Locked</DisplayName>
-    <Description>True when the edge locking mechanism holds the microplate.</Description>
+    <Description>True when the plate lock holds the microplate.</Description>
     <Observable>Yes</Observable>
     <DataType>
       <Basic>Boolean</Basic>

@@ -1,4 +1,4 @@
-use aemulus_servers::serve_sim;
+use aemulus_servers::{models::ModelIdentifier, serve_sim};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -10,7 +10,7 @@ struct Cli {
     device_name: String,
 
     #[arg(short, long)]
-    device_id: String,
+    device_id: ModelIdentifier,
 
     #[arg(short, long)]
     port: u16,

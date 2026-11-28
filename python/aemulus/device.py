@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import ClassVar
 
-from aemulus._rust._native import start_sim_server
+from aemulus._rust._native import ModelIdentifier, start_sim_server
 
 
 @dataclass(frozen=True)
@@ -13,7 +13,7 @@ class Device:
     pos: tuple[float, float, float] | None = None
 
     mjcf: ClassVar[str]
-    device_id: ClassVar[str]
+    device_id: ClassVar[ModelIdentifier]
 
     def start_sim_server(self) -> None:
         if self.address is not None:
