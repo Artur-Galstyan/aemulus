@@ -290,6 +290,7 @@ async def main(view=False):
         if not np.isclose(volume, 20.0, atol=1.0):
             raise RuntimeError(f"Liquid did not reach plate A1: {volume} uL")
         print(f"Transferred 20 uL from the reservoir to plate A1: {volume:.2f} uL")
+        check_plate(lab, (carrier_a[0], SITE_0_Y, PLATE_SITE_Z), "carrier A")
 
         # Step 3: the CO-RE paddles move the plate from carrier A to carrier B.
         # Channels 6 and 7 carry the paddles. Their Y positions are
