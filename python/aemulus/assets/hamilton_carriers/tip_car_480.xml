@@ -1,0 +1,52 @@
+<!-- Hamilton TIP_CAR_480_A00 tip carrier (cat. no. 182085, 5 landscape 96-tip rack sites, 6 tracks wide).
+     Sources: outer dimensions (135 x 497 x 130 mm), site openings (114.5 x 74.0 mm),
+     site LFB positions (x=10.15 mm, y=14.3 + i*96.0 mm for i=0..4, z=114.95 mm) from PyLabRobot:
+     https://raw.githubusercontent.com/PyLabRobot/pylabrobot/main/pylabrobot/resources/hamilton/tip_carriers.py
+     Units: SI (meters, kilograms).
+     Origin: center of the footprint on the bottom surface; +x is across tracks (width),
+     +y is front to back (depth), +z is up.
+     Site centers in carrier frame (m):
+       site_0: (-0.0001, -0.1972, 0.11495)
+       site_1: (-0.0001, -0.1012, 0.11495)
+       site_2: (-0.0001, -0.0052, 0.11495)
+       site_3: (-0.0001,  0.0908, 0.11495)
+       site_4: (-0.0001,  0.1868, 0.11495)
+     Estimates, not vendor values: carrier mass (1.2 kg), wall and base thicknesses (4 to 6 mm),
+     ledge thickness (4 mm), and material color.
+     Simple box geoms are both the visual and collision shapes; bays are open underneath so hanging tips clear. -->
+<mujoco model="tip_car_480">
+  <default>
+    <geom type="box" contype="1" conaffinity="1" material="hamilton_carrier_metal"/>
+  </default>
+
+  <asset>
+    <material name="hamilton_carrier_metal" rgba="0.72 0.74 0.77 1" specular="0.4" shininess="0.5"/>
+  </asset>
+
+  <worldbody>
+    <body name="tip_car_480">
+      <!-- Base plate (135 x 497 x 4 mm) and outer walls up to 130 mm. -->
+      <geom name="base" size="0.0675 0.2485 0.002" pos="0 0 0.002" mass="0.4"/>
+      <geom name="wall_left" size="0.003 0.2485 0.063" pos="-0.0645 0 0.067" mass="0.3"/>
+      <geom name="wall_right" size="0.003 0.2485 0.063" pos="0.0645 0 0.067" mass="0.3"/>
+      <geom name="wall_front" size="0.0615 0.005 0.063" pos="0 -0.2435 0.067" mass="0.05"/>
+      <geom name="wall_back" size="0.0615 0.0102 0.063" pos="0 0.2383 0.067" mass="0.05"/>
+
+      <!-- Rack support ledges at z = 114.95 mm, leaving a 114.6 mm central opening for hanging tips. -->
+      <geom name="ledge_left" size="0.0021 0.2333 0.002" pos="-0.0594 -0.0052 0.11295" mass="0.03"/>
+      <geom name="ledge_right" size="0.0021 0.2333 0.002" pos="0.0594 -0.0052 0.11295" mass="0.03"/>
+
+      <!-- Crossbar dividers between the 5 landscape rack bays (96 mm pitch, 82.6 mm rack depth). -->
+      <geom name="divider_0_1" size="0.0615 0.0067 0.007525" pos="0 -0.1492 0.122475" mass="0.01"/>
+      <geom name="divider_1_2" size="0.0615 0.0067 0.007525" pos="0 -0.0532 0.122475" mass="0.01"/>
+      <geom name="divider_2_3" size="0.0615 0.0067 0.007525" pos="0 0.0428 0.122475" mass="0.01"/>
+      <geom name="divider_3_4" size="0.0615 0.0067 0.007525" pos="0 0.1388 0.122475" mass="0.01"/>
+
+      <site name="site_0" pos="-0.0001 -0.1972 0.11495" size="0.001" rgba="0 0 0 0"/>
+      <site name="site_1" pos="-0.0001 -0.1012 0.11495" size="0.001" rgba="0 0 0 0"/>
+      <site name="site_2" pos="-0.0001 -0.0052 0.11495" size="0.001" rgba="0 0 0 0"/>
+      <site name="site_3" pos="-0.0001 0.0908 0.11495" size="0.001" rgba="0 0 0 0"/>
+      <site name="site_4" pos="-0.0001 0.1868 0.11495" size="0.001" rgba="0 0 0 0"/>
+    </body>
+  </worldbody>
+</mujoco>
