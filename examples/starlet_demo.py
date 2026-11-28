@@ -81,14 +81,18 @@ async def move_z(client, position, channel):
 
 async def move_plunger(client, position, channel):
     confirmation = await client.move_plunger(
-        MovePlunger_Parameters(Channel=Integer(value=channel), Position=Real(value=position))
+        MovePlunger_Parameters(
+            Channel=Integer(value=channel), Position=Real(value=position)
+        )
     )
     await wait(confirmation, client.move_plunger_info, client.move_plunger_result)
 
 
 async def move_eject(client, position, channel):
     confirmation = await client.move_eject(
-        MoveEject_Parameters(Channel=Integer(value=channel), Position=Real(value=position))
+        MoveEject_Parameters(
+            Channel=Integer(value=channel), Position=Real(value=position)
+        )
     )
     await wait(confirmation, client.move_eject_info, client.move_eject_result)
 
@@ -153,14 +157,26 @@ async def main(view=False):
     lab = create_lab(
         [starlet, pf400],
         labware=[
-            Labware("tip_carrier", str(assets / "hamilton_carriers/tip_car_480.xml"), tip_carrier),
-            Labware("carrier_a", str(assets / "hamilton_carriers/plt_car_l5ac.xml"), carrier_a),
+            Labware(
+                "tip_carrier",
+                str(assets / "hamilton_carriers/tip_car_480.xml"),
+                tip_carrier,
+            ),
+            Labware(
+                "carrier_a",
+                str(assets / "hamilton_carriers/plt_car_l5ac.xml"),
+                carrier_a,
+            ),
             Labware(
                 "reservoir_carrier",
                 str(assets / "hamilton_carriers/plt_car_l5ac.xml"),
                 reservoir_carrier,
             ),
-            Labware("carrier_b", str(assets / "hamilton_carriers/plt_car_l5ac.xml"), carrier_b),
+            Labware(
+                "carrier_b",
+                str(assets / "hamilton_carriers/plt_car_l5ac.xml"),
+                carrier_b,
+            ),
             Labware("nest", str(assets / "plate_nest/plate_nest.xml"), NEST),
             Labware(
                 "plate",
@@ -229,7 +245,9 @@ async def main(view=False):
         x, y = lab.well_xy("reservoir")
         await move_x(client, x)
         await move_y(client, y, 5)
-        await move_z(client, lab.labware_pos("reservoir")[2] + 0.005 + TIP_50UL_LENGTH, 5)
+        await move_z(
+            client, lab.labware_pos("reservoir")[2] + 0.005 + TIP_50UL_LENGTH, 5
+        )
         await move_plunger(client, 0.020, 5)
         await asyncio.sleep(0.5)
         if not np.isclose(starlet.channel_volume_ul(5), 20.0, atol=1.0):
@@ -273,10 +291,13 @@ async def main(view=False):
         # Step 3: the CO-RE paddles move the plate from carrier A to carrier B.
         # Channels 6 and 7 carry the paddles. Their Y positions are
         # the inner gripping faces, and their Z positions are the paddle bottoms.
-        await asyncio.gather(move_y(client, SITE_0_Y + 0.055, 6), move_y(client, -0.333, 7))
+        await asyncio.gather(
+            move_y(client, SITE_0_Y + 0.055, 6), move_y(client, -0.333, 7)
+        )
         await move_x(client, carrier_a[0])
         await asyncio.gather(
-            move_z(client, PLATE_SITE_Z + 0.002, 6), move_z(client, PLATE_SITE_Z + 0.002, 7)
+            move_z(client, PLATE_SITE_Z + 0.002, 6),
+            move_z(client, PLATE_SITE_Z + 0.002, 7),
         )
         await asyncio.gather(
             move_y(client, SITE_0_Y + 0.042, 6), move_y(client, SITE_0_Y - 0.042, 7)
@@ -284,9 +305,12 @@ async def main(view=False):
         await asyncio.gather(move_z(client, 0.40, 6), move_z(client, 0.40, 7))
         await move_x(client, carrier_b[0])
         await asyncio.gather(
-            move_z(client, PLATE_SITE_Z + 0.012, 6), move_z(client, PLATE_SITE_Z + 0.012, 7)
+            move_z(client, PLATE_SITE_Z + 0.012, 6),
+            move_z(client, PLATE_SITE_Z + 0.012, 7),
         )
-        await asyncio.gather(move_y(client, SITE_0_Y + 0.055, 6), move_y(client, -0.333, 7))
+        await asyncio.gather(
+            move_y(client, SITE_0_Y + 0.055, 6), move_y(client, -0.333, 7)
+        )
         await asyncio.gather(move_z(client, 0.45, 6), move_z(client, 0.45, 7))
         # Clear carrier B for the PF400.
         await move_x(client, reservoir_carrier[0])

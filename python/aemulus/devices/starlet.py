@@ -118,7 +118,11 @@ class STARlet(Device):
         for labware_name, body_id, is_plate, hx, hy, max_z in self._state.containers:
             pos = xpos[body_id]
             cx, cy, cz = float(pos[0]), float(pos[1]), float(pos[2])
-            if not (abs(x - cx) <= hx and abs(y - cy) <= hy and cz - 0.002 <= z <= cz + max_z):
+            if not (
+                abs(x - cx) <= hx
+                and abs(y - cy) <= hy
+                and cz - 0.002 <= z <= cz + max_z
+            ):
                 continue
             if not is_plate:
                 return (labware_name, "")
@@ -185,7 +189,8 @@ class STARlet(Device):
                             continue
                         tpos = xpos[cand_id]
                         if (
-                            math.hypot(px - float(tpos[0]), py - float(tpos[1])) <= 0.003
+                            math.hypot(px - float(tpos[0]), py - float(tpos[1]))
+                            <= 0.003
                             and abs(pz - float(tpos[2])) <= 0.004
                         ):
                             qpos[qpos_adr : qpos_adr + 3] = pos
