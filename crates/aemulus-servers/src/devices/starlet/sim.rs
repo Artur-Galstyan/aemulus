@@ -26,12 +26,6 @@ use tonic::{
 use tracing::info;
 use uuid::Uuid;
 
-const POSITION_TOLERANCE_M: f64 = 0.001;
-const SETTLE_DELTA_M: f64 = 1e-4;
-const SETTLE_MAX_ERROR_M: f64 = 0.005;
-const SETTLE_TICKS: u32 = 5;
-const MAX_POLL_TICKS: u32 = 100;
-
 struct StarletSim {
     sim: SimServiceClient<Channel>,
     moves: Arc<Mutex<HashMap<String, (CommandStatus, f64)>>>,
@@ -80,13 +74,9 @@ impl StarletSim {
 
         let moves = Arc::clone(&self.moves);
         let id = move_uuid.to_string();
-        let allow_contact_settle = axis.starts_with('y');
 
         tokio::spawn(async move {
-            let mut prev_pos = start_pos;
-            let mut settled_ticks: u32 = 0;
-
-            for tick in 0..=MAX_POLL_TICKS {
+            loop {
                 let get_joint_request = GetJointRequest {
                     joint: joint_name.clone(),
                 };
@@ -98,32 +88,16 @@ impl StarletSim {
 
                     break;
                 };
-                let current = response.into_inner().position;
-
-                if tick > 0 {
-                    if (current - prev_pos).abs() < SETTLE_DELTA_M {
-                        settled_ticks += 1;
-                    } else {
-                        settled_ticks = 0;
-                    }
-                }
-                prev_pos = current;
-
-                let error = (current - target).abs();
+                let joint_response = response.into_inner();
                 let mut status = CommandStatus::Running;
-                if error < POSITION_TOLERANCE_M
-                    || (allow_contact_settle
-                        && settled_ticks >= SETTLE_TICKS
-                        && error < SETTLE_MAX_ERROR_M)
-                {
+                if (joint_response.position - target).abs() < 0.001 {
                     status = CommandStatus::FinishedSuccessfully;
-                } else if tick == MAX_POLL_TICKS {
-                    status = CommandStatus::FinishedWithError;
                 }
 
+                let current = joint_response.position;
                 let total = (target - start_pos).abs();
                 let progress = if total > 0.0 {
-                    (1.0 - error / total).clamp(0.0, 1.0)
+                    (1.0 - (target - current).abs() / total).clamp(0.0, 1.0)
                 } else {
                     1.0
                 };
@@ -132,9 +106,7 @@ impl StarletSim {
                     moves.insert(id.clone(), (status, progress));
                 }
 
-                if status == CommandStatus::FinishedSuccessfully
-                    || status == CommandStatus::FinishedWithError
-                {
+                if status == CommandStatus::FinishedSuccessfully {
                     break;
                 }
 
