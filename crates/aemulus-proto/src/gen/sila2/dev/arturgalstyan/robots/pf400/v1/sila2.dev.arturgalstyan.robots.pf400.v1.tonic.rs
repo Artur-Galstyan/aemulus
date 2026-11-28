@@ -188,6 +188,206 @@ pub mod pf400_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        /// Moves the Z, shoulder, elbow and wrist axes together.
+        pub async fn move_joints(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MoveJointsParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
+                        "MoveJoints",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Monitor the state of MoveJoints
+        pub async fn move_joints_info(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                >,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Info",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
+                        "MoveJoints_Info",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        /// Retrieve result of MoveJoints
+        pub async fn move_joints_result(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MoveJointsResponses>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Result",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
+                        "MoveJoints_Result",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Moves the gripper fingers to a position.
+        pub async fn move_gripper(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MoveGripperParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
+                        "MoveGripper",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Monitor the state of MoveGripper
+        pub async fn move_gripper_info(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                >,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper_Info",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
+                        "MoveGripper_Info",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        /// Retrieve result of MoveGripper
+        pub async fn move_gripper_result(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MoveGripperResponses>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper_Result",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
+                        "MoveGripper_Result",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
         /// The current height of the Z axis in meters.
         pub async fn subscribe_position_z(
             &mut self,
@@ -266,6 +466,84 @@ pub mod pf400_server {
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<super::MoveZResponses>, tonic::Status>;
+        /// Moves the Z, shoulder, elbow and wrist axes together.
+        async fn move_joints(
+            &self,
+            request: tonic::Request<super::MoveJointsParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        >;
+        /// Server streaming response type for the MoveJoints_Info method.
+        type MoveJoints_InfoStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                    tonic::Status,
+                >,
+            >
+            + std::marker::Send
+            + 'static;
+        /// Monitor the state of MoveJoints
+        async fn move_joints_info(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<Self::MoveJoints_InfoStream>,
+            tonic::Status,
+        >;
+        /// Retrieve result of MoveJoints
+        async fn move_joints_result(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MoveJointsResponses>,
+            tonic::Status,
+        >;
+        /// Moves the gripper fingers to a position.
+        async fn move_gripper(
+            &self,
+            request: tonic::Request<super::MoveGripperParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        >;
+        /// Server streaming response type for the MoveGripper_Info method.
+        type MoveGripper_InfoStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                    tonic::Status,
+                >,
+            >
+            + std::marker::Send
+            + 'static;
+        /// Monitor the state of MoveGripper
+        async fn move_gripper_info(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<Self::MoveGripper_InfoStream>,
+            tonic::Status,
+        >;
+        /// Retrieve result of MoveGripper
+        async fn move_gripper_result(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MoveGripperResponses>,
+            tonic::Status,
+        >;
         /// Server streaming response type for the Subscribe_PositionZ method.
         type Subscribe_PositionZStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<
@@ -486,6 +764,290 @@ pub mod pf400_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = MoveZ_ResultSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveJointsSvc<T: Pf400>(pub Arc<T>);
+                    impl<
+                        T: Pf400,
+                    > tonic::server::UnaryService<super::MoveJointsParameters>
+                    for MoveJointsSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::CommandConfirmation;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MoveJointsParameters>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Pf400>::move_joints(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveJointsSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Info" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveJoints_InfoSvc<T: Pf400>(pub Arc<T>);
+                    impl<
+                        T: Pf400,
+                    > tonic::server::ServerStreamingService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MoveJoints_InfoSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::ExecutionInfo;
+                        type ResponseStream = T::MoveJoints_InfoStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Pf400>::move_joints_info(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveJoints_InfoSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Result" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveJoints_ResultSvc<T: Pf400>(pub Arc<T>);
+                    impl<
+                        T: Pf400,
+                    > tonic::server::UnaryService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MoveJoints_ResultSvc<T> {
+                        type Response = super::MoveJointsResponses;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Pf400>::move_joints_result(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveJoints_ResultSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveGripperSvc<T: Pf400>(pub Arc<T>);
+                    impl<
+                        T: Pf400,
+                    > tonic::server::UnaryService<super::MoveGripperParameters>
+                    for MoveGripperSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::CommandConfirmation;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MoveGripperParameters>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Pf400>::move_gripper(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveGripperSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper_Info" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveGripper_InfoSvc<T: Pf400>(pub Arc<T>);
+                    impl<
+                        T: Pf400,
+                    > tonic::server::ServerStreamingService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MoveGripper_InfoSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::ExecutionInfo;
+                        type ResponseStream = T::MoveGripper_InfoStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Pf400>::move_gripper_info(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveGripper_InfoSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper_Result" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveGripper_ResultSvc<T: Pf400>(pub Arc<T>);
+                    impl<
+                        T: Pf400,
+                    > tonic::server::UnaryService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MoveGripper_ResultSvc<T> {
+                        type Response = super::MoveGripperResponses;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Pf400>::move_gripper_result(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveGripper_ResultSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

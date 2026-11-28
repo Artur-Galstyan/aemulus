@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use aemulus_proto::{
     sila2::dev::arturgalstyan::{
-        robots::pf400::v1::pf400_server::Pf400Server,
+        robots::{
+            pf400::v1::pf400_server::Pf400Server, starlet::v1::starlet_server::StarletServer,
+        },
         shakers::shakercontroller::v1::shaker_controller_server::ShakerControllerServer,
     },
     sim::v1::sim_service_client::SimServiceClient,
@@ -13,7 +15,7 @@ use tonic::{
 };
 
 use crate::{
-    devices::{pf400::sim::Pf400Sim, shaker::sim::ShakerSim},
+    devices::{pf400::sim::Pf400Sim, shaker::sim::ShakerSim, starlet::sim::StarletSim},
     models::Kind,
 };
 
@@ -40,6 +42,14 @@ pub async fn serve_sim(
                 sim,
                 device_name,
                 spec,
+            })
+            .accept_compressed(CompressionEncoding::Gzip),
+        ),
+        Kind::Starlet => Server::builder().add_service(
+            StarletServer::new(StarletSim {
+                sim,
+                moves: Arc::default(),
+                device_name,
             })
             .accept_compressed(CompressionEncoding::Gzip),
         ),

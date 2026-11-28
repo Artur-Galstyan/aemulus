@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import ClassVar
 
+from mujoco import MjData, MjModel
+
 from aemulus._rust._native import ModelIdentifier, start_sim_server
 
 
@@ -20,3 +22,6 @@ class Device:
             raise ValueError("address is not None, sim mode is disabled")
 
         start_sim_server(self.device_name, self.device_id, self.port)
+
+    def on_step(self, model: MjModel, data: MjData) -> None:
+        pass

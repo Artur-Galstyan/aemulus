@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Feature SiLA2Version="1.0" FeatureVersion="1.0" Originator="dev.arturgalstyan" Category="robots"
+         xmlns="http://www.sila-standard.org"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>Starlet</Identifier>
+  <DisplayName>Hamilton STARlet</DisplayName>
+  <Description>Controls a Hamilton Microlab STARlet liquid handler.</Description>
+  <Command>
+    <Identifier>MoveX</Identifier>
+    <DisplayName>Move X</DisplayName>
+    <Description>Moves the X arm to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target X arm position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveY</Identifier>
+    <DisplayName>Move Y</DisplayName>
+    <Description>Moves a channel along the Y axis to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target Y position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveZ</Identifier>
+    <DisplayName>Move Z</DisplayName>
+    <Description>Moves a channel along the Z axis to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target Z position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MovePlunger</Identifier>
+    <DisplayName>Move Plunger</DisplayName>
+    <Description>Moves a channel plunger to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target plunger position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveEject</Identifier>
+    <DisplayName>Move Eject</DisplayName>
+    <Description>Moves a channel tip eject sleeve to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target eject sleeve position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+</Feature>

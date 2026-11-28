@@ -1,7 +1,9 @@
 import asyncio
 import socket
+import sys
 import threading
 import time
+from dataclasses import dataclass
 from importlib.resources import files
 
 import mujoco.viewer
@@ -32,9 +34,30 @@ from aemulus.sim.v1.sim_pb import (
 )
 
 
-def create_lab(devices: list[Device]) -> Lab:
-    lab = Lab(devices)
-    if any(device.address is None for device in devices):
+@dataclass(frozen=True)
+class Labware:
+    name: str
+    mjcf: str
+    pos: tuple[float, float, float]
+    free: bool = False
+
+
+def sbs_96_offset(well: str) -> tuple[float, float]:
+    if len(well) < 2:
+        raise ValueError(f"Invalid 96-well name: {well!r}")
+    row = ord(well[0].upper()) - ord("A")
+    try:
+        col = int(well[1:]) - 1
+    except ValueError as err:
+        raise ValueError(f"Invalid 96-well name: {well!r}") from err
+    if not (0 <= row < 8 and 0 <= col < 12):
+        raise ValueError(f"Invalid 96-well name: {well!r}")
+    return (-0.0495 + col * 0.009, 0.0315 - row * 0.009)
+
+
+def create_lab(devices: list[Device], labware: list[Labware] | None = None) -> Lab:
+    lab = Lab(devices, labware)
+    if labware or any(device.address is None for device in devices):
         lab.sim = SimServer(lab)
         run_sim(lab.sim)
     return lab
@@ -45,8 +68,10 @@ class Lab:
     model: MjModel
     sim: SimServer | None
 
-    def __init__(self, devices: list[Device]):
+    def __init__(self, devices: list[Device], labware: list[Labware] | None = None):
         self.devices = devices
+        self.sim = None
+        self._labware_bodies: dict[str, str] = {}
         spec = MjSpec.from_file(str(files("aemulus") / "assets/lab.xml"))
         for device in self.devices:
             if device.address is None:
@@ -57,7 +82,34 @@ class Lab:
                 spec.attach(child, prefix=f"{device.device_name}/", frame=frame)
                 device.start_sim_server()
 
+        for item in labware or []:
+            child = MjSpec.from_file(item.mjcf)
+            root_body = child.worldbody.bodies[0]
+            root_name = root_body.name
+            if item.free:
+                root_body.add_freejoint()
+            frame = spec.worldbody.add_frame(pos=item.pos)
+            spec.attach(child, prefix=f"{item.name}/", frame=frame)
+            self._labware_bodies[item.name] = f"{item.name}/{root_name}"
+
         self.model = spec.compile()
+
+    def labware_pos(self, name: str) -> np.ndarray:
+        if self.sim is None:
+            raise ValueError("no simulation")
+        data = MjData(self.model)
+        mj_setState(self.model, data, self.sim.state, mjtState.mjSTATE_FULLPHYSICS)
+        mj_forward(self.model, data)
+        return data.body(self._labware_bodies[name]).xpos.copy()
+
+    def well_xy(
+        self, labware_name: str, well: str | None = None
+    ) -> tuple[float, float]:
+        pos = self.labware_pos(labware_name)
+        if well is None:
+            return (float(pos[0]), float(pos[1]))
+        dx, dy = sbs_96_offset(well)
+        return (float(pos[0] + dx), float(pos[1] + dy))
 
     def keep_alive(self):
         try:
@@ -93,6 +145,7 @@ class SimServer(SimService):
 
     def __init__(self, lab: Lab):
         self.model = lab.model
+        self.devices = [device for device in lab.devices if device.address is None]
         self.data = MjData(self.model)
         self.state = self.reset()
         joints = self.model.actuator_trnid[:, 0]
@@ -109,6 +162,8 @@ class SimServer(SimService):
         mj_setState(self.model, self.data, self.state, mjtState.mjSTATE_FULLPHYSICS)
         self.data.ctrl[:] = self.ctrl
         mj_step(self.model, self.data)
+        for device in self.devices:
+            device.on_step(self.model, self.data)
         next_state = np.empty_like(self.state)
         mj_getState(self.model, self.data, next_state, mjtState.mjSTATE_FULLPHYSICS)
         self.state = next_state
@@ -146,6 +201,8 @@ def run_sim(sim_server: SimServer, port: int = 50051) -> None:
     def _run_server():
         config = Config()
         config.bind = [f"127.0.0.1:{port}"]
+        # The device servers poll joints over one connection for the whole run.
+        config.keep_alive_max_requests = sys.maxsize
 
         async def main():
             app = SimServiceASGIApplication(sim_server)

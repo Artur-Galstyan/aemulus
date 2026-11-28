@@ -20,6 +20,58 @@
       </DataType>
     </Parameter>
   </Command>
+  <Command>
+    <Identifier>MoveJoints</Identifier>
+    <DisplayName>Move Joints</DisplayName>
+    <Description>Moves the Z, shoulder, elbow and wrist axes together.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Z</Identifier>
+      <DisplayName>Z</DisplayName>
+      <Description>The target height in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Shoulder</Identifier>
+      <DisplayName>Shoulder</DisplayName>
+      <Description>The target shoulder angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Elbow</Identifier>
+      <DisplayName>Elbow</DisplayName>
+      <Description>The target elbow angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Wrist</Identifier>
+      <DisplayName>Wrist</DisplayName>
+      <Description>The target wrist angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveGripper</Identifier>
+    <DisplayName>Move Gripper</DisplayName>
+    <Description>Moves the gripper fingers to a position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target finger displacement in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
   <Property>
     <Identifier>PositionZ</Identifier>
     <DisplayName>Position Z</DisplayName>

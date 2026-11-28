@@ -7,6 +7,7 @@ pub struct ShakerSpec {
 pub enum Kind {
     Pf400,
     Shaker(ShakerSpec),
+    Starlet,
 }
 
 #[cfg_attr(feature = "python", pyo3::pyclass(eq, eq_int, from_py_object))]
@@ -14,6 +15,7 @@ pub enum Kind {
 pub enum ModelIdentifier {
     PrecisePf400,
     QInstrumentsBioshake3000Elm,
+    HamiltonStarlet,
 }
 
 impl ModelIdentifier {
@@ -24,6 +26,7 @@ impl ModelIdentifier {
                 min_rpm: 200,
                 max_rpm: 3000,
             }),
+            ModelIdentifier::HamiltonStarlet => Kind::Starlet,
         }
     }
 }

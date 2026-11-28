@@ -1,9 +1,13 @@
 <!-- Hamilton tip rack, 96 tips of 50 uL in a grid of 8 x 12 with a 9 mm pitch.
-     Sources: the rack body (122.4 x 82.6 x 20 mm) is from PyLabRobot. The tip length (50.4 mm) is from Hamilton.
+     Sources: rack body (122.4 x 82.6 x 20 mm) from PyLabRobot (tip_racks.py);
+     tip length (50.4 mm) and collar height (8.0 mm) from Hamilton and PyLabRobot (tip_creators.py).
      Origin: center of the footprint, on the bottom of the rack. x is the long side.
-     The tips are one box over the 8 x 12 grid. The tips stand on the plane of the rack bottom, so the top of the tips is at 50.4 mm.
-     Estimates, not vendor values: the mass of the loaded rack (150 g), the tip collar diameter (7 mm), and the height of the tips in the rack.
-     All geoms are boxes. They are also the collision shapes. -->
+     Each tip is an individual freejoint body whose origin is at the tip top (collar), resting on the
+     rack top (z = 20 mm) so the 8 mm collar sits at z = 20 to 28 mm and the 50.4 mm tip hangs down to
+     z = -22.4 mm inside the open tip carrier. Tips have gravcomp="1" while seated/attached and
+     conaffinity="2" so ejected tips land on the deck without colliding with plates, racks, or carriers.
+     Estimates, not vendor values: rack mass (150 g), per-tip mass (5 g for stable deck contact),
+     tip shaft radius (2.5 mm), and collar radius (3.6 mm, matching the channel shaft). -->
 <mujoco model="hamilton_tip_rack_50ul">
   <default>
     <geom type="box" contype="1" conaffinity="1"/>
@@ -11,13 +15,21 @@
 
   <asset>
     <material name="hamilton_tip_rack_body" rgba="0.15 0.15 0.17 1" specular="0.3" shininess="0.4"/>
-    <material name="hamilton_tip" rgba="0.9 0.9 0.88 0.6" specular="0.3" shininess="0.4"/>
+    <material name="hamilton_tip" rgba="0.9 0.9 0.88 0.7" specular="0.3" shininess="0.4"/>
   </asset>
 
   <worldbody>
     <body name="hamilton_tip_rack_50ul">
       <geom name="rack" size="0.0612 0.0413 0.01" pos="0 0 0.01" mass="0.15" material="hamilton_tip_rack_body"/>
-      <geom name="tips" size="0.053 0.035 0.0252" pos="0 0 0.0252" mass="0" material="hamilton_tip"/>
     </body>
+    <replicate count="8" offset="0 -0.009 0" sep="_">
+      <replicate count="12" offset="0.009 0 0" sep="_">
+        <body name="tip" pos="-0.0495 0.0315 0.028" gravcomp="1">
+          <freejoint/>
+          <geom name="tip" type="cylinder" size="0.0025 0.0252" pos="0 0 -0.0252" mass="0.005" contype="0" conaffinity="2" material="hamilton_tip"/>
+          <geom name="collar" type="cylinder" size="0.0036 0.004" pos="0 0 -0.004" mass="0" contype="0" conaffinity="0" material="hamilton_tip"/>
+        </body>
+      </replicate>
+    </replicate>
   </worldbody>
 </mujoco>

@@ -1,0 +1,38 @@
+<!-- Hamilton PLT_CAR_L5AC landscape 5-position plate carrier (6 tracks wide).
+     Also holds SBS-footprint labware such as the 127.5 x 86 mm reagent reservoir.
+     Sources: PyLabRobot (pylabrobot/resources/hamilton/plate_carriers.py, PLT_CAR_L5AC / Hamilton 182090):
+       - Footprint: 135 x 497 mm (6 tracks at 22.5 mm pitch); envelope height 130 mm.
+       - Five 127 x 86 mm landscape sites at PyLabRobot (x, y, z) = (4.0, 8.5 + 96*i, 86.15) mm for i = 0..4.
+     Origin: center of the footprint on the bottom surface. +x is right, +y is back, +z is up.
+     Site centers in carrier frame (m):
+       - site_0: (0, -0.197, 0.08615)
+       - site_1: (0, -0.101, 0.08615)
+       - site_2: (0, -0.005, 0.08615)
+       - site_3: (0,  0.091, 0.08615)
+       - site_4: (0,  0.187, 0.08615)
+     Units: SI (meters, kilograms).
+     Estimates, not vendor values: carrier mass (0.8 kg), simplified solid box geometry up to the
+     86.15 mm site support height (1 mm raised site pads; rails, clips, and front handle omitted),
+     and material colors.
+     All geoms are boxes and serve as both visual and collision shapes. -->
+<mujoco model="plt_car_l5ac">
+  <default>
+    <geom type="box" contype="1" conaffinity="1"/>
+  </default>
+
+  <asset>
+    <material name="hamilton_carrier_body" rgba="0.72 0.74 0.77 1" specular="0.4" shininess="0.5"/>
+    <material name="hamilton_carrier_site" rgba="0.55 0.57 0.60 1" specular="0.3" shininess="0.4"/>
+  </asset>
+
+  <worldbody>
+    <body name="plt_car_l5ac">
+      <geom name="body" size="0.0675 0.2485 0.042575" pos="0 0 0.042575" mass="0.8" material="hamilton_carrier_body"/>
+      <geom name="site_0_pad" size="0.0635 0.043 0.0005" pos="0 -0.197 0.08565" mass="0" material="hamilton_carrier_site"/>
+      <geom name="site_1_pad" size="0.0635 0.043 0.0005" pos="0 -0.101 0.08565" mass="0" material="hamilton_carrier_site"/>
+      <geom name="site_2_pad" size="0.0635 0.043 0.0005" pos="0 -0.005 0.08565" mass="0" material="hamilton_carrier_site"/>
+      <geom name="site_3_pad" size="0.0635 0.043 0.0005" pos="0 0.091 0.08565" mass="0" material="hamilton_carrier_site"/>
+      <geom name="site_4_pad" size="0.0635 0.043 0.0005" pos="0 0.187 0.08565" mass="0" material="hamilton_carrier_site"/>
+    </body>
+  </worldbody>
+</mujoco>

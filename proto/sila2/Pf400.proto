@@ -12,6 +12,18 @@ service Pf400 {
   rpc MoveZ_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
   /* Retrieve result of MoveZ */
   rpc MoveZ_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Responses) {}
+  /* Moves the Z, shoulder, elbow and wrist axes together. */
+  rpc MoveJoints (sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveJoints */
+  rpc MoveJoints_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveJoints */
+  rpc MoveJoints_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Responses) {}
+  /* Moves the gripper fingers to a position. */
+  rpc MoveGripper (sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveGripper */
+  rpc MoveGripper_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveGripper */
+  rpc MoveGripper_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Responses) {}
   /* The current height of the Z axis in meters. */
   rpc Subscribe_PositionZ (sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Parameters) returns (stream sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Responses) {}
 }
@@ -23,6 +35,27 @@ message MoveZ_Parameters {
 
 /* Responses of MoveZ */
 message MoveZ_Responses {
+}
+
+/* Parameters for MoveJoints */
+message MoveJoints_Parameters {
+  sila2.org.silastandard.Real Z = 1;  /* The target height in meters. */
+  sila2.org.silastandard.Real Shoulder = 2;  /* The target shoulder angle in radians. */
+  sila2.org.silastandard.Real Elbow = 3;  /* The target elbow angle in radians. */
+  sila2.org.silastandard.Real Wrist = 4;  /* The target wrist angle in radians. */
+}
+
+/* Responses of MoveJoints */
+message MoveJoints_Responses {
+}
+
+/* Parameters for MoveGripper */
+message MoveGripper_Parameters {
+  sila2.org.silastandard.Real Position = 1;  /* The target finger displacement in meters. */
+}
+
+/* Responses of MoveGripper */
+message MoveGripper_Responses {
 }
 
 /* Parameters for PositionZ */
