@@ -5,8 +5,7 @@
      The outer link (210 mm) is calculated from the 500.8 mm reach.
      Origin: center of the base footprint, on the mount surface. +x is FRONT.
      Meshes: scripts/pf400_meshes.py makes them. Each mesh is convex, so it is also the collision shape.
-     Masses and link cross-sections are estimates, not vendor CAD values.
-     Stiff finger contacts model a nonslip grasp of a lightweight plate. -->
+     Masses and link cross-sections are estimates, not vendor CAD values. -->
 <mujoco model="pf400">
   <compiler angle="degree" autolimits="true" meshdir="meshes"/>
 
@@ -15,10 +14,6 @@
     <geom type="mesh" material="pf400_white"/>
     <mesh scale="0.001 0.001 0.001"/>
     <position inheritrange="1"/>
-    <default class="pf400_finger">
-      <geom material="pf400_dark" mass="0.05" friction="2.5 0.01 0.001" condim="4"
-            priority="1" solref="0.005 1" solimp="0.9999 0.9999 0.001"/>
-    </default>
     <default class="pf400_decor">
       <geom contype="0" conaffinity="0" mass="0"/>
     </default>
@@ -68,11 +63,11 @@
 
               <body name="finger_left" pos="0.0682 0.043 -0.045" gravcomp="1">
                 <joint name="finger_left" type="slide" axis="0 1 0" range="0 0.03"/>
-                <geom name="finger_left" mesh="finger" class="pf400_finger"/>
+                <geom name="finger_left" mesh="finger" material="pf400_dark" mass="0.05" friction="1.5"/>
               </body>
               <body name="finger_right" pos="0.0682 -0.043 -0.045" gravcomp="1">
                 <joint name="finger_right" type="slide" axis="0 -1 0" range="0 0.03"/>
-                <geom name="finger_right" mesh="finger" class="pf400_finger"/>
+                <geom name="finger_right" mesh="finger" material="pf400_dark" mass="0.05" friction="1.5"/>
               </body>
             </body>
           </body>
@@ -91,7 +86,7 @@
     <position name="j2_shoulder" joint="j2_shoulder" kp="200" kv="20"/>
     <position name="j3_elbow" joint="j3_elbow" kp="200" kv="20"/>
     <position name="j4_wrist" joint="j4_wrist" kp="50" kv="5"/>
-    <position name="gripper" joint="finger_left" kp="2000" kv="40"/>
+    <position name="gripper" joint="finger_left" kp="500" kv="20"/>
   </actuator>
 
   <!-- Folded arm, gripper to the front. This is also the default pose. With J4 = 0 the folded gripper hits the column. -->
