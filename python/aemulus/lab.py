@@ -42,7 +42,6 @@ class Labware:
 
 
 def sbs_96_offset(well: str) -> tuple[float, float]:
-    """Return (dx, dy) in meters from labware center for a 96-position well/tip ('A1'..'H12')."""
     if len(well) < 2:
         raise ValueError(f"Invalid 96-well name: {well!r}")
     row = ord(well[0].upper()) - ord("A")
@@ -72,7 +71,6 @@ class Lab:
         self.devices = devices
         self.sim = None
         self._labware_bodies: dict[str, str] = {}
-        self._labware_pos: dict[str, tuple[float, float, float]] = {}
         spec = MjSpec.from_file(str(files("aemulus") / "assets/lab.xml"))
         for device in self.devices:
             if device.address is None:
@@ -92,16 +90,12 @@ class Lab:
             frame = spec.worldbody.add_frame(pos=item.pos)
             spec.attach(child, prefix=f"{item.name}/", frame=frame)
             self._labware_bodies[item.name] = f"{item.name}/{root_name}"
-            self._labware_pos[item.name] = item.pos
 
         self.model = spec.compile()
 
     def labware_pos(self, name: str) -> np.ndarray:
-        """Return current world (x, y, z) position of a labware root body."""
-        if name not in self._labware_bodies:
-            raise KeyError(f"Unknown labware: {name!r}")
         if self.sim is None:
-            return np.array(self._labware_pos[name], dtype=float)
+            raise ValueError("no simulation")
         data = MjData(self.model)
         mj_setState(self.model, data, self.sim.state, mjtState.mjSTATE_FULLPHYSICS)
         mj_forward(self.model, data)
@@ -110,7 +104,6 @@ class Lab:
     def well_xy(
         self, labware_name: str, well: str | None = None
     ) -> tuple[float, float]:
-        """Return current world (x, y) of a well/tip ('A1'..'H12') or labware center."""
         pos = self.labware_pos(labware_name)
         if well is None:
             return (float(pos[0]), float(pos[1]))
