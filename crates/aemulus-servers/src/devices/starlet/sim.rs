@@ -6,6 +6,7 @@ use std::{
 use aemulus_proto::{
     sila2::{
         dev::arturgalstyan::robots::starlet::v1::{
+            MoveEjectParameters, MoveEjectResponses, MovePlungerParameters, MovePlungerResponses,
             MoveXParameters, MoveXResponses, MoveYParameters, MoveYResponses, MoveZParameters,
             MoveZResponses,
             starlet_server::{Starlet, StarletServer},
@@ -192,6 +193,8 @@ impl Starlet for StarletSim {
     type MoveX_InfoStream = tonic::codegen::BoxStream<ExecutionInfo>;
     type MoveY_InfoStream = tonic::codegen::BoxStream<ExecutionInfo>;
     type MoveZ_InfoStream = tonic::codegen::BoxStream<ExecutionInfo>;
+    type MovePlunger_InfoStream = tonic::codegen::BoxStream<ExecutionInfo>;
+    type MoveEject_InfoStream = tonic::codegen::BoxStream<ExecutionInfo>;
 
     async fn move_x(
         &self,
@@ -269,6 +272,62 @@ impl Starlet for StarletSim {
         &self,
         request: tonic::Request<CommandExecutionUuid>,
     ) -> Result<tonic::Response<MoveZResponses>, tonic::Status> {
+        self.move_result(request)
+    }
+
+    async fn move_plunger(
+        &self,
+        request: tonic::Request<MovePlungerParameters>,
+    ) -> Result<tonic::Response<CommandConfirmation>, tonic::Status> {
+        info!("Got move_plunger request");
+        let params = request.into_inner();
+        let channel = channel_index(params.channel)?;
+        let Some(position) = params.position else {
+            return Err(tonic::Status::invalid_argument("position is required"));
+        };
+        self.start_move(format!("plunger{channel}"), position.value)
+            .await
+    }
+
+    async fn move_plunger_info(
+        &self,
+        request: tonic::Request<CommandExecutionUuid>,
+    ) -> Result<tonic::Response<Self::MovePlunger_InfoStream>, tonic::Status> {
+        self.move_info(request)
+    }
+
+    async fn move_plunger_result(
+        &self,
+        request: tonic::Request<CommandExecutionUuid>,
+    ) -> Result<tonic::Response<MovePlungerResponses>, tonic::Status> {
+        self.move_result(request)
+    }
+
+    async fn move_eject(
+        &self,
+        request: tonic::Request<MoveEjectParameters>,
+    ) -> Result<tonic::Response<CommandConfirmation>, tonic::Status> {
+        info!("Got move_eject request");
+        let params = request.into_inner();
+        let channel = channel_index(params.channel)?;
+        let Some(position) = params.position else {
+            return Err(tonic::Status::invalid_argument("position is required"));
+        };
+        self.start_move(format!("eject{channel}"), position.value)
+            .await
+    }
+
+    async fn move_eject_info(
+        &self,
+        request: tonic::Request<CommandExecutionUuid>,
+    ) -> Result<tonic::Response<Self::MoveEject_InfoStream>, tonic::Status> {
+        self.move_info(request)
+    }
+
+    async fn move_eject_result(
+        &self,
+        request: tonic::Request<CommandExecutionUuid>,
+    ) -> Result<tonic::Response<MoveEjectResponses>, tonic::Status> {
         self.move_result(request)
     }
 }
