@@ -20,6 +20,62 @@
       </DataType>
     </Parameter>
   </Command>
+  <Command>
+    <Identifier>MoveShoulder</Identifier>
+    <DisplayName>Move Shoulder</DisplayName>
+    <Description>Moves the shoulder to an angle.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Angle</Identifier>
+      <DisplayName>Angle</DisplayName>
+      <Description>The target angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveElbow</Identifier>
+    <DisplayName>Move Elbow</DisplayName>
+    <Description>Moves the elbow to an angle.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Angle</Identifier>
+      <DisplayName>Angle</DisplayName>
+      <Description>The target angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveWrist</Identifier>
+    <DisplayName>Move Wrist</DisplayName>
+    <Description>Moves the wrist to an angle.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Angle</Identifier>
+      <DisplayName>Angle</DisplayName>
+      <Description>The target angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveGripper</Identifier>
+    <DisplayName>Move Gripper</DisplayName>
+    <Description>Moves the gripper fingers to a position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target finger displacement in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
   <Property>
     <Identifier>PositionZ</Identifier>
     <DisplayName>Position Z</DisplayName>

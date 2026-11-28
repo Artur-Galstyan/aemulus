@@ -11,6 +11,50 @@ pub struct MoveZParameters {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MoveZResponses {
 }
+/// Parameters for MoveShoulder 
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MoveShoulderParameters {
+    /// The target angle in radians. 
+    #[prost(message, optional, tag="1")]
+    pub angle: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+}
+/// Responses of MoveShoulder 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MoveShoulderResponses {
+}
+/// Parameters for MoveElbow 
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MoveElbowParameters {
+    /// The target angle in radians. 
+    #[prost(message, optional, tag="1")]
+    pub angle: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+}
+/// Responses of MoveElbow 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MoveElbowResponses {
+}
+/// Parameters for MoveWrist 
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MoveWristParameters {
+    /// The target angle in radians. 
+    #[prost(message, optional, tag="1")]
+    pub angle: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+}
+/// Responses of MoveWrist 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MoveWristResponses {
+}
+/// Parameters for MoveGripper 
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MoveGripperParameters {
+    /// The target finger displacement in meters. 
+    #[prost(message, optional, tag="1")]
+    pub position: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+}
+/// Responses of MoveGripper 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MoveGripperResponses {
+}
 /// Parameters for PositionZ 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SubscribePositionZParameters {
