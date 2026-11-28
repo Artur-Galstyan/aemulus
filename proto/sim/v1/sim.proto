@@ -18,7 +18,22 @@ message SetActuatorRequest {
 
 message SetActuatorResponse {}
 
+message StreamStateRequest {}
+
+message StreamStateResponse {
+  repeated double qpos = 1;
+}
+
+message GetModelRequest {}
+
+message GetModelResponse {
+  string xml = 1;
+  map<string, bytes> meshes = 2;
+}
+
 service SimService {
   rpc GetJoint(GetJointRequest) returns (GetJointResponse);
   rpc SetActuator(SetActuatorRequest) returns (SetActuatorResponse);
+  rpc StreamState(StreamStateRequest) returns (stream StreamStateResponse);
+  rpc GetModel(GetModelRequest) returns (GetModelResponse);
 }

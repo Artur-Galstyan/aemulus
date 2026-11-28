@@ -8,12 +8,10 @@ from importlib.resources import files
 
 import mujoco.viewer
 import numpy as np
-from connectrpc.protocol import ProtocolType
-from pyqwest import Client, HTTPTransport, HTTPVersion
-
 from aemulus.devices.pf400 import PF400
-from aemulus.devices.starlet import STARlet, TIP_50UL_LENGTH
-from aemulus.lab import Labware, create_lab, wait_for_port
+from aemulus.devices.starlet import TIP_50UL_LENGTH, STARlet
+from aemulus.lab import create_lab, wait_for_port
+from aemulus.labware import Labware, well_xy
 from aemulus.sila2.Pf400_connect import Pf400Client
 from aemulus.sila2.Pf400_pb import (
     MoveGripper_Parameters,
@@ -28,6 +26,8 @@ from aemulus.sila2.Starlet_pb import (
     MoveY_Parameters,
     MoveZ_Parameters,
 )
+from connectrpc.protocol import ProtocolType
+from pyqwest import Client, HTTPTransport, HTTPVersion
 
 # Plate carrier site 0 (front) and tip carrier site 0 in the world frame, from the carrier MJCF.
 SITE_0_Y = -0.283
@@ -139,7 +139,7 @@ def check_plate(lab, expected, place):
 
 
 async def main(view=False):
-    if view and sys.platform == "darwin" and mujoco.viewer._MJPYTHON is None:
+    if view and sys.platform == "darwin" and mujoco.viewer._MJPYTHON is None:  # ty: ignore[missing-attribute]
         raise SystemExit(
             "On macOS use: uv run mjpython examples/starlet_demo.py --view"
         )
@@ -233,7 +233,7 @@ async def main(view=False):
             move_y(client, -0.325, 7),
         )
         # XYZ describes the nozzle. The tip collar tops are 28 mm above the rack bottom.
-        x, y = lab.well_xy("tips_50", "A1")
+        x, y = well_xy(lab.labware_pos("tips_50"), "A1")
         await move_x(client, x)
         await move_y(client, y, 5)
         await move_z(client, lab.labware_pos("tips_50")[2] + 0.028, 5)
@@ -242,7 +242,7 @@ async def main(view=False):
             raise RuntimeError("Channel 5 did not pick up the A1 tip")
 
         # The 50.4 mm tip ends 5 mm above the reservoir floor.
-        x, y = lab.well_xy("reservoir")
+        x, y = lab.labware_pos("reservoir")[:2]
         await move_x(client, x)
         await move_y(client, y, 5)
         await move_z(
@@ -254,7 +254,7 @@ async def main(view=False):
             raise RuntimeError("Channel 5 did not aspirate 20 uL")
         await move_z(client, 0.45, 5)
 
-        x, y = lab.well_xy("plate", "A1")
+        x, y = well_xy(lab.labware_pos("plate"), "A1")
         await move_x(client, x)
         await move_y(client, y, 5)
         await move_z(client, lab.labware_pos("plate")[2] + 0.010 + TIP_50UL_LENGTH, 5)

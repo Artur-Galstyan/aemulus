@@ -10,7 +10,20 @@ Units are mm. Each part is drawn in the frame of its MuJoCo body.
 
 from pathlib import Path
 
-from build123d import Align, Axis, Box, Circle, Cone, Cylinder, Pos, RectangleRounded, export_stl, extrude, fillet, make_hull
+from build123d import (
+    Align,
+    Axis,
+    Box,
+    Circle,
+    Cone,
+    Cylinder,
+    Pos,
+    RectangleRounded,
+    export_stl,
+    extrude,
+    fillet,
+    make_hull,
+)
 
 OUT = Path(__file__).parent.parent / "python/aemulus/assets/bioshake/meshes"
 BOTTOM = (Align.CENTER, Align.CENTER, Align.MIN)
@@ -38,7 +51,9 @@ def plate():
 
 def clamp():
     # One ELM pin on its lever. Origin: the pin axis, on the top of the plate. The lever points to +x.
-    lever = extrude(Pos(0, 0, -0.5) * make_hull((Circle(2) + Pos(14, 0) * Circle(3)).edges()), 1)
+    lever = extrude(
+        Pos(0, 0, -0.5) * make_hull((Circle(2) + Pos(14, 0) * Circle(3)).edges()), 1
+    )
     pivot = Pos(14, 0, 0.5) * Cylinder(1.8, 0.8, align=BOTTOM)
     return Cone(1.0, 1.5, 7.15, align=BOTTOM) + lever + pivot
 
@@ -46,5 +61,7 @@ def clamp():
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for make in (housing, plate, clamp):
-        export_stl(make(), OUT / f"{make.__name__}.stl", tolerance=0.1, angular_tolerance=0.25)
+        export_stl(
+            make(), OUT / f"{make.__name__}.stl", tolerance=0.1, angular_tolerance=0.25
+        )
         print(make.__name__)

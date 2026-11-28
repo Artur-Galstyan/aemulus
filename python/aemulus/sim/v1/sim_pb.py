@@ -132,15 +132,117 @@ class SetActuatorResponse(Message[_SetActuatorResponseFields]):
         ) -> None:
             pass
 
+_StreamStateRequestFields: TypeAlias = NoReturn
+
+class StreamStateRequest(Message[_StreamStateRequestFields]):
+    """
+    ```proto
+    message aemulus.sim.v1.StreamStateRequest
+    ```
+    """
+
+    __slots__ = ()
+
+    if TYPE_CHECKING:
+
+        def __init__(
+            self,
+        ) -> None:
+            pass
+
+_StreamStateResponseFields: TypeAlias = Literal["qpos"]
+
+class StreamStateResponse(Message[_StreamStateResponseFields]):
+    """
+    ```proto
+    message aemulus.sim.v1.StreamStateResponse
+    ```
+
+    Attributes:
+        qpos:
+            ```proto
+            repeated double qpos = 1 [packed = true];
+            ```
+    """
+
+    __slots__ = ("qpos",)
+
+    if TYPE_CHECKING:
+
+        def __init__(
+            self,
+            *,
+            qpos: list[float] | None = None,
+        ) -> None:
+            pass
+
+        qpos: list[float]
+
+_GetModelRequestFields: TypeAlias = NoReturn
+
+class GetModelRequest(Message[_GetModelRequestFields]):
+    """
+    ```proto
+    message aemulus.sim.v1.GetModelRequest
+    ```
+    """
+
+    __slots__ = ()
+
+    if TYPE_CHECKING:
+
+        def __init__(
+            self,
+        ) -> None:
+            pass
+
+_GetModelResponseFields: TypeAlias = Literal["xml", "meshes"]
+
+class GetModelResponse(Message[_GetModelResponseFields]):
+    """
+    ```proto
+    message aemulus.sim.v1.GetModelResponse
+    ```
+
+    Attributes:
+        xml:
+            ```proto
+            string xml = 1;
+            ```
+        meshes:
+            ```proto
+            map<string, bytes> meshes = 2;
+            ```
+    """
+
+    __slots__ = ("xml", "meshes")
+
+    if TYPE_CHECKING:
+
+        def __init__(
+            self,
+            *,
+            xml: str = "",
+            meshes: dict[str, bytes] | None = None,
+        ) -> None:
+            pass
+
+        xml: str
+        meshes: dict[str, bytes]
+
 
 _DESC = file_desc(
-    b'\n\x10sim/v1/sim.proto\x12\x0eaemulus.sim.v1"\'\n\x0fGetJointRequest\x12\x14\n\x05joint\x18\x01 \x01(\tR\x05joint"J\n\x10GetJointResponse\x12\x1a\n\x08position\x18\x01 \x01(\x01R\x08position\x12\x1a\n\x08velocity\x18\x02 \x01(\x01R\x08velocity"F\n\x12SetActuatorRequest\x12\x1a\n\x08actuator\x18\x01 \x01(\tR\x08actuator\x12\x14\n\x05value\x18\x02 \x01(\x01R\x05value"\x15\n\x13SetActuatorResponse2\xb3\x01\n\nSimService\x12M\n\x08GetJoint\x12\x1f.aemulus.sim.v1.GetJointRequest\x1a .aemulus.sim.v1.GetJointResponse\x12V\n\x0bSetActuator\x12".aemulus.sim.v1.SetActuatorRequest\x1a#.aemulus.sim.v1.SetActuatorResponseb\x06proto3',
+    b'\n\x10sim/v1/sim.proto\x12\x0eaemulus.sim.v1"\'\n\x0fGetJointRequest\x12\x14\n\x05joint\x18\x01 \x01(\tR\x05joint"J\n\x10GetJointResponse\x12\x1a\n\x08position\x18\x01 \x01(\x01R\x08position\x12\x1a\n\x08velocity\x18\x02 \x01(\x01R\x08velocity"F\n\x12SetActuatorRequest\x12\x1a\n\x08actuator\x18\x01 \x01(\tR\x08actuator\x12\x14\n\x05value\x18\x02 \x01(\x01R\x05value"\x15\n\x13SetActuatorResponse"\x14\n\x12StreamStateRequest")\n\x13StreamStateResponse\x12\x12\n\x04qpos\x18\x01 \x03(\x01R\x04qpos"\x11\n\x0fGetModelRequest"\xa5\x01\n\x10GetModelResponse\x12\x10\n\x03xml\x18\x01 \x01(\tR\x03xml\x12D\n\x06meshes\x18\x02 \x03(\x0b2,.aemulus.sim.v1.GetModelResponse.MeshesEntryR\x06meshes\x1a9\n\x0bMeshesEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\x0cR\x05value:\x028\x012\xdc\x02\n\nSimService\x12M\n\x08GetJoint\x12\x1f.aemulus.sim.v1.GetJointRequest\x1a .aemulus.sim.v1.GetJointResponse\x12V\n\x0bSetActuator\x12".aemulus.sim.v1.SetActuatorRequest\x1a#.aemulus.sim.v1.SetActuatorResponse\x12X\n\x0bStreamState\x12".aemulus.sim.v1.StreamStateRequest\x1a#.aemulus.sim.v1.StreamStateResponse0\x01\x12M\n\x08GetModel\x12\x1f.aemulus.sim.v1.GetModelRequest\x1a .aemulus.sim.v1.GetModelResponseb\x06proto3',
     [],
     {
         "GetJointRequest": GetJointRequest,
         "GetJointResponse": GetJointResponse,
         "SetActuatorRequest": SetActuatorRequest,
         "SetActuatorResponse": SetActuatorResponse,
+        "StreamStateRequest": StreamStateRequest,
+        "StreamStateResponse": StreamStateResponse,
+        "GetModelRequest": GetModelRequest,
+        "GetModelResponse": GetModelResponse,
     },
 )
 

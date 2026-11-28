@@ -141,6 +141,56 @@ pub mod sim_service_client {
                 .insert(GrpcMethod::new("aemulus.sim.v1.SimService", "SetActuator"));
             self.inner.unary(req, path, codec).await
         }
+        ///
+        pub async fn stream_state(
+            &mut self,
+            request: impl tonic::IntoRequest<super::StreamStateRequest>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::StreamStateResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/aemulus.sim.v1.SimService/StreamState",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("aemulus.sim.v1.SimService", "StreamState"));
+            self.inner.server_streaming(req, path, codec).await
+        }
+        ///
+        pub async fn get_model(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetModelRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetModelResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/aemulus.sim.v1.SimService/GetModel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("aemulus.sim.v1.SimService", "GetModel"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -170,6 +220,28 @@ pub mod sim_service_server {
             request: tonic::Request<super::SetActuatorRequest>,
         ) -> std::result::Result<
             tonic::Response<super::SetActuatorResponse>,
+            tonic::Status,
+        >;
+        /// Server streaming response type for the StreamState method.
+        type StreamStateStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<super::StreamStateResponse, tonic::Status>,
+            >
+            + std::marker::Send
+            + 'static;
+        ///
+        async fn stream_state(
+            &self,
+            request: tonic::Request<super::StreamStateRequest>,
+        ) -> std::result::Result<
+            tonic::Response<Self::StreamStateStream>,
+            tonic::Status,
+        >;
+        ///
+        async fn get_model(
+            &self,
+            request: tonic::Request<super::GetModelRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetModelResponse>,
             tonic::Status,
         >;
     }
@@ -325,6 +397,97 @@ pub mod sim_service_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = SetActuatorSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/aemulus.sim.v1.SimService/StreamState" => {
+                    #[allow(non_camel_case_types)]
+                    struct StreamStateSvc<T: SimService>(pub Arc<T>);
+                    impl<
+                        T: SimService,
+                    > tonic::server::ServerStreamingService<super::StreamStateRequest>
+                    for StreamStateSvc<T> {
+                        type Response = super::StreamStateResponse;
+                        type ResponseStream = T::StreamStateStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::StreamStateRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as SimService>::stream_state(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = StreamStateSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/aemulus.sim.v1.SimService/GetModel" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetModelSvc<T: SimService>(pub Arc<T>);
+                    impl<
+                        T: SimService,
+                    > tonic::server::UnaryService<super::GetModelRequest>
+                    for GetModelSvc<T> {
+                        type Response = super::GetModelResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetModelRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as SimService>::get_model(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = GetModelSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

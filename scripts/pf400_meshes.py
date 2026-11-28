@@ -81,5 +81,7 @@ def finger():
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for make in (base_plate, column, carriage, inner_link, outer_link, gripper, finger):
-        export_stl(make(), OUT / f"{make.__name__}.stl", tolerance=0.1, angular_tolerance=0.25)
+        export_stl(
+            make(), OUT / f"{make.__name__}.stl", tolerance=0.1, angular_tolerance=0.25
+        )
         print(make.__name__)

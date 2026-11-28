@@ -19,10 +19,10 @@ from connectrpc.server import ConnectASGIApplication, ConnectWSGIApplication, DE
 from protobuf import DescService
 
 from . import sim_pb
-from .sim_pb import GetJointRequest, GetJointResponse, SetActuatorRequest, SetActuatorResponse
+from .sim_pb import GetJointRequest, GetJointResponse, GetModelRequest, GetModelResponse, SetActuatorRequest, SetActuatorResponse, StreamStateRequest, StreamStateResponse
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncGenerator, Iterable, Mapping
+    from collections.abc import AsyncGenerator, AsyncIterator, Iterable, Iterator, Mapping
 
     from connectrpc.codec import Codec
     from connectrpc.compression import Compression
@@ -35,6 +35,12 @@ class SimService(Protocol):
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
     async def set_actuator(self, request: SetActuatorRequest, ctx: RequestContext[SetActuatorRequest, SetActuatorResponse], /) -> SetActuatorResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def stream_state(self, request: StreamStateRequest, ctx: RequestContext[StreamStateRequest, StreamStateResponse], /) -> AsyncIterator[StreamStateResponse]:
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    async def get_model(self, request: GetModelRequest, ctx: RequestContext[GetModelRequest, GetModelResponse], /) -> GetModelResponse:
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
     @classmethod
@@ -76,6 +82,28 @@ class SimServiceASGIApplication(ConnectASGIApplication[SimService]):
                         stream_type=StreamType.UNARY,
                     ),
                     function=svc.set_actuator,
+                ),
+                "/aemulus.sim.v1.SimService/StreamState": Endpoint.server_stream(
+                    method=MethodInfo(
+                        name="StreamState",
+                        service_name="aemulus.sim.v1.SimService",
+                        input=StreamStateRequest,
+                        output=StreamStateResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.SERVER_STREAM,
+                    ),
+                    function=svc.stream_state,
+                ),
+                "/aemulus.sim.v1.SimService/GetModel": Endpoint.unary(
+                    method=MethodInfo(
+                        name="GetModel",
+                        service_name="aemulus.sim.v1.SimService",
+                        input=GetModelRequest,
+                        output=GetModelResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=svc.get_model,
                 ),
             },
             interceptors=interceptors,
@@ -131,12 +159,58 @@ class SimServiceClient(ConnectClient):
             headers=headers,
             timeout_ms=timeout_ms,
         )
+    def stream_state(
+        self,
+        request: StreamStateRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> AsyncIterator[StreamStateResponse]:
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="StreamState",
+                service_name="aemulus.sim.v1.SimService",
+                input=StreamStateRequest,
+                output=StreamStateResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.SERVER_STREAM,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    async def get_model(
+        self,
+        request: GetModelRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> GetModelResponse:
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="GetModel",
+                service_name="aemulus.sim.v1.SimService",
+                input=GetModelRequest,
+                output=GetModelResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
 
 class SimServiceSync(Protocol):
     def get_joint(self, request: GetJointRequest, ctx: RequestContext[GetJointRequest, GetJointResponse], /) -> GetJointResponse:
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
     def set_actuator(self, request: SetActuatorRequest, ctx: RequestContext[SetActuatorRequest, SetActuatorResponse], /) -> SetActuatorResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def stream_state(self, request: StreamStateRequest, ctx: RequestContext[StreamStateRequest, StreamStateResponse], /) -> Iterator[StreamStateResponse]:
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def get_model(self, request: GetModelRequest, ctx: RequestContext[GetModelRequest, GetModelResponse], /) -> GetModelResponse:
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
     @classmethod
@@ -176,6 +250,28 @@ class SimServiceWSGIApplication(ConnectWSGIApplication):
                         stream_type=StreamType.UNARY,
                     ),
                     function=service.set_actuator,
+                ),
+                "/aemulus.sim.v1.SimService/StreamState": EndpointSync.server_stream(
+                    method=MethodInfo(
+                        name="StreamState",
+                        service_name="aemulus.sim.v1.SimService",
+                        input=StreamStateRequest,
+                        output=StreamStateResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.SERVER_STREAM,
+                    ),
+                    function=service.stream_state,
+                ),
+                "/aemulus.sim.v1.SimService/GetModel": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="GetModel",
+                        service_name="aemulus.sim.v1.SimService",
+                        input=GetModelRequest,
+                        output=GetModelResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=service.get_model,
                 ),
             },
             interceptors=interceptors,
@@ -225,6 +321,46 @@ class SimServiceClientSync(ConnectClientSync):
                 service_name="aemulus.sim.v1.SimService",
                 input=SetActuatorRequest,
                 output=SetActuatorResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def stream_state(
+        self,
+        request: StreamStateRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> Iterator[StreamStateResponse]:
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="StreamState",
+                service_name="aemulus.sim.v1.SimService",
+                input=StreamStateRequest,
+                output=StreamStateResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.SERVER_STREAM,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def get_model(
+        self,
+        request: GetModelRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> GetModelResponse:
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="GetModel",
+                service_name="aemulus.sim.v1.SimService",
+                input=GetModelRequest,
+                output=GetModelResponse,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
             ),

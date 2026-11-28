@@ -34,3 +34,9 @@ dev = [
     "protoc-gen-connectrpc>=0.13.0",
     "protoc-gen-py>=0.7.0",
 ]
+
+[tool.ty.rules]
+possibly-missing-attribute = "ignore"
+
+[tool.ty.src]
+exclude = ["scripts"]

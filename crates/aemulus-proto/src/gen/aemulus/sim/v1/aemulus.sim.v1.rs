@@ -22,5 +22,23 @@ pub struct SetActuatorRequest {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetActuatorResponse {
 }
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct StreamStateRequest {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StreamStateResponse {
+    #[prost(double, repeated, tag="1")]
+    pub qpos: ::prost::alloc::vec::Vec<f64>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetModelRequest {
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetModelResponse {
+    #[prost(string, tag="1")]
+    pub xml: ::prost::alloc::string::String,
+    #[prost(map="string, bytes", tag="2")]
+    pub meshes: ::std::collections::HashMap<::prost::alloc::string::String, ::prost::alloc::vec::Vec<u8>>,
+}
 include!("aemulus.sim.v1.tonic.rs");
 // @@protoc_insertion_point(module)

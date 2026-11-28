@@ -3,8 +3,9 @@ import socket
 import sys
 import threading
 import time
-from dataclasses import dataclass
 from importlib.resources import files
+from pathlib import Path
+from typing import AsyncIterator
 
 import mujoco.viewer
 import numpy as np
@@ -25,34 +26,27 @@ from mujoco import (
 )
 
 from aemulus.device import Device
+from aemulus.labware import Labware
 from aemulus.sim.v1.sim_connect import SimService, SimServiceASGIApplication
 from aemulus.sim.v1.sim_pb import (
     GetJointRequest,
     GetJointResponse,
+    GetModelRequest,
+    GetModelResponse,
     SetActuatorRequest,
     SetActuatorResponse,
+    StreamStateRequest,
+    StreamStateResponse,
 )
 
 
-@dataclass(frozen=True)
-class Labware:
-    name: str
-    mjcf: str
-    pos: tuple[float, float, float]
-    free: bool = False
-
-
-def sbs_96_offset(well: str) -> tuple[float, float]:
-    if len(well) < 2:
-        raise ValueError(f"Invalid 96-well name: {well!r}")
-    row = ord(well[0].upper()) - ord("A")
-    try:
-        col = int(well[1:]) - 1
-    except ValueError as err:
-        raise ValueError(f"Invalid 96-well name: {well!r}") from err
-    if not (0 <= row < 8 and 0 <= col < 12):
-        raise ValueError(f"Invalid 96-well name: {well!r}")
-    return (-0.0495 + col * 0.009, 0.0315 - row * 0.009)
+def _collect_meshes(child: MjSpec, prefix: str, meshes: dict[str, bytes]) -> None:
+    for mesh in child.meshes:
+        file = f"{prefix}_{mesh.file}"
+        meshes[file] = (
+            Path(child.modelfiledir) / child.meshdir / mesh.file
+        ).read_bytes()
+        mesh.file = file
 
 
 def create_lab(devices: list[Device], labware: list[Labware] | None = None) -> Lab:
@@ -67,11 +61,14 @@ class Lab:
     devices: list[Device]
     model: MjModel
     sim: SimServer | None
+    meshes: dict[str, bytes]
+    labware_bodies: dict[str, str]
 
     def __init__(self, devices: list[Device], labware: list[Labware] | None = None):
         self.devices = devices
         self.sim = None
-        self._labware_bodies: dict[str, str] = {}
+        self.labware_bodies = {}
+        self.meshes = {}
         spec = MjSpec.from_file(str(files("aemulus") / "assets/lab.xml"))
         for device in self.devices:
             if device.address is None:
@@ -79,7 +76,9 @@ class Lab:
                     raise ValueError(f"Device {device.device_name} has no position")
                 child = MjSpec.from_file(device.mjcf)
                 frame = spec.worldbody.add_frame(pos=device.pos)
-                spec.attach(child, prefix=f"{device.device_name}/", frame=frame)
+                prefix = f"{device.device_name}/"
+                _collect_meshes(child, device.device_name, self.meshes)
+                spec.attach(child, prefix=prefix, frame=frame)
                 device.start_sim_server()
 
         for item in labware or []:
@@ -89,27 +88,22 @@ class Lab:
             if item.free:
                 root_body.add_freejoint()
             frame = spec.worldbody.add_frame(pos=item.pos)
-            spec.attach(child, prefix=f"{item.name}/", frame=frame)
-            self._labware_bodies[item.name] = f"{item.name}/{root_name}"
+            prefix = f"{item.name}/"
+            _collect_meshes(child, item.name, self.meshes)
+            spec.attach(child, prefix=prefix, frame=frame)
+            self.labware_bodies[item.name] = f"{item.name}/{root_name}"
 
+        spec.assets = {**self.meshes}
         self.model = spec.compile()
+        self.xml = spec.to_xml()
 
-    def labware_pos(self, name: str) -> np.ndarray:
+    def labware_pos(self, name: str) -> Float[np.ndarray, "3"]:
         if self.sim is None:
             raise ValueError("no simulation")
         data = MjData(self.model)
         mj_setState(self.model, data, self.sim.state, mjtState.mjSTATE_FULLPHYSICS)
         mj_forward(self.model, data)
-        return data.body(self._labware_bodies[name]).xpos.copy()
-
-    def well_xy(
-        self, labware_name: str, well: str | None = None
-    ) -> tuple[float, float]:
-        pos = self.labware_pos(labware_name)
-        if well is None:
-            return (float(pos[0]), float(pos[1]))
-        dx, dy = sbs_96_offset(well)
-        return (float(pos[0] + dx), float(pos[1] + dy))
+        return data.body(self.labware_bodies[name]).xpos.copy()
 
     def keep_alive(self):
         try:
@@ -138,47 +132,58 @@ class Lab:
 
 
 class SimServer(SimService):
-    model: MjModel
     data: MjData
     state: Float[np.ndarray, "nstate"]
     ctrl: Float[np.ndarray, "nu"]
+    lab: Lab
 
     def __init__(self, lab: Lab):
-        self.model = lab.model
+        self.lab = lab
         self.devices = [device for device in lab.devices if device.address is None]
-        self.data = MjData(self.model)
+        self.data = MjData(self.lab.model)
         self.state = self.reset()
-        joints = self.model.actuator_trnid[:, 0]
-        self.ctrl = self.state[1 + self.model.jnt_qposadr[joints]]
+        joints = self.lab.model.actuator_trnid[:, 0]
+        self.ctrl = self.state[1 + self.lab.model.jnt_qposadr[joints]]
 
     def reset(self) -> Float[np.ndarray, "nstate"]:
         spec = mjtState.mjSTATE_FULLPHYSICS
-        mj_resetData(self.model, self.data)
-        state = np.empty(mj_stateSize(self.model, spec))
-        mj_getState(self.model, self.data, state, spec)
+        mj_resetData(self.lab.model, self.data)
+        state = np.empty(mj_stateSize(self.lab.model, spec))
+        mj_getState(self.lab.model, self.data, state, spec)
         return state
 
     def step(self) -> None:
-        mj_setState(self.model, self.data, self.state, mjtState.mjSTATE_FULLPHYSICS)
+        mj_setState(self.lab.model, self.data, self.state, mjtState.mjSTATE_FULLPHYSICS)
         self.data.ctrl[:] = self.ctrl
-        mj_step(self.model, self.data)
+        mj_step(self.lab.model, self.data)
         for device in self.devices:
-            device.on_step(self.model, self.data)
+            device.on_step(self.lab.model, self.data)
         next_state = np.empty_like(self.state)
-        mj_getState(self.model, self.data, next_state, mjtState.mjSTATE_FULLPHYSICS)
+        mj_getState(self.lab.model, self.data, next_state, mjtState.mjSTATE_FULLPHYSICS)
         self.state = next_state
 
     async def get_joint(self, request: GetJointRequest, ctx, /) -> GetJointResponse:
-        joint = self.model.joint(request.joint)
+        joint = self.lab.model.joint(request.joint)
         position = self.state[1 + joint.qposadr[0]]
-        velocity = self.state[1 + self.model.nq + joint.dofadr[0]]
+        velocity = self.state[1 + self.lab.model.nq + joint.dofadr[0]]
         return GetJointResponse(position=position, velocity=velocity)
 
     async def set_actuator(
         self, request: SetActuatorRequest, ctx, /
     ) -> SetActuatorResponse:
-        self.ctrl[self.model.actuator(request.actuator).id] = request.value
+        self.ctrl[self.lab.model.actuator(request.actuator).id] = request.value
         return SetActuatorResponse()
+
+    async def get_model(self, _request: GetModelRequest, ctx, /) -> GetModelResponse:
+        return GetModelResponse(xml=self.lab.xml, meshes=self.lab.meshes)
+
+    async def stream_state(
+        self, request: StreamStateRequest, ctx, /
+    ) -> AsyncIterator[StreamStateResponse]:
+        while True:
+            qpos = self.state[1 : 1 + self.lab.model.nq]
+            yield StreamStateResponse(qpos=list(qpos))
+            await asyncio.sleep(1 / 60)
 
 
 def wait_for_port(port: int, timeout: float = 10.0) -> None:
@@ -214,7 +219,7 @@ def run_sim(sim_server: SimServer, port: int = 50051) -> None:
         next_step = time.monotonic()
         while True:
             sim_server.step()
-            next_step += sim_server.model.opt.timestep
+            next_step += sim_server.lab.model.opt.timestep
             remaining = next_step - time.monotonic()
             if remaining > 0:
                 time.sleep(remaining)

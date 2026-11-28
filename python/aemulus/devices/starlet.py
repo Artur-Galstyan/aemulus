@@ -4,11 +4,10 @@ import typing
 from dataclasses import dataclass, field
 from importlib.resources import files
 
-from mujoco import MjData, MjModel, mjtGeom
-
 from aemulus._rust._native import ModelIdentifier
 from aemulus.device import Device
-from aemulus.lab import sbs_96_offset
+from aemulus.labware import sbs_96_offset
+from mujoco import MjData, MjModel, mjtGeom
 
 TIP_50UL_LENGTH = 0.0504
 PLUNGER_UL_PER_M = 1000.0
@@ -96,7 +95,7 @@ class STARlet(Device):
                 state.max_tip_top_z = max(
                     state.max_tip_top_z, float(data.xpos[body_id, 2]) + 0.004
                 )
-            elif name.endswith("/nunc_96_plate") or name.endswith("/reservoir"):
+            elif name.endswith(("/nunc_96_plate", "/reservoir")):
                 # Collision geom is last on reservoir (after visual walls) and sole geom on plate.
                 geom_id = model.body_geomadr[body_id] + model.body_geomnum[body_id] - 1
                 hx, hy, hz = model.geom_size[geom_id]
