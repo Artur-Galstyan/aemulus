@@ -49,6 +49,51 @@ def _collect_meshes(child: MjSpec, prefix: str, meshes: dict[str, bytes]) -> Non
         mesh.file = file
 
 
+def check_overlap(model: MjModel, data: MjData) -> None:
+    Box = tuple[str, Float[np.ndarray, "3"], Float[np.ndarray, "3"]]
+    mj_forward(model, data)
+
+    def geom_box(model: MjModel, data: MjData, g: int) -> tuple[np.ndarray, np.ndarray]:
+        rot = data.geom_xmat[g].reshape(3, 3)
+        center = data.geom_xpos[g] + rot @ model.geom_aabb[g, :3]
+        half = np.abs(rot) @ model.geom_aabb[g, 3:]
+        return center - half, center + half
+
+    def boxes_overlap(a: Box, b: Box) -> bool:
+        _, a_lo, a_hi = a
+        _, b_lo, b_hi = b
+
+        a_lo_x, a_lo_y, a_lo_z = a_lo
+        a_hi_x, a_hi_y, a_hi_z = a_hi
+        b_lo_x, b_lo_y, b_lo_z = b_lo
+        b_hi_x, b_hi_y, b_hi_z = b_hi
+
+        def _axis_overlaps(a_lo, a_hi, b_lo, b_hi) -> bool:
+            return a_lo < b_hi and b_lo < a_hi
+
+        return (
+            _axis_overlaps(a_lo_x, a_hi_x, b_lo_x, b_hi_x)
+            and _axis_overlaps(a_lo_y, a_hi_y, b_lo_y, b_hi_y)
+            and _axis_overlaps(a_lo_z, a_hi_z, b_lo_z, b_hi_z)
+        )
+
+    def find_overlap(boxes: list[Box]) -> bool:
+        for i, a in enumerate(boxes):
+            for b in boxes[i + 1 :]:
+                if a[0] != b[0] and boxes_overlap(a, b):
+                    return True
+        return False
+
+    geoms = [geom_box(model, data, g) for g in range(model.ngeom)]
+    boxes = []
+    for g, (lo, hi) in enumerate(geoms):
+        body = model.body(model.geom_bodyid[g]).name
+        if "/" in body and (model.geom_contype[g] or model.geom_conaffinity[g]):
+            boxes.append((body.split("/")[0], lo, hi))
+    if find_overlap(boxes):
+        raise ValueError("geoms overlap")
+
+
 def create_lab(devices: list[Device], labware: list[Labware] | None = None) -> Lab:
     lab = Lab(devices, labware)
     if labware or any(device.address is None for device in devices):
@@ -144,6 +189,8 @@ class SimServer(SimService):
         self.state = self.reset()
         joints = self.lab.model.actuator_trnid[:, 0]
         self.ctrl = self.state[1 + self.lab.model.jnt_qposadr[joints]]
+
+        check_overlap(self.lab.model, self.data)
 
     def reset(self) -> Float[np.ndarray, "nstate"]:
         spec = mjtState.mjSTATE_FULLPHYSICS

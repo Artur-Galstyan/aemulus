@@ -1,5 +1,6 @@
 from aemulus.devices.bioshake import BioShake
 from aemulus.devices.pf400 import PF400
+from aemulus.devices.starlet import STARlet
 from aemulus.lab import create_lab
 
 
@@ -8,6 +9,7 @@ def main():
         devices=[
             PF400(pos=(0, 0, 0), device_name="pf400", port=50052),
             BioShake(pos=(0.25, 0.25, 0), device_name="bioshake", port=50053),
+            STARlet(pos=(1.5, 1.0, 0), device_name="starlet", port=50054),
         ]
     )
     # lab.keep_alive()

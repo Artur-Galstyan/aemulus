@@ -68,8 +68,13 @@
 
   <asset>
     <material name="starlet_housing" rgba="0.9 0.9 0.91 1" specular="0.3" shininess="0.4"/>
-    <material name="starlet_deck" rgba="0.75 0.76 0.78 1" specular="0.6" shininess="0.7"/>
-    <material name="starlet_arm" rgba="0.20 0.45 0.75 1" specular="0.3" shininess="0.4"/>
+    <material name="starlet_deck" rgba="0.86 0.87 0.88 1" specular="0.6" shininess="0.7"/>
+    <material name="starlet_arm" rgba="0.18 0.19 0.21 1" specular="0.3" shininess="0.4"/>
+    <material name="starlet_navy" rgba="0.12 0.16 0.27 1" specular="0.3" shininess="0.5"/>
+    <material name="starlet_frame" rgba="0.82 0.83 0.85 1" specular="0.7" shininess="0.8"/>
+    <material name="starlet_interior" rgba="0.35 0.37 0.40 1" specular="0.2"/>
+    <material name="starlet_status" rgba="0.30 0.85 0.30 1" emission="0.6"/>
+    <material name="starlet_track" rgba="0.55 0.56 0.58 1"/>
     <material name="starlet_dark" rgba="0.25 0.28 0.32 1" specular="0.2"/>
     <material name="starlet_metal" rgba="0.78 0.80 0.84 1" specular="0.5" shininess="0.6"/>
     <material name="starlet_paddle" rgba="0.95 0.55 0.15 1" specular="0.3" shininess="0.4"/>
@@ -85,9 +90,54 @@
       <geom name="deck" size="0.3375 0.2325 0.010" pos="0 -0.102 0.190" mass="15" material="starlet_deck" contype="3"/>
 
       <!-- Back and side walls (0.030 m thick): z [0.180, 0.903], open at front (-y) and top. -->
-      <geom name="back_wall" size="0.562 0.015 0.3615" pos="0 0.3825 0.5415" mass="14"/>
+      <geom name="back_wall" size="0.562 0.015 0.3615" pos="0 0.3825 0.5415" mass="14" material="starlet_interior"/>
       <geom name="left_wall" size="0.015 0.3825 0.3615" pos="-0.547 -0.015 0.5415" mass="8"/>
       <geom name="right_wall" size="0.015 0.3825 0.3615" pos="0.547 -0.015 0.5415" mass="8"/>
+
+      <!-- Visual only: navy front frame, status light bar, track ruler, front tray, X rail and deck tracks. -->
+      <geom name="front_header" class="starlet_decor" size="0.562 0.004 0.050" pos="0 -0.4015 0.853" material="starlet_navy"/>
+      <geom name="status_light" class="starlet_decor" size="0.33 0.0015 0.003" pos="-0.12 -0.407 0.825" material="starlet_status"/>
+      <geom name="front_pillar_left" class="starlet_decor" size="0.030 0.004 0.3115" pos="-0.532 -0.4015 0.4915" material="starlet_navy"/>
+      <geom name="front_pillar_right" class="starlet_decor" size="0.030 0.004 0.3115" pos="0.532 -0.4015 0.4915" material="starlet_navy"/>
+      <geom name="front_crossbar" class="starlet_decor" size="0.502 0.004 0.012" pos="0 -0.4015 0.64" material="starlet_navy"/>
+      <geom name="track_ruler" class="starlet_decor" size="0.3375 0.004 0.008" pos="0 -0.4015 0.36" material="starlet_arm"/>
+      <geom name="front_base" class="starlet_decor" size="0.562 0.004 0.0885" pos="0 -0.4015 0.0885" material="starlet_navy"/>
+      <geom name="front_tray" class="starlet_decor" size="0.50 0.032 0.018" pos="0 -0.375 0.195" material="starlet_frame"/>
+      <geom name="frame_left" class="starlet_decor" type="cylinder" size="0.012 0.4515" pos="-0.550 -0.4015 0.4515" material="starlet_frame"/>
+      <geom name="frame_right" class="starlet_decor" type="cylinder" size="0.012 0.4515" pos="0.550 -0.4015 0.4515" material="starlet_frame"/>
+      <geom name="frame_top" class="starlet_decor" type="cylinder" size="0.012 0.550" pos="0 -0.4015 0.891" euler="0 90 0" material="starlet_frame"/>
+      <geom name="x_rail" class="starlet_decor" size="0.50 0.010 0.015" pos="0 0.36 0.72" material="starlet_arm"/>
+      <geom name="track0" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.3375 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track1" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.3150 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track2" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.2925 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track3" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.2700 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track4" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.2475 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track5" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.2250 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track6" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.2025 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track7" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.1800 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track8" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.1575 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track9" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.1350 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track10" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.1125 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track11" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.0900 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track12" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.0675 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track13" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.0450 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track14" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.0225 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track15" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="-0.0000 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track16" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.0225 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track17" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.0450 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track18" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.0675 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track19" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.0900 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track20" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.1125 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track21" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.1350 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track22" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.1575 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track23" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.1800 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track24" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.2025 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track25" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.2250 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track26" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.2475 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track27" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.2700 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track28" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.2925 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track29" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.3150 -0.102 0.2006" material="starlet_track"/>
+      <geom name="track30" class="starlet_decor" size="0.0012 0.2325 0.0006" pos="0.3375 -0.102 0.2006" material="starlet_track"/>
 
       <!-- X gantry arm spanning the deck, carrying 8 independent pipetting channels. -->
       <body name="arm" gravcomp="1">
