@@ -24,4 +24,9 @@ class Device:
         start_sim_server(self.device_name, self.device_id, self.port)
 
     def on_step(self, model: MjModel, data: MjData) -> None:
-        pass
+        """Hook called on each simulation step.
+
+        Args:
+            model: The MuJoCo model being simulated.
+            data: The current MuJoCo simulation data for this step.
+        """
