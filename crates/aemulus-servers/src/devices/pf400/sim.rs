@@ -216,8 +216,8 @@ impl Pf400 for Pf400Sim {
 
         // Conservative demo limits, not vendor performance specifications: m/s and rad/s,
         // then m/s^2 and rad/s^2. A shared quintic profile starts and ends at rest.
-        let speeds = [0.10, 0.50, 0.50, 0.50];
-        let accelerations = [0.20, 1.0, 1.0, 1.0];
+        let speeds = [0.20, 1.50, 1.50, 1.50];
+        let accelerations = [0.50, 3.0, 3.0, 3.0];
         let mut duration = 0.02_f64;
         for axis in 0..4 {
             let distance = (targets[axis] - starts[axis]).abs();
