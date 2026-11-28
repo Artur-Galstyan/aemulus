@@ -16,6 +16,17 @@ fn start_sim_server(server_name: String, device_name: String) -> PyResult<()> {
             });
             Ok(())
         }
+        "starlet" => {
+            std::thread::spawn(|| {
+                let rt = tokio::runtime::Runtime::new().expect("failed to create tokio runtime");
+                if let Err(err) = rt.block_on(
+                    aemulus_servers::devices::starlet::sim::serve_starlet_sim(device_name),
+                ) {
+                    tracing::error!("starlet sim server failed: {err}");
+                }
+            });
+            Ok(())
+        }
         other => Err(PyValueError::new_err(format!(
             "unknown sim server: {other}"
         ))),
