@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+import "sila2/SiLAFramework.proto";
+
+package sila2.dev.arturgalstyan.robots.starlet.v1;
+
+/* Controls a Hamilton Microlab STARlet liquid handler. */
+service Starlet {
+  /* Moves the X arm to a target position. */
+  rpc MoveX (sila2.dev.arturgalstyan.robots.starlet.v1.MoveX_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveX */
+  rpc MoveX_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveX */
+  rpc MoveX_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.MoveX_Responses) {}
+  /* Moves the gripper Y axis to a target position. */
+  rpc MoveY (sila2.dev.arturgalstyan.robots.starlet.v1.MoveY_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveY */
+  rpc MoveY_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveY */
+  rpc MoveY_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.MoveY_Responses) {}
+  /* Moves the gripper Z axis to a target position. */
+  rpc MoveZ (sila2.dev.arturgalstyan.robots.starlet.v1.MoveZ_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveZ */
+  rpc MoveZ_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveZ */
+  rpc MoveZ_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.MoveZ_Responses) {}
+  /* Sets the gripper opening width. */
+  rpc SetGripperWidth (sila2.dev.arturgalstyan.robots.starlet.v1.SetGripperWidth_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of SetGripperWidth */
+  rpc SetGripperWidth_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of SetGripperWidth */
+  rpc SetGripperWidth_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.SetGripperWidth_Responses) {}
+}
+
+/* Parameters for MoveX */
+message MoveX_Parameters {
+  sila2.org.silastandard.Real Position = 1;  /* The target X arm position in meters. */
+}
+
+/* Responses of MoveX */
+message MoveX_Responses {
+}
+
+/* Parameters for MoveY */
+message MoveY_Parameters {
+  sila2.org.silastandard.Real Position = 1;  /* The target gripper Y position in meters. */
+}
+
+/* Responses of MoveY */
+message MoveY_Responses {
+}
+
+/* Parameters for MoveZ */
+message MoveZ_Parameters {
+  sila2.org.silastandard.Real Position = 1;  /* The target gripper Z position in meters. */
+}
+
+/* Responses of MoveZ */
+message MoveZ_Responses {
+}
+
+/* Parameters for SetGripperWidth */
+message SetGripperWidth_Parameters {
+  sila2.org.silastandard.Real Width = 1;  /* The target gripper opening width in meters. */
+}
+
+/* Responses of SetGripperWidth */
+message SetGripperWidth_Responses {
+}

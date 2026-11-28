@@ -20,6 +20,13 @@ pub mod sila2 {
                         );
                     }
                 }
+                pub mod starlet {
+                    pub mod v1 {
+                        include!(
+                            "gen/sila2/dev/arturgalstyan/robots/starlet/v1/sila2.dev.arturgalstyan.robots.starlet.v1.rs"
+                        );
+                    }
+                }
             }
         }
     }

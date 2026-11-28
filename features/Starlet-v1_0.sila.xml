@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Feature SiLA2Version="1.0" FeatureVersion="1.0" Originator="dev.arturgalstyan" Category="robots"
+         xmlns="http://www.sila-standard.org"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>Starlet</Identifier>
+  <DisplayName>Hamilton STARlet</DisplayName>
+  <Description>Controls a Hamilton Microlab STARlet liquid handler.</Description>
+  <Command>
+    <Identifier>MoveX</Identifier>
+    <DisplayName>Move X</DisplayName>
+    <Description>Moves the X arm to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target X arm position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveY</Identifier>
+    <DisplayName>Move Y</DisplayName>
+    <Description>Moves the gripper Y axis to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target gripper Y position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveZ</Identifier>
+    <DisplayName>Move Z</DisplayName>
+    <Description>Moves the gripper Z axis to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target gripper Z position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>SetGripperWidth</Identifier>
+    <DisplayName>Set Gripper Width</DisplayName>
+    <Description>Sets the gripper opening width.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Width</Identifier>
+      <DisplayName>Width</DisplayName>
+      <Description>The target gripper opening width in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+</Feature>
