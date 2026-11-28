@@ -11,38 +11,26 @@ pub struct MoveZParameters {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MoveZResponses {
 }
-/// Parameters for MoveShoulder 
+/// Parameters for MoveJoints 
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct MoveShoulderParameters {
-    /// The target angle in radians. 
+pub struct MoveJointsParameters {
     #[prost(message, optional, tag="1")]
-    pub angle: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+    pub z: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+    /// The target height in meters. 
+    #[prost(message, optional, tag="2")]
+    pub shoulder: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+    /// The target shoulder angle in radians. 
+    #[prost(message, optional, tag="3")]
+    pub elbow: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+    /// The target elbow angle in radians. 
+    ///
+    /// The target wrist angle in radians. 
+    #[prost(message, optional, tag="4")]
+    pub wrist: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
 }
-/// Responses of MoveShoulder 
+/// Responses of MoveJoints 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MoveShoulderResponses {
-}
-/// Parameters for MoveElbow 
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct MoveElbowParameters {
-    /// The target angle in radians. 
-    #[prost(message, optional, tag="1")]
-    pub angle: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
-}
-/// Responses of MoveElbow 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MoveElbowResponses {
-}
-/// Parameters for MoveWrist 
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct MoveWristParameters {
-    /// The target angle in radians. 
-    #[prost(message, optional, tag="1")]
-    pub angle: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
-}
-/// Responses of MoveWrist 
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct MoveWristResponses {
+pub struct MoveJointsResponses {
 }
 /// Parameters for MoveGripper 
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]

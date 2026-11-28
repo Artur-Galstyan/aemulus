@@ -12,24 +12,12 @@ service Pf400 {
   rpc MoveZ_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
   /* Retrieve result of MoveZ */
   rpc MoveZ_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Responses) {}
-  /* Moves the shoulder to an angle. */
-  rpc MoveShoulder (sila2.dev.arturgalstyan.robots.pf400.v1.MoveShoulder_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
-  /* Monitor the state of MoveShoulder */
-  rpc MoveShoulder_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
-  /* Retrieve result of MoveShoulder */
-  rpc MoveShoulder_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveShoulder_Responses) {}
-  /* Moves the elbow to an angle. */
-  rpc MoveElbow (sila2.dev.arturgalstyan.robots.pf400.v1.MoveElbow_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
-  /* Monitor the state of MoveElbow */
-  rpc MoveElbow_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
-  /* Retrieve result of MoveElbow */
-  rpc MoveElbow_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveElbow_Responses) {}
-  /* Moves the wrist to an angle. */
-  rpc MoveWrist (sila2.dev.arturgalstyan.robots.pf400.v1.MoveWrist_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
-  /* Monitor the state of MoveWrist */
-  rpc MoveWrist_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
-  /* Retrieve result of MoveWrist */
-  rpc MoveWrist_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveWrist_Responses) {}
+  /* Moves the Z, shoulder, elbow and wrist axes together. */
+  rpc MoveJoints (sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveJoints */
+  rpc MoveJoints_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveJoints */
+  rpc MoveJoints_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Responses) {}
   /* Moves the gripper fingers to a position. */
   rpc MoveGripper (sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
   /* Monitor the state of MoveGripper */
@@ -49,31 +37,16 @@ message MoveZ_Parameters {
 message MoveZ_Responses {
 }
 
-/* Parameters for MoveShoulder */
-message MoveShoulder_Parameters {
-  sila2.org.silastandard.Real Angle = 1;  /* The target angle in radians. */
+/* Parameters for MoveJoints */
+message MoveJoints_Parameters {
+  sila2.org.silastandard.Real Z = 1;  /* The target height in meters. */
+  sila2.org.silastandard.Real Shoulder = 2;  /* The target shoulder angle in radians. */
+  sila2.org.silastandard.Real Elbow = 3;  /* The target elbow angle in radians. */
+  sila2.org.silastandard.Real Wrist = 4;  /* The target wrist angle in radians. */
 }
 
-/* Responses of MoveShoulder */
-message MoveShoulder_Responses {
-}
-
-/* Parameters for MoveElbow */
-message MoveElbow_Parameters {
-  sila2.org.silastandard.Real Angle = 1;  /* The target angle in radians. */
-}
-
-/* Responses of MoveElbow */
-message MoveElbow_Responses {
-}
-
-/* Parameters for MoveWrist */
-message MoveWrist_Parameters {
-  sila2.org.silastandard.Real Angle = 1;  /* The target angle in radians. */
-}
-
-/* Responses of MoveWrist */
-message MoveWrist_Responses {
+/* Responses of MoveJoints */
+message MoveJoints_Responses {
 }
 
 /* Parameters for MoveGripper */

@@ -21,42 +21,38 @@
     </Parameter>
   </Command>
   <Command>
-    <Identifier>MoveShoulder</Identifier>
-    <DisplayName>Move Shoulder</DisplayName>
-    <Description>Moves the shoulder to an angle.</Description>
+    <Identifier>MoveJoints</Identifier>
+    <DisplayName>Move Joints</DisplayName>
+    <Description>Moves the Z, shoulder, elbow and wrist axes together.</Description>
     <Observable>Yes</Observable>
     <Parameter>
-      <Identifier>Angle</Identifier>
-      <DisplayName>Angle</DisplayName>
-      <Description>The target angle in radians.</Description>
+      <Identifier>Z</Identifier>
+      <DisplayName>Z</DisplayName>
+      <Description>The target height in meters.</Description>
       <DataType>
         <Basic>Real</Basic>
       </DataType>
     </Parameter>
-  </Command>
-  <Command>
-    <Identifier>MoveElbow</Identifier>
-    <DisplayName>Move Elbow</DisplayName>
-    <Description>Moves the elbow to an angle.</Description>
-    <Observable>Yes</Observable>
     <Parameter>
-      <Identifier>Angle</Identifier>
-      <DisplayName>Angle</DisplayName>
-      <Description>The target angle in radians.</Description>
+      <Identifier>Shoulder</Identifier>
+      <DisplayName>Shoulder</DisplayName>
+      <Description>The target shoulder angle in radians.</Description>
       <DataType>
         <Basic>Real</Basic>
       </DataType>
     </Parameter>
-  </Command>
-  <Command>
-    <Identifier>MoveWrist</Identifier>
-    <DisplayName>Move Wrist</DisplayName>
-    <Description>Moves the wrist to an angle.</Description>
-    <Observable>Yes</Observable>
     <Parameter>
-      <Identifier>Angle</Identifier>
-      <DisplayName>Angle</DisplayName>
-      <Description>The target angle in radians.</Description>
+      <Identifier>Elbow</Identifier>
+      <DisplayName>Elbow</DisplayName>
+      <Description>The target elbow angle in radians.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Wrist</Identifier>
+      <DisplayName>Wrist</DisplayName>
+      <Description>The target wrist angle in radians.</Description>
       <DataType>
         <Basic>Real</Basic>
       </DataType>

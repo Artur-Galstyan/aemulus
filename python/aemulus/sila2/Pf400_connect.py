@@ -19,7 +19,7 @@ from connectrpc.server import ConnectASGIApplication, ConnectWSGIApplication, DE
 from protobuf import DescService
 
 from . import Pf400_pb
-from .Pf400_pb import MoveElbow_Parameters, MoveElbow_Responses, MoveGripper_Parameters, MoveGripper_Responses, MoveShoulder_Parameters, MoveShoulder_Responses, MoveWrist_Parameters, MoveWrist_Responses, MoveZ_Parameters, MoveZ_Responses, Subscribe_PositionZ_Parameters, Subscribe_PositionZ_Responses
+from .Pf400_pb import MoveGripper_Parameters, MoveGripper_Responses, MoveJoints_Parameters, MoveJoints_Responses, MoveZ_Parameters, MoveZ_Responses, Subscribe_PositionZ_Parameters, Subscribe_PositionZ_Responses
 from .SiLAFramework_pb import CommandConfirmation, CommandExecutionUUID, ExecutionInfo
 
 if TYPE_CHECKING:
@@ -53,57 +53,21 @@ class Pf400(Protocol):
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
-    async def move_shoulder(self, request: MoveShoulder_Parameters, ctx: RequestContext[MoveShoulder_Parameters, CommandConfirmation], /) -> CommandConfirmation:
+    async def move_joints(self, request: MoveJoints_Parameters, ctx: RequestContext[MoveJoints_Parameters, CommandConfirmation], /) -> CommandConfirmation:
         """
-        Moves the shoulder to an angle.
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_shoulder_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveShoulder
+        Moves the Z, shoulder, elbow and wrist axes together.
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
-    async def move_shoulder_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveShoulder_Responses], /) -> MoveShoulder_Responses:
+    def move_joints_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
         """
-        Retrieve result of MoveShoulder
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    async def move_elbow(self, request: MoveElbow_Parameters, ctx: RequestContext[MoveElbow_Parameters, CommandConfirmation], /) -> CommandConfirmation:
-        """
-        Moves the elbow to an angle.
+        Monitor the state of MoveJoints
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
-    def move_elbow_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
+    async def move_joints_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveJoints_Responses], /) -> MoveJoints_Responses:
         """
-        Monitor the state of MoveElbow
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    async def move_elbow_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveElbow_Responses], /) -> MoveElbow_Responses:
-        """
-        Retrieve result of MoveElbow
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    async def move_wrist(self, request: MoveWrist_Parameters, ctx: RequestContext[MoveWrist_Parameters, CommandConfirmation], /) -> CommandConfirmation:
-        """
-        Moves the wrist to an angle.
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_wrist_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveWrist
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    async def move_wrist_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveWrist_Responses], /) -> MoveWrist_Responses:
-        """
-        Retrieve result of MoveWrist
+        Retrieve result of MoveJoints
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -182,104 +146,38 @@ class Pf400ASGIApplication(ConnectASGIApplication[Pf400]):
                     ),
                     function=svc.move_z_result,
                 ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveShoulder": Endpoint.unary(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints": Endpoint.unary(
                     method=MethodInfo(
-                        name="MoveShoulder",
+                        name="MoveJoints",
                         service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=MoveShoulder_Parameters,
+                        input=MoveJoints_Parameters,
                         output=CommandConfirmation,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                         stream_type=StreamType.UNARY,
                     ),
-                    function=svc.move_shoulder,
+                    function=svc.move_joints,
                 ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveShoulder_Info": Endpoint.server_stream(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Info": Endpoint.server_stream(
                     method=MethodInfo(
-                        name="MoveShoulder_Info",
+                        name="MoveJoints_Info",
                         service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                         input=CommandExecutionUUID,
                         output=ExecutionInfo,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                         stream_type=StreamType.SERVER_STREAM,
                     ),
-                    function=svc.move_shoulder_info,
+                    function=svc.move_joints_info,
                 ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveShoulder_Result": Endpoint.unary(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Result": Endpoint.unary(
                     method=MethodInfo(
-                        name="MoveShoulder_Result",
+                        name="MoveJoints_Result",
                         service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                         input=CommandExecutionUUID,
-                        output=MoveShoulder_Responses,
+                        output=MoveJoints_Responses,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                         stream_type=StreamType.UNARY,
                     ),
-                    function=svc.move_shoulder_result,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveElbow": Endpoint.unary(
-                    method=MethodInfo(
-                        name="MoveElbow",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=MoveElbow_Parameters,
-                        output=CommandConfirmation,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=svc.move_elbow,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveElbow_Info": Endpoint.server_stream(
-                    method=MethodInfo(
-                        name="MoveElbow_Info",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=ExecutionInfo,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.SERVER_STREAM,
-                    ),
-                    function=svc.move_elbow_info,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveElbow_Result": Endpoint.unary(
-                    method=MethodInfo(
-                        name="MoveElbow_Result",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=MoveElbow_Responses,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=svc.move_elbow_result,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveWrist": Endpoint.unary(
-                    method=MethodInfo(
-                        name="MoveWrist",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=MoveWrist_Parameters,
-                        output=CommandConfirmation,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=svc.move_wrist,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveWrist_Info": Endpoint.server_stream(
-                    method=MethodInfo(
-                        name="MoveWrist_Info",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=ExecutionInfo,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.SERVER_STREAM,
-                    ),
-                    function=svc.move_wrist_info,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveWrist_Result": Endpoint.unary(
-                    method=MethodInfo(
-                        name="MoveWrist_Result",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=MoveWrist_Responses,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=svc.move_wrist_result,
+                    function=svc.move_joints_result,
                 ),
                 "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper": Endpoint.unary(
                     method=MethodInfo(
@@ -411,22 +309,22 @@ class Pf400Client(ConnectClient):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    async def move_shoulder(
+    async def move_joints(
         self,
-        request: MoveShoulder_Parameters,
+        request: MoveJoints_Parameters,
         *,
         headers: Headers | Mapping[str, str] | None = None, 
         timeout_ms: int | None = None,
     ) -> CommandConfirmation:
         """
-        Moves the shoulder to an angle.
+        Moves the Z, shoulder, elbow and wrist axes together.
         """
         return await self.execute_unary(
             request=request,
             method=MethodInfo(
-                name="MoveShoulder",
+                name="MoveJoints",
                 service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=MoveShoulder_Parameters,
+                input=MoveJoints_Parameters,
                 output=CommandConfirmation,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
@@ -434,7 +332,7 @@ class Pf400Client(ConnectClient):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    def move_shoulder_info(
+    def move_joints_info(
         self,
         request: CommandExecutionUUID,
         *,
@@ -442,12 +340,12 @@ class Pf400Client(ConnectClient):
         timeout_ms: int | None = None,
     ) -> AsyncIterator[ExecutionInfo]:
         """
-        Monitor the state of MoveShoulder
+        Monitor the state of MoveJoints
         """
         return self.execute_server_stream(
             request=request,
             method=MethodInfo(
-                name="MoveShoulder_Info",
+                name="MoveJoints_Info",
                 service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                 input=CommandExecutionUUID,
                 output=ExecutionInfo,
@@ -457,161 +355,23 @@ class Pf400Client(ConnectClient):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    async def move_shoulder_result(
+    async def move_joints_result(
         self,
         request: CommandExecutionUUID,
         *,
         headers: Headers | Mapping[str, str] | None = None, 
         timeout_ms: int | None = None,
-    ) -> MoveShoulder_Responses:
+    ) -> MoveJoints_Responses:
         """
-        Retrieve result of MoveShoulder
-        """
-        return await self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveShoulder_Result",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=MoveShoulder_Responses,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    async def move_elbow(
-        self,
-        request: MoveElbow_Parameters,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> CommandConfirmation:
-        """
-        Moves the elbow to an angle.
+        Retrieve result of MoveJoints
         """
         return await self.execute_unary(
             request=request,
             method=MethodInfo(
-                name="MoveElbow",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=MoveElbow_Parameters,
-                output=CommandConfirmation,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_elbow_info(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> AsyncIterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveElbow
-        """
-        return self.execute_server_stream(
-            request=request,
-            method=MethodInfo(
-                name="MoveElbow_Info",
+                name="MoveJoints_Result",
                 service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                 input=CommandExecutionUUID,
-                output=ExecutionInfo,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.SERVER_STREAM,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    async def move_elbow_result(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> MoveElbow_Responses:
-        """
-        Retrieve result of MoveElbow
-        """
-        return await self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveElbow_Result",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=MoveElbow_Responses,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    async def move_wrist(
-        self,
-        request: MoveWrist_Parameters,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> CommandConfirmation:
-        """
-        Moves the wrist to an angle.
-        """
-        return await self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveWrist",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=MoveWrist_Parameters,
-                output=CommandConfirmation,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_wrist_info(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> AsyncIterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveWrist
-        """
-        return self.execute_server_stream(
-            request=request,
-            method=MethodInfo(
-                name="MoveWrist_Info",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=ExecutionInfo,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.SERVER_STREAM,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    async def move_wrist_result(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> MoveWrist_Responses:
-        """
-        Retrieve result of MoveWrist
-        """
-        return await self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveWrist_Result",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=MoveWrist_Responses,
+                output=MoveJoints_Responses,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
             ),
@@ -733,57 +493,21 @@ class Pf400Sync(Protocol):
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
-    def move_shoulder(self, request: MoveShoulder_Parameters, ctx: RequestContext[MoveShoulder_Parameters, CommandConfirmation], /) -> CommandConfirmation:
+    def move_joints(self, request: MoveJoints_Parameters, ctx: RequestContext[MoveJoints_Parameters, CommandConfirmation], /) -> CommandConfirmation:
         """
-        Moves the shoulder to an angle.
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_shoulder_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveShoulder
+        Moves the Z, shoulder, elbow and wrist axes together.
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
-    def move_shoulder_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveShoulder_Responses], /) -> MoveShoulder_Responses:
+    def move_joints_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
         """
-        Retrieve result of MoveShoulder
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_elbow(self, request: MoveElbow_Parameters, ctx: RequestContext[MoveElbow_Parameters, CommandConfirmation], /) -> CommandConfirmation:
-        """
-        Moves the elbow to an angle.
+        Monitor the state of MoveJoints
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
-    def move_elbow_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
+    def move_joints_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveJoints_Responses], /) -> MoveJoints_Responses:
         """
-        Monitor the state of MoveElbow
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_elbow_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveElbow_Responses], /) -> MoveElbow_Responses:
-        """
-        Retrieve result of MoveElbow
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_wrist(self, request: MoveWrist_Parameters, ctx: RequestContext[MoveWrist_Parameters, CommandConfirmation], /) -> CommandConfirmation:
-        """
-        Moves the wrist to an angle.
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_wrist_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveWrist
-        """
-        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
-
-    def move_wrist_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveWrist_Responses], /) -> MoveWrist_Responses:
-        """
-        Retrieve result of MoveWrist
+        Retrieve result of MoveJoints
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -860,104 +584,38 @@ class Pf400WSGIApplication(ConnectWSGIApplication):
                     ),
                     function=service.move_z_result,
                 ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveShoulder": EndpointSync.unary(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints": EndpointSync.unary(
                     method=MethodInfo(
-                        name="MoveShoulder",
+                        name="MoveJoints",
                         service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=MoveShoulder_Parameters,
+                        input=MoveJoints_Parameters,
                         output=CommandConfirmation,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                         stream_type=StreamType.UNARY,
                     ),
-                    function=service.move_shoulder,
+                    function=service.move_joints,
                 ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveShoulder_Info": EndpointSync.server_stream(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Info": EndpointSync.server_stream(
                     method=MethodInfo(
-                        name="MoveShoulder_Info",
+                        name="MoveJoints_Info",
                         service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                         input=CommandExecutionUUID,
                         output=ExecutionInfo,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                         stream_type=StreamType.SERVER_STREAM,
                     ),
-                    function=service.move_shoulder_info,
+                    function=service.move_joints_info,
                 ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveShoulder_Result": EndpointSync.unary(
+                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveJoints_Result": EndpointSync.unary(
                     method=MethodInfo(
-                        name="MoveShoulder_Result",
+                        name="MoveJoints_Result",
                         service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                         input=CommandExecutionUUID,
-                        output=MoveShoulder_Responses,
+                        output=MoveJoints_Responses,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                         stream_type=StreamType.UNARY,
                     ),
-                    function=service.move_shoulder_result,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveElbow": EndpointSync.unary(
-                    method=MethodInfo(
-                        name="MoveElbow",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=MoveElbow_Parameters,
-                        output=CommandConfirmation,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=service.move_elbow,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveElbow_Info": EndpointSync.server_stream(
-                    method=MethodInfo(
-                        name="MoveElbow_Info",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=ExecutionInfo,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.SERVER_STREAM,
-                    ),
-                    function=service.move_elbow_info,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveElbow_Result": EndpointSync.unary(
-                    method=MethodInfo(
-                        name="MoveElbow_Result",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=MoveElbow_Responses,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=service.move_elbow_result,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveWrist": EndpointSync.unary(
-                    method=MethodInfo(
-                        name="MoveWrist",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=MoveWrist_Parameters,
-                        output=CommandConfirmation,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=service.move_wrist,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveWrist_Info": EndpointSync.server_stream(
-                    method=MethodInfo(
-                        name="MoveWrist_Info",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=ExecutionInfo,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.SERVER_STREAM,
-                    ),
-                    function=service.move_wrist_info,
-                ),
-                "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveWrist_Result": EndpointSync.unary(
-                    method=MethodInfo(
-                        name="MoveWrist_Result",
-                        service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                        input=CommandExecutionUUID,
-                        output=MoveWrist_Responses,
-                        idempotency_level=IdempotencyLevel.UNKNOWN,
-                        stream_type=StreamType.UNARY,
-                    ),
-                    function=service.move_wrist_result,
+                    function=service.move_joints_result,
                 ),
                 "/sila2.dev.arturgalstyan.robots.pf400.v1.Pf400/MoveGripper": EndpointSync.unary(
                     method=MethodInfo(
@@ -1089,22 +747,22 @@ class Pf400ClientSync(ConnectClientSync):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    def move_shoulder(
+    def move_joints(
         self,
-        request: MoveShoulder_Parameters,
+        request: MoveJoints_Parameters,
         *,
         headers: Headers | Mapping[str, str] | None = None, 
         timeout_ms: int | None = None,
     ) -> CommandConfirmation:
         """
-        Moves the shoulder to an angle.
+        Moves the Z, shoulder, elbow and wrist axes together.
         """
         return self.execute_unary(
             request=request,
             method=MethodInfo(
-                name="MoveShoulder",
+                name="MoveJoints",
                 service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=MoveShoulder_Parameters,
+                input=MoveJoints_Parameters,
                 output=CommandConfirmation,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
@@ -1112,7 +770,7 @@ class Pf400ClientSync(ConnectClientSync):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    def move_shoulder_info(
+    def move_joints_info(
         self,
         request: CommandExecutionUUID,
         *,
@@ -1120,12 +778,12 @@ class Pf400ClientSync(ConnectClientSync):
         timeout_ms: int | None = None,
     ) -> Iterator[ExecutionInfo]:
         """
-        Monitor the state of MoveShoulder
+        Monitor the state of MoveJoints
         """
         return self.execute_server_stream(
             request=request,
             method=MethodInfo(
-                name="MoveShoulder_Info",
+                name="MoveJoints_Info",
                 service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                 input=CommandExecutionUUID,
                 output=ExecutionInfo,
@@ -1135,161 +793,23 @@ class Pf400ClientSync(ConnectClientSync):
             headers=headers,
             timeout_ms=timeout_ms,
         )
-    def move_shoulder_result(
+    def move_joints_result(
         self,
         request: CommandExecutionUUID,
         *,
         headers: Headers | Mapping[str, str] | None = None, 
         timeout_ms: int | None = None,
-    ) -> MoveShoulder_Responses:
+    ) -> MoveJoints_Responses:
         """
-        Retrieve result of MoveShoulder
-        """
-        return self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveShoulder_Result",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=MoveShoulder_Responses,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_elbow(
-        self,
-        request: MoveElbow_Parameters,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> CommandConfirmation:
-        """
-        Moves the elbow to an angle.
+        Retrieve result of MoveJoints
         """
         return self.execute_unary(
             request=request,
             method=MethodInfo(
-                name="MoveElbow",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=MoveElbow_Parameters,
-                output=CommandConfirmation,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_elbow_info(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> Iterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveElbow
-        """
-        return self.execute_server_stream(
-            request=request,
-            method=MethodInfo(
-                name="MoveElbow_Info",
+                name="MoveJoints_Result",
                 service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
                 input=CommandExecutionUUID,
-                output=ExecutionInfo,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.SERVER_STREAM,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_elbow_result(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> MoveElbow_Responses:
-        """
-        Retrieve result of MoveElbow
-        """
-        return self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveElbow_Result",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=MoveElbow_Responses,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_wrist(
-        self,
-        request: MoveWrist_Parameters,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> CommandConfirmation:
-        """
-        Moves the wrist to an angle.
-        """
-        return self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveWrist",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=MoveWrist_Parameters,
-                output=CommandConfirmation,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.UNARY,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_wrist_info(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> Iterator[ExecutionInfo]:
-        """
-        Monitor the state of MoveWrist
-        """
-        return self.execute_server_stream(
-            request=request,
-            method=MethodInfo(
-                name="MoveWrist_Info",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=ExecutionInfo,
-                idempotency_level=IdempotencyLevel.UNKNOWN,
-                stream_type=StreamType.SERVER_STREAM,
-            ),
-            headers=headers,
-            timeout_ms=timeout_ms,
-        )
-    def move_wrist_result(
-        self,
-        request: CommandExecutionUUID,
-        *,
-        headers: Headers | Mapping[str, str] | None = None, 
-        timeout_ms: int | None = None,
-    ) -> MoveWrist_Responses:
-        """
-        Retrieve result of MoveWrist
-        """
-        return self.execute_unary(
-            request=request,
-            method=MethodInfo(
-                name="MoveWrist_Result",
-                service_name="sila2.dev.arturgalstyan.robots.pf400.v1.Pf400",
-                input=CommandExecutionUUID,
-                output=MoveWrist_Responses,
+                output=MoveJoints_Responses,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
             ),

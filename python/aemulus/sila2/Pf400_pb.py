@@ -74,150 +74,70 @@ class MoveZ_Responses(Message[_MoveZ_ResponsesFields]):
         ) -> None:
             pass
 
-_MoveShoulder_ParametersFields: TypeAlias = Literal["Angle"]
+_MoveJoints_ParametersFields: TypeAlias = Literal["Z", "Shoulder", "Elbow", "Wrist"]
 
-class MoveShoulder_Parameters(Message[_MoveShoulder_ParametersFields]):
+class MoveJoints_Parameters(Message[_MoveJoints_ParametersFields]):
     """
-    Parameters for MoveShoulder
+    Parameters for MoveJoints
 
     ```proto
-    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveShoulder_Parameters
+    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Parameters
     ```
 
     Attributes:
-        Angle:
-            The target angle in radians.
+        Z:
+            ```proto
+            optional sila2.org.silastandard.Real Z = 1;
+            ```
+        Shoulder:
+            The target height in meters.
 
             ```proto
-            optional sila2.org.silastandard.Real Angle = 1;
+            optional sila2.org.silastandard.Real Shoulder = 2;
+            ```
+        Elbow:
+            The target shoulder angle in radians.
+
+            ```proto
+            optional sila2.org.silastandard.Real Elbow = 3;
+            ```
+        Wrist:
+            The target elbow angle in radians.
+
+            The target wrist angle in radians.
+
+            ```proto
+            optional sila2.org.silastandard.Real Wrist = 4;
             ```
     """
 
-    __slots__ = ("Angle",)
+    __slots__ = ("Z", "Shoulder", "Elbow", "Wrist")
 
     if TYPE_CHECKING:
 
         def __init__(
             self,
             *,
-            Angle: Real | None = None,
+            Z: Real | None = None,
+            Shoulder: Real | None = None,
+            Elbow: Real | None = None,
+            Wrist: Real | None = None,
         ) -> None:
             pass
 
-        Angle: Real | None
+        Z: Real | None
+        Shoulder: Real | None
+        Elbow: Real | None
+        Wrist: Real | None
 
-_MoveShoulder_ResponsesFields: TypeAlias = NoReturn
+_MoveJoints_ResponsesFields: TypeAlias = NoReturn
 
-class MoveShoulder_Responses(Message[_MoveShoulder_ResponsesFields]):
+class MoveJoints_Responses(Message[_MoveJoints_ResponsesFields]):
     """
-    Responses of MoveShoulder
+    Responses of MoveJoints
 
     ```proto
-    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveShoulder_Responses
-    ```
-    """
-
-    __slots__ = ()
-
-    if TYPE_CHECKING:
-
-        def __init__(
-            self,
-        ) -> None:
-            pass
-
-_MoveElbow_ParametersFields: TypeAlias = Literal["Angle"]
-
-class MoveElbow_Parameters(Message[_MoveElbow_ParametersFields]):
-    """
-    Parameters for MoveElbow
-
-    ```proto
-    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveElbow_Parameters
-    ```
-
-    Attributes:
-        Angle:
-            The target angle in radians.
-
-            ```proto
-            optional sila2.org.silastandard.Real Angle = 1;
-            ```
-    """
-
-    __slots__ = ("Angle",)
-
-    if TYPE_CHECKING:
-
-        def __init__(
-            self,
-            *,
-            Angle: Real | None = None,
-        ) -> None:
-            pass
-
-        Angle: Real | None
-
-_MoveElbow_ResponsesFields: TypeAlias = NoReturn
-
-class MoveElbow_Responses(Message[_MoveElbow_ResponsesFields]):
-    """
-    Responses of MoveElbow
-
-    ```proto
-    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveElbow_Responses
-    ```
-    """
-
-    __slots__ = ()
-
-    if TYPE_CHECKING:
-
-        def __init__(
-            self,
-        ) -> None:
-            pass
-
-_MoveWrist_ParametersFields: TypeAlias = Literal["Angle"]
-
-class MoveWrist_Parameters(Message[_MoveWrist_ParametersFields]):
-    """
-    Parameters for MoveWrist
-
-    ```proto
-    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveWrist_Parameters
-    ```
-
-    Attributes:
-        Angle:
-            The target angle in radians.
-
-            ```proto
-            optional sila2.org.silastandard.Real Angle = 1;
-            ```
-    """
-
-    __slots__ = ("Angle",)
-
-    if TYPE_CHECKING:
-
-        def __init__(
-            self,
-            *,
-            Angle: Real | None = None,
-        ) -> None:
-            pass
-
-        Angle: Real | None
-
-_MoveWrist_ResponsesFields: TypeAlias = NoReturn
-
-class MoveWrist_Responses(Message[_MoveWrist_ResponsesFields]):
-    """
-    Responses of MoveWrist
-
-    ```proto
-    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveWrist_Responses
+    message sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Responses
     ```
     """
 
@@ -336,19 +256,15 @@ class Subscribe_PositionZ_Responses(Message[_Subscribe_PositionZ_ResponsesFields
 
 
 _DESC = file_desc(
-    b'\n\x11sila2/Pf400.proto\x12\'sila2.dev.arturgalstyan.robots.pf400.v1\x1a\x19sila2/SiLAFramework.proto"H\n\x10MoveZ_Parameters\x124\n\x06Height\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x06Height"\x11\n\x0fMoveZ_Responses"M\n\x17MoveShoulder_Parameters\x122\n\x05Angle\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x05Angle"\x18\n\x16MoveShoulder_Responses"J\n\x14MoveElbow_Parameters\x122\n\x05Angle\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x05Angle"\x15\n\x13MoveElbow_Responses"J\n\x14MoveWrist_Parameters\x122\n\x05Angle\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x05Angle"\x15\n\x13MoveWrist_Responses"R\n\x16MoveGripper_Parameters\x128\n\x08Position\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x08Position"\x17\n\x15MoveGripper_Responses" \n\x1eSubscribe_PositionZ_Parameters"[\n\x1dSubscribe_PositionZ_Responses\x12:\n\tPositionZ\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\tPositionZ2\xc5\x0f\n\x05Pf400\x12q\n\x05MoveZ\x129.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12e\n\nMoveZ_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12x\n\x0cMoveZ_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a8.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Responses"\x00\x12\x7f\n\x0cMoveShoulder\x12@.sila2.dev.arturgalstyan.robots.pf400.v1.MoveShoulder_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12l\n\x11MoveShoulder_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12\x86\x01\n\x13MoveShoulder_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a?.sila2.dev.arturgalstyan.robots.pf400.v1.MoveShoulder_Responses"\x00\x12y\n\tMoveElbow\x12=.sila2.dev.arturgalstyan.robots.pf400.v1.MoveElbow_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12i\n\x0eMoveElbow_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12\x80\x01\n\x10MoveElbow_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a<.sila2.dev.arturgalstyan.robots.pf400.v1.MoveElbow_Responses"\x00\x12y\n\tMoveWrist\x12=.sila2.dev.arturgalstyan.robots.pf400.v1.MoveWrist_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12i\n\x0eMoveWrist_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12\x80\x01\n\x10MoveWrist_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a<.sila2.dev.arturgalstyan.robots.pf400.v1.MoveWrist_Responses"\x00\x12}\n\x0bMoveGripper\x12?.sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12k\n\x10MoveGripper_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12\x84\x01\n\x12MoveGripper_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a>.sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Responses"\x00\x12\xaa\x01\n\x13Subscribe_PositionZ\x12G.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Parameters\x1aF.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Responses"\x000\x01b\x06proto3',
+    b'\n\x11sila2/Pf400.proto\x12\'sila2.dev.arturgalstyan.robots.pf400.v1\x1a\x19sila2/SiLAFramework.proto"H\n\x10MoveZ_Parameters\x124\n\x06Height\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x06Height"\x11\n\x0fMoveZ_Responses"\xe5\x01\n\x15MoveJoints_Parameters\x12*\n\x01Z\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x01Z\x128\n\x08Shoulder\x18\x02 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x08Shoulder\x122\n\x05Elbow\x18\x03 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x05Elbow\x122\n\x05Wrist\x18\x04 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x05Wrist"\x16\n\x14MoveJoints_Responses"R\n\x16MoveGripper_Parameters\x128\n\x08Position\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\x08Position"\x17\n\x15MoveGripper_Responses" \n\x1eSubscribe_PositionZ_Parameters"[\n\x1dSubscribe_PositionZ_Responses\x12:\n\tPositionZ\x18\x01 \x01(\x0b2\x1c.sila2.org.silastandard.RealR\tPositionZ2\xe9\t\n\x05Pf400\x12q\n\x05MoveZ\x129.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12e\n\nMoveZ_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12x\n\x0cMoveZ_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a8.sila2.dev.arturgalstyan.robots.pf400.v1.MoveZ_Responses"\x00\x12{\n\nMoveJoints\x12>.sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12j\n\x0fMoveJoints_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12\x82\x01\n\x11MoveJoints_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a=.sila2.dev.arturgalstyan.robots.pf400.v1.MoveJoints_Responses"\x00\x12}\n\x0bMoveGripper\x12?.sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Parameters\x1a+.sila2.org.silastandard.CommandConfirmation"\x00\x12k\n\x10MoveGripper_Info\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a%.sila2.org.silastandard.ExecutionInfo"\x000\x01\x12\x84\x01\n\x12MoveGripper_Result\x12,.sila2.org.silastandard.CommandExecutionUUID\x1a>.sila2.dev.arturgalstyan.robots.pf400.v1.MoveGripper_Responses"\x00\x12\xaa\x01\n\x13Subscribe_PositionZ\x12G.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Parameters\x1aF.sila2.dev.arturgalstyan.robots.pf400.v1.Subscribe_PositionZ_Responses"\x000\x01b\x06proto3',
     [
         SiLAFramework_pb.desc(),
     ],
     {
         "MoveZ_Parameters": MoveZ_Parameters,
         "MoveZ_Responses": MoveZ_Responses,
-        "MoveShoulder_Parameters": MoveShoulder_Parameters,
-        "MoveShoulder_Responses": MoveShoulder_Responses,
-        "MoveElbow_Parameters": MoveElbow_Parameters,
-        "MoveElbow_Responses": MoveElbow_Responses,
-        "MoveWrist_Parameters": MoveWrist_Parameters,
-        "MoveWrist_Responses": MoveWrist_Responses,
+        "MoveJoints_Parameters": MoveJoints_Parameters,
+        "MoveJoints_Responses": MoveJoints_Responses,
         "MoveGripper_Parameters": MoveGripper_Parameters,
         "MoveGripper_Responses": MoveGripper_Responses,
         "Subscribe_PositionZ_Parameters": Subscribe_PositionZ_Parameters,
