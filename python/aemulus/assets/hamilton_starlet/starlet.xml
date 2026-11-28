@@ -312,14 +312,14 @@
   </actuator>
 
   <equality>
-    <weld name="tip_weld_0" body1="pipette0" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_1" body1="pipette1" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_2" body1="pipette2" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_3" body1="pipette3" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_4" body1="pipette4" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_5" body1="pipette5" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_6" body1="pipette6" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
-    <weld name="tip_weld_7" body1="pipette7" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_0" body1="pipette0" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_1" body1="pipette1" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_2" body1="pipette2" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_3" body1="pipette3" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_4" body1="pipette4" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_5" body1="pipette5" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_6" body1="pipette6" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
+    <weld name="tip_weld_7" body1="pipette7" body2="world" active="false" relpose="0 0 0 1 0 0 0" torquescale="10" solref="0.002 1" solimp="0.99 0.999 0.0001"/>
   </equality>
 
   <!-- Arm centered at x = 0, channels spaced 30 mm apart at z = 0.35 m, paddles 6 and 7 fitted. This is also the default pose. -->

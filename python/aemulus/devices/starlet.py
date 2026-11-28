@@ -4,7 +4,7 @@ import typing
 from dataclasses import dataclass, field
 from importlib.resources import files
 
-from mujoco import MjData, MjModel
+from mujoco import MjData, MjModel, mjtGeom
 
 from aemulus.device import Device
 from aemulus.lab import sbs_96_offset
@@ -22,7 +22,7 @@ class _StarletState:
         self.lock = threading.Lock()
         self.initialized = False
         self.channels: list[tuple[int, int, int, int, int]] = []
-        self.tips: dict[int, tuple[str, float]] = {}
+        self.tips: dict[int, tuple[str, float, int, int]] = {}
         self.max_tip_top_z = 0.0
         self.containers: list[tuple[str, int, bool, float, float, float]] = []
         self.attached: dict[int, int] = {}
@@ -76,11 +76,24 @@ class STARlet(Device):
         for body_id in range(model.nbody):
             name = model.body(body_id).name
             if "/tip_" in name and model.body_jntnum[body_id] == 1:
-                geom_id = model.body_geomadr[body_id]
-                tip_length = float(model.geom_size[geom_id][1] * 2.0)
-                state.tips[body_id] = (name, tip_length)
+                geom_start = int(model.body_geomadr[body_id])
+                geom_count = int(model.body_geomnum[body_id])
+                tip_length = 0.0
+                for geom_id in range(geom_start, geom_start + geom_count):
+                    half_z = float(
+                        model.geom_size[geom_id][2]
+                        if model.geom_type[geom_id] == mjtGeom.mjGEOM_BOX
+                        else model.geom_size[geom_id][1]
+                    )
+                    tip_length = max(
+                        tip_length, half_z - float(model.geom_pos[geom_id][2])
+                    )
+                jnt_id = int(model.body_jntadr[body_id])
+                qpos_adr = int(model.jnt_qposadr[jnt_id])
+                dof_adr = int(model.jnt_dofadr[jnt_id])
+                state.tips[body_id] = (name, tip_length, qpos_adr, dof_adr)
                 state.max_tip_top_z = max(
-                    state.max_tip_top_z, float(data.xpos[body_id, 2]) + tip_length + 0.004
+                    state.max_tip_top_z, float(data.xpos[body_id, 2]) + 0.004
                 )
             elif name.endswith("/nunc_96_plate") or name.endswith("/reservoir"):
                 # Collision geom is last on reservoir (after visual walls) and sole geom on plate.
@@ -150,7 +163,7 @@ class STARlet(Device):
                         continue
 
                     if abs(dp) > 1e-7 and abs(float(qvel[z_dof])) < 0.02:
-                        _, tip_length = state.tips[tip_id]
+                        _, tip_length, _, _ = state.tips[tip_id]
                         target = self._container_at(data, px, py, pz - tip_length)
                         if target is not None:
                             dv = dp * PLUNGER_UL_PER_M
@@ -166,17 +179,22 @@ class STARlet(Device):
                                     state.volumes_ul.get(target, 0.0) + given
                                 )
                 elif eject < 0.002 and pz <= state.max_tip_top_z:
-                    # Weld tip when nozzle meets an unpicked tip collar.
-                    for cand_id, (_, tip_length) in state.tips.items():
+                    # Weld tip collar flush to the channel nozzle when they meet.
+                    for cand_id, (_, _, qpos_adr, dof_adr) in state.tips.items():
                         if cand_id in state.attached_ids or cand_id in state.ejected:
                             continue
                         tpos = xpos[cand_id]
                         if (
                             math.hypot(px - float(tpos[0]), py - float(tpos[1])) <= 0.003
-                            and abs(pz - (float(tpos[2]) + tip_length)) <= 0.004
+                            and abs(pz - float(tpos[2])) <= 0.004
                         ):
+                            qpos[qpos_adr : qpos_adr + 3] = pos
+                            qpos[qpos_adr + 3 : qpos_adr + 7] = data.xquat[pipette_id]
+                            qvel[dof_adr : dof_adr + 6] = 0.0
                             model.eq_obj2id[weld_id] = cand_id
-                            model.eq_data[weld_id, 3:6] = (0.0, 0.0, -tip_length)
+                            model.eq_data[weld_id, 0:3] = (0.0, 0.0, 0.0)
+                            model.eq_data[weld_id, 3:6] = (0.0, 0.0, 0.0)
+                            model.eq_data[weld_id, 6:10] = (1.0, 0.0, 0.0, 0.0)
                             data.eq_active[weld_id] = 1
                             state.attached[ch] = cand_id
                             state.attached_ids.add(cand_id)
