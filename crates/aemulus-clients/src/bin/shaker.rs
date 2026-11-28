@@ -1,7 +1,6 @@
 use aemulus_proto::sila2::{
     dev::arturgalstyan::shakers::shakercontroller::v1::{
-        StartShakingParameters,
-        shaker_controller_client::ShakerControllerClient,
+        StartShakingParameters, shaker_controller_client::ShakerControllerClient,
     },
     org::silastandard::Integer,
 };
