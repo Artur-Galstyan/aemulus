@@ -1,5 +1,6 @@
 import asyncio
 import socket
+import sys
 import threading
 import time
 from dataclasses import dataclass
@@ -198,6 +199,8 @@ def run_sim(sim_server: SimServer, port: int = 50051) -> None:
     def _run_server():
         config = Config()
         config.bind = [f"127.0.0.1:{port}"]
+        # The device servers poll joints over one connection for the whole run.
+        config.keep_alive_max_requests = sys.maxsize
 
         async def main():
             app = SimServiceASGIApplication(sim_server)
