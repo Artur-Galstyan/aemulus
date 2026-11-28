@@ -28,6 +28,7 @@ use uuid::Uuid;
 
 const POSITION_TOLERANCE_M: f64 = 0.001;
 const SETTLE_DELTA_M: f64 = 1e-4;
+const SETTLE_MAX_ERROR_M: f64 = 0.005;
 const SETTLE_TICKS: u32 = 5;
 const MAX_POLL_TICKS: u32 = 100;
 
@@ -79,6 +80,7 @@ impl StarletSim {
 
         let moves = Arc::clone(&self.moves);
         let id = move_uuid.to_string();
+        let allow_contact_settle = axis.starts_with('y');
 
         tokio::spawn(async move {
             let mut prev_pos = start_pos;
@@ -107,17 +109,21 @@ impl StarletSim {
                 }
                 prev_pos = current;
 
+                let error = (current - target).abs();
                 let mut status = CommandStatus::Running;
-                if (current - target).abs() < POSITION_TOLERANCE_M
-                    || settled_ticks >= SETTLE_TICKS
-                    || tick == MAX_POLL_TICKS
+                if error < POSITION_TOLERANCE_M
+                    || (allow_contact_settle
+                        && settled_ticks >= SETTLE_TICKS
+                        && error < SETTLE_MAX_ERROR_M)
                 {
                     status = CommandStatus::FinishedSuccessfully;
+                } else if tick == MAX_POLL_TICKS {
+                    status = CommandStatus::FinishedWithError;
                 }
 
                 let total = (target - start_pos).abs();
                 let progress = if total > 0.0 {
-                    (1.0 - (target - current).abs() / total).clamp(0.0, 1.0)
+                    (1.0 - error / total).clamp(0.0, 1.0)
                 } else {
                     1.0
                 };
@@ -126,7 +132,9 @@ impl StarletSim {
                     moves.insert(id.clone(), (status, progress));
                 }
 
-                if status == CommandStatus::FinishedSuccessfully {
+                if status == CommandStatus::FinishedSuccessfully
+                    || status == CommandStatus::FinishedWithError
+                {
                     break;
                 }
 
