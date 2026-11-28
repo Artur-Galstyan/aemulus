@@ -15,12 +15,9 @@ from aemulus.devices.starlet import STARlet, TIP_50UL_LENGTH
 from aemulus.lab import Labware, create_lab, wait_for_port
 from aemulus.sila2.Pf400_connect import Pf400Client
 from aemulus.sila2.Pf400_pb import (
-    MoveElbow_Parameters,
     MoveGripper_Parameters,
-    MoveShoulder_Parameters,
-    MoveWrist_Parameters,
+    MoveJoints_Parameters,
 )
-from aemulus.sila2.Pf400_pb import MoveZ_Parameters as Pf400MoveZ_Parameters
 from aemulus.sila2.SiLAFramework_pb import ExecutionInfo, Integer, Real
 from aemulus.sila2.Starlet_connect import StarletClient
 from aemulus.sila2.Starlet_pb import (
@@ -95,26 +92,17 @@ async def move_eject(client, position, channel):
     await wait(confirmation, client.move_eject_info, client.move_eject_result)
 
 
-async def move_height(client, position):
-    confirmation = await client.move_z(Pf400MoveZ_Parameters(Height=Real(value=position)))
-    await wait(confirmation, client.move_z_info, client.move_z_result)
-
-
-async def move_shoulder(client, angle):
-    confirmation = await client.move_shoulder(
-        MoveShoulder_Parameters(Angle=Real(value=angle))
+async def move_joints(client, pose):
+    height, shoulder, elbow, wrist = pose
+    confirmation = await client.move_joints(
+        MoveJoints_Parameters(
+            Z=Real(value=height),
+            Shoulder=Real(value=shoulder),
+            Elbow=Real(value=elbow),
+            Wrist=Real(value=wrist),
+        )
     )
-    await wait(confirmation, client.move_shoulder_info, client.move_shoulder_result)
-
-
-async def move_elbow(client, angle):
-    confirmation = await client.move_elbow(MoveElbow_Parameters(Angle=Real(value=angle)))
-    await wait(confirmation, client.move_elbow_info, client.move_elbow_result)
-
-
-async def move_wrist(client, angle):
-    confirmation = await client.move_wrist(MoveWrist_Parameters(Angle=Real(value=angle)))
-    await wait(confirmation, client.move_wrist_info, client.move_wrist_result)
+    await wait(confirmation, client.move_joints_info, client.move_joints_result)
 
 
 async def move_gripper(client, position):
@@ -124,29 +112,17 @@ async def move_gripper(client, position):
     await wait(confirmation, client.move_gripper_info, client.move_gripper_result)
 
 
-async def pf400_move(client, start, end):
-    # Move the three rotary joints together to keep the plate landscape.
-    # Small angle increments limit acceleration while the fingers grip the plate.
-    for fraction in np.linspace(0, 1, 21)[1:]:
-        shoulder, elbow, wrist = np.array(start) + fraction * (np.array(end) - start)
-        await asyncio.gather(
-            move_shoulder(client, shoulder),
-            move_elbow(client, elbow),
-            move_wrist(client, wrist),
-        )
-
-
 async def transfer(client, start, end):
     # Poses contain (Z, shoulder, elbow, wrist). The arm starts above start.
-    # The fingers hold the plate by friction.
-    await move_height(client, start[0])
+    # Lift clear of each support before traversing the deck with a friction grip.
+    await move_joints(client, start)
     await move_gripper(client, 0.0019)
-    await move_height(client, PF400_SAFE_Z)
-    await pf400_move(client, start[1:], end[1:])
-    await move_height(client, end[0])
+    await move_joints(client, (PF400_SAFE_Z, *start[1:]))
+    await move_joints(client, (PF400_SAFE_Z, *end[1:]))
+    await move_joints(client, end)
     await asyncio.sleep(0.5)
     await move_gripper(client, 0.030)
-    await move_height(client, PF400_SAFE_Z)
+    await move_joints(client, (PF400_SAFE_Z, *end[1:]))
 
 
 def check_plate(lab, expected, place):
@@ -224,11 +200,11 @@ async def main(view=False):
     ):
         # Step 1: the PF400 loads the plate from the nest onto carrier A, site 0.
         await move_gripper(arm, 0.030)
-        await move_height(arm, PF400_SAFE_Z)
-        await pf400_move(arm, PF400_HOME, NEST_POSE[1:])
+        await move_joints(arm, (PF400_SAFE_Z, *PF400_HOME))
+        await move_joints(arm, (PF400_SAFE_Z, *NEST_POSE[1:]))
         await transfer(arm, NEST_POSE, SITE_A_POSE)
         # Park above the nest, clear of the deck.
-        await pf400_move(arm, SITE_A_POSE[1:], NEST_POSE[1:])
+        await move_joints(arm, (PF400_SAFE_Z, *NEST_POSE[1:]))
         check_plate(lab, (carrier_a[0], SITE_0_Y, PLATE_SITE_Z), "carrier A")
 
         # Step 2: channel 5 transfers 20 uL from the reservoir to plate A1.
@@ -316,7 +292,7 @@ async def main(view=False):
         check_plate(lab, (carrier_b[0], SITE_0_Y, PLATE_SITE_Z), "carrier B")
 
         # Step 4: the PF400 returns the plate from carrier B, site 0, to the nest.
-        await pf400_move(arm, NEST_POSE[1:], SITE_B_POSE[1:])
+        await move_joints(arm, (PF400_SAFE_Z, *SITE_B_POSE[1:]))
         await transfer(arm, SITE_B_POSE, NEST_POSE)
         check_plate(lab, (NEST[0], NEST[1], NEST_Z), "the nest")
 
