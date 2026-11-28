@@ -1,19 +1,27 @@
-"""Move a plate on the STARlet deck, headless by default (pass --view for the viewer)."""
+"""Move a plate and transfer liquid on the STARlet deck (pass --view for the viewer)."""
 
 import argparse
 import asyncio
+import sys
 from importlib.resources import files
 
+import mujoco.viewer
 import numpy as np
 from connectrpc.protocol import ProtocolType
 from mujoco import MjData, mj_forward, mj_setState, mjtState
 from pyqwest import Client, HTTPTransport, HTTPVersion
 
-from aemulus.devices.starlet import STARlet
+from aemulus.devices.starlet import STARlet, TIP_50UL_LENGTH
 from aemulus.lab import Labware, create_lab, wait_for_port
 from aemulus.sila2.SiLAFramework_pb import ExecutionInfo, Integer, Real
 from aemulus.sila2.Starlet_connect import StarletClient
-from aemulus.sila2.Starlet_pb import MoveX_Parameters, MoveY_Parameters, MoveZ_Parameters
+from aemulus.sila2.Starlet_pb import (
+    MoveEject_Parameters,
+    MovePlunger_Parameters,
+    MoveX_Parameters,
+    MoveY_Parameters,
+    MoveZ_Parameters,
+)
 
 
 async def wait(confirmation, info, result):
@@ -49,7 +57,25 @@ async def move_z(client, position, channel):
     await wait(confirmation, client.move_z_info, client.move_z_result)
 
 
+async def move_plunger(client, position, channel):
+    confirmation = await client.move_plunger(
+        MovePlunger_Parameters(Channel=Integer(value=channel), Position=Real(value=position))
+    )
+    await wait(confirmation, client.move_plunger_info, client.move_plunger_result)
+
+
+async def move_eject(client, position, channel):
+    confirmation = await client.move_eject(
+        MoveEject_Parameters(Channel=Integer(value=channel), Position=Real(value=position))
+    )
+    await wait(confirmation, client.move_eject_info, client.move_eject_result)
+
+
 async def main(view=False):
+    if view and sys.platform == "darwin" and mujoco.viewer._MJPYTHON is None:
+        raise SystemExit(
+            "On macOS use: uv run mjpython examples/starlet_demo.py --view"
+        )
     assets = files("aemulus") / "assets"
     starlet = STARlet(device_name="starlet", pos=(0, 0, 0))
     lab = create_lab(
@@ -60,6 +86,11 @@ async def main(view=False):
                 str(assets / "nunc_96_plate/nunc_96_plate.xml"),
                 (-0.20, -0.20, 0.20),
                 free=True,
+            ),
+            Labware(
+                "destination",
+                str(assets / "nunc_96_plate/nunc_96_plate.xml"),
+                (0.22, -0.20, 0.20),
             ),
             Labware(
                 "tips_50",
@@ -78,6 +109,7 @@ async def main(view=False):
             ),
         ],
     )
+    starlet.set_liquid("plate", 50.0, "A1")
     if view:
         lab.view()
     wait_for_port(50053)
@@ -103,6 +135,60 @@ async def main(view=False):
         await asyncio.gather(move_z(client, 0.35, 6), move_z(client, 0.35, 7))
         await asyncio.sleep(0.5)
 
+        # Preserve channel order while channel 5 travels between the racks and plates.
+        await asyncio.gather(
+            *(move_y(client, 0.18 - channel * 0.02, channel) for channel in range(5)),
+            move_y(client, -0.25, 6),
+            move_y(client, -0.27, 7),
+        )
+        # Channel 5 picks up a 50 uL tip at A1. XYZ describes the nozzle,
+        # so the tip collar meets the nozzle at the rack top.
+        x, y = lab.well_xy("tips_50", "A1")
+        await move_x(client, x)
+        await move_y(client, y, 5)
+        await move_z(client, lab.labware_pos("tips_50")[2] + TIP_50UL_LENGTH, 5)
+        await move_z(client, 0.35, 5)
+        if starlet.attached_tip(5) is None:
+            raise RuntimeError("Channel 5 did not pick up the A1 tip")
+
+        # Aspirate 20 uL from the moved plate. The 50.4 mm tip ends
+        # 10 mm above the plate bottom, inside the A1 well.
+        x, y = lab.well_xy("plate", "A1")
+        await move_x(client, x)
+        await move_y(client, y, 5)
+        await move_z(client, lab.labware_pos("plate")[2] + 0.010 + TIP_50UL_LENGTH, 5)
+        await move_plunger(client, 0.020, 5)
+        await asyncio.sleep(0.5)
+        if not np.isclose(starlet.channel_volume_ul(5), 20.0, atol=1.0):
+            raise RuntimeError("Channel 5 did not aspirate 20 uL")
+        await move_z(client, 0.35, 5)
+
+        x, y = lab.well_xy("destination", "A1")
+        await move_x(client, x)
+        await move_y(client, y, 5)
+        await move_z(
+            client, lab.labware_pos("destination")[2] + 0.010 + TIP_50UL_LENGTH, 5
+        )
+        await move_plunger(client, 0.0, 5)
+        await asyncio.sleep(0.5)
+        await move_z(client, 0.35, 5)
+
+        # Check conservation before ejection discards any residual in the tip.
+        total = (
+            starlet.volume_ul("plate", "A1")
+            + starlet.volume_ul("destination", "A1")
+            + starlet.channel_volume_ul(5)
+        )
+        if not np.isclose(total, 50.0, rtol=0.0, atol=1e-6):
+            raise RuntimeError(f"Liquid was lost during transfer: {total} uL")
+
+        # Eject onto an empty part of the deck, clear of both plates.
+        await move_x(client, -0.30)
+        await move_y(client, -0.10, 5)
+        await move_eject(client, 0.010, 5)
+        await move_eject(client, 0.0, 5)
+        await asyncio.sleep(0.5)
+
     data = MjData(lab.model)
     mj_setState(lab.model, data, lab.sim.state, mjtState.mjSTATE_FULLPHYSICS)
     mj_forward(lab.model, data)
@@ -110,6 +196,15 @@ async def main(view=False):
     if not np.allclose(position, (0.05, -0.20, 0.20), atol=0.005):
         raise RuntimeError(f"Plate did not reach the destination: {position}")
     print(f"Plate moved successfully to {position.round(4).tolist()} m")
+    volumes = (starlet.volume_ul("plate", "A1"), starlet.volume_ul("destination", "A1"))
+    # The 1 mm plunger arrival tolerance corresponds to 1 uL.
+    if not np.allclose(volumes, (30.0, 20.0), atol=1.0):
+        raise RuntimeError(f"Liquid did not reach the destination: {volumes} uL")
+    if starlet.attached_tip(5) is not None:
+        raise RuntimeError("Channel 5 did not eject its tip")
+    if not np.isclose(starlet.channel_volume_ul(5), 0.0, atol=0.1):
+        raise RuntimeError("Liquid remains in channel 5")
+    print(f"Transferred 20 uL from plate A1 to destination A1: {np.round(volumes, 2)} uL")
 
 
 if __name__ == "__main__":
