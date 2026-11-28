@@ -1,9 +1,9 @@
 use aemulus_proto::sila2::{
     dev::arturgalstyan::shakers::shakercontroller::v1::{
-        StartShakingParameters, StopShakingParameters,
+        StartShakingParameters,
         shaker_controller_client::ShakerControllerClient,
     },
-    org::silastandard::{Integer, Real},
+    org::silastandard::Integer,
 };
 use tonic::transport::Channel;
 

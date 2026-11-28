@@ -15,7 +15,7 @@ use aemulus_proto::{
 use tokio_stream::wrappers::ReceiverStream;
 use tonic::{Response, Status, transport::Channel};
 
-use crate::{devices::shaker::ShakerModel, models::ShakerSpec};
+use crate::models::ShakerSpec;
 
 pub(crate) struct ShakerSim {
     pub sim: SimServiceClient<Channel>,
