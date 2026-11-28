@@ -33,11 +33,6 @@
       <geom name="site_2_pad" size="0.0635 0.043 0.0005" pos="0 -0.005 0.08565" mass="0" material="hamilton_carrier_site"/>
       <geom name="site_3_pad" size="0.0635 0.043 0.0005" pos="0 0.091 0.08565" mass="0" material="hamilton_carrier_site"/>
       <geom name="site_4_pad" size="0.0635 0.043 0.0005" pos="0 0.187 0.08565" mass="0" material="hamilton_carrier_site"/>
-      <site name="site_0" pos="0 -0.197 0.08615" group="3"/>
-      <site name="site_1" pos="0 -0.101 0.08615" group="3"/>
-      <site name="site_2" pos="0 -0.005 0.08615" group="3"/>
-      <site name="site_3" pos="0 0.091 0.08615" group="3"/>
-      <site name="site_4" pos="0 0.187 0.08615" group="3"/>
     </body>
   </worldbody>
 </mujoco>
