@@ -1,0 +1,16 @@
+<!-- Off-deck plate nest for the PF400 workcell demo.
+     Estimates, not vendor values: base 150 x 100 x 10 mm, support 110 x 60 mm,
+     plate bottom 280 mm above the mount surface, total mass 2 kg.
+     Units: meters and kilograms. Origin: center of the footprint on the bottom surface;
+     x is the plate long side, y is the short side, and z points up.
+     The narrow support leaves the plate's short sides clear for the gripper fingers. -->
+<mujoco model="plate_nest">
+  <worldbody>
+    <body name="plate_nest">
+      <geom name="base" type="box" size="0.075 0.050 0.005" pos="0 0 0.005"
+            mass="0.5" rgba="0.35 0.36 0.38 1"/>
+      <geom name="support" type="box" size="0.055 0.030 0.135" pos="0 0 0.145"
+            mass="1.5" rgba="0.65 0.66 0.68 1"/>
+    </body>
+  </worldbody>
+</mujoco>
