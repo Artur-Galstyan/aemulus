@@ -1,8 +1,13 @@
-<!-- Hamilton Microlab STARlet liquid handler: outer housing and deck surface only.
+<!-- Hamilton Microlab STARlet liquid handler: outer housing, deck surface, X arm, and 8 pipetting channels
+     with independent Y/Z drives, dispense plungers, tip eject sleeves, and CO-RE gripper paddles.
      Units: SI (meters, kg).
      Origin: center of the footprint on the floor (bench). +x is along the long side (left to right),
      -y is front (open side), +y is back, +z is up.
-     Simple box geoms are both the visual and collision shapes. The deck is one box.
+     Simple box and cylinder geoms are both the visual and collision shapes. The deck is one box.
+     Joint coordinates: x, y0..y7, and z0..z7 equal the channel tip/paddle-bottom position in the housing frame.
+     Channels are ordered from back (+y, channel 0) to front (-y, channel 7).
+     paddle0..paddle7 equal the paddle stow offset above zN (0 = fitted at zN, 0.25 = parked).
+     Channels 6 and 7 start with CO-RE paddles fitted; their inner faces sit at y6 and y7 (gap = y6 - y7).
      Sourced values:
        - Overall dimensions: 1124 x 795 x 903 mm (W x D x H), Hamilton Microlab STARlet data sheet.
        - Free work area: 675 x 465 x 136 mm (30 tracks x 22.5 mm pitch = 675 mm), Hamilton data sheet and PyLabRobot:
@@ -10,25 +15,55 @@
        - Carrier front edge offset: 63 mm, plus reference chassis depth 785.79 mm, modelled deck depth 773 mm,
          and deck resource 1005 x 653.5 mm from PyLabRobot (hamilton_decks.py above, and
          https://raw.githubusercontent.com/PyLabRobot/pylabrobot/main/pylabrobot/resources/hamilton/star_decks.py).
-     Estimated values (not vendor values):
-       - Total mass: 110 kg (base 65, deck 15, back wall 14, side walls 8 each).
-       - Deck plate footprint: 0.675 x 0.465 m (estimate using the sourced free work area, not a sourced physical deck plate size).
+       - Pipetting channels: 8 independent channels, 9 mm minimum Y pitch, 600.5 mm Y span, 334.7 mm Z travel above deck.
+     Estimates, not vendor values:
+       - Total housing mass: 110 kg (base 65, deck 15, back wall 14, side walls 8 each); moving link masses and inertias.
+       - Deck plate footprint: 0.675 x 0.465 m (using the sourced free work area, not a sourced physical deck plate size).
        - Deck top surface height above floor/bench: 0.200 m; deck box 0.020 m thick (z = 0.180 to 0.200 m);
          base block ends at deck underside (z = 0 to 0.180 m) to avoid overlap.
-       - Deck box position: centered in x; front edge 0.063 m behind housing front (y = -0.3345 to +0.1305 m,
-         estimate transferring PyLabRobot carrier offset from deck frame to housing front).
+       - Deck box position: centered in x; front edge 0.063 m behind housing front (y = -0.3345 to +0.1305 m).
        - Housing shell: full-footprint base block with no separate feet; back and side walls 0.030 m thick from
-         z = 0.180 to 0.903 m; open front and open top (top cover omitted). -->
+         z = 0.180 to 0.903 m; open front and open top (top cover omitted).
+       - X travel (-0.35 to 0.35 m, fit to housing/deck), arm beam, channel housings, pipette shafts,
+         plunger travel (60 mm), tip eject travel (10 mm), CO-RE paddle dimensions (36 x 4 x 60 mm),
+         and actuator gains/force limits. -->
 <mujoco model="hamilton_starlet">
   <compiler angle="degree" autolimits="true"/>
 
   <default>
+    <joint damping="1" armature="0.05"/>
     <geom type="box" contype="1" conaffinity="1" material="starlet_housing"/>
+    <position inheritrange="1"/>
+    <default class="starlet_decor">
+      <geom contype="0" conaffinity="0"/>
+    </default>
+    <default class="starlet_y">
+      <joint type="slide" axis="0 1 0" range="-0.3345 0.2660"/>
+    </default>
+    <default class="starlet_z">
+      <joint type="slide" axis="0 0 1" range="0.20 0.5347" ref="0.35"/>
+    </default>
+    <default class="starlet_plunger">
+      <joint type="slide" axis="0 0 1" range="0 0.06" ref="0" damping="0.2" armature="0.01"/>
+    </default>
+    <default class="starlet_eject">
+      <joint type="slide" axis="0 0 1" range="0 0.01" ref="0" damping="0.2" armature="0.01"/>
+    </default>
+    <default class="starlet_paddle">
+      <joint type="slide" axis="0 0 1" range="0 0.25" damping="0.5" armature="0.02"/>
+    </default>
+    <default class="starlet_paddle_geom">
+      <geom type="box" size="0.018 0.002 0.030" mass="0.05" material="starlet_paddle" friction="2.5 0.01 0.001" condim="4" solref="0.005 1" solimp="0.95 0.99 0.001"/>
+    </default>
   </default>
 
   <asset>
     <material name="starlet_housing" rgba="0.9 0.9 0.91 1" specular="0.3" shininess="0.4"/>
     <material name="starlet_deck" rgba="0.75 0.76 0.78 1" specular="0.6" shininess="0.7"/>
+    <material name="starlet_arm" rgba="0.20 0.45 0.75 1" specular="0.3" shininess="0.4"/>
+    <material name="starlet_dark" rgba="0.25 0.28 0.32 1" specular="0.2"/>
+    <material name="starlet_metal" rgba="0.78 0.80 0.84 1" specular="0.5" shininess="0.6"/>
+    <material name="starlet_paddle" rgba="0.95 0.55 0.15 1" specular="0.3" shininess="0.4"/>
   </asset>
 
   <worldbody>
@@ -43,6 +78,246 @@
       <geom name="back_wall" size="0.562 0.015 0.3615" pos="0 0.3825 0.5415" mass="14"/>
       <geom name="left_wall" size="0.015 0.3825 0.3615" pos="-0.547 -0.015 0.5415" mass="8"/>
       <geom name="right_wall" size="0.015 0.3825 0.3615" pos="0.547 -0.015 0.5415" mass="8"/>
+
+      <!-- X gantry arm spanning the deck, carrying 8 independent pipetting channels. -->
+      <body name="arm" gravcomp="1">
+        <joint name="x" type="slide" axis="1 0 0" range="-0.35 0.35" ref="0"/>
+        <geom name="beam" class="starlet_decor" size="0.030 0.34 0.025" pos="0 -0.04 0.72" mass="2.0" material="starlet_arm"/>
+
+        <body name="channel0" pos="0 0.11 0" gravcomp="1">
+          <joint name="y0" class="starlet_y" ref="0.11"/>
+          <geom name="housing0" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette0" pos="0 0 0.35" gravcomp="1">
+            <joint name="z0" class="starlet_z"/>
+            <geom name="shaft0" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger0" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger0" class="starlet_plunger"/>
+              <geom name="plunger0" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject0" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject0" class="starlet_eject"/>
+              <geom name="eject0" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle0" pos="0 0 0.25" gravcomp="1">
+              <joint name="paddle0" class="starlet_paddle" ref="0.25"/>
+              <geom name="paddle0" class="starlet_paddle_geom" pos="0 0 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <body name="channel1" pos="0 0.08 0" gravcomp="1">
+          <joint name="y1" class="starlet_y" ref="0.08"/>
+          <geom name="housing1" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette1" pos="0 0 0.35" gravcomp="1">
+            <joint name="z1" class="starlet_z"/>
+            <geom name="shaft1" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger1" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger1" class="starlet_plunger"/>
+              <geom name="plunger1" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject1" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject1" class="starlet_eject"/>
+              <geom name="eject1" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle1" pos="0 0 0.25" gravcomp="1">
+              <joint name="paddle1" class="starlet_paddle" ref="0.25"/>
+              <geom name="paddle1" class="starlet_paddle_geom" pos="0 0 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <body name="channel2" pos="0 0.05 0" gravcomp="1">
+          <joint name="y2" class="starlet_y" ref="0.05"/>
+          <geom name="housing2" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette2" pos="0 0 0.35" gravcomp="1">
+            <joint name="z2" class="starlet_z"/>
+            <geom name="shaft2" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger2" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger2" class="starlet_plunger"/>
+              <geom name="plunger2" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject2" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject2" class="starlet_eject"/>
+              <geom name="eject2" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle2" pos="0 0 0.25" gravcomp="1">
+              <joint name="paddle2" class="starlet_paddle" ref="0.25"/>
+              <geom name="paddle2" class="starlet_paddle_geom" pos="0 0 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <body name="channel3" pos="0 0.02 0" gravcomp="1">
+          <joint name="y3" class="starlet_y" ref="0.02"/>
+          <geom name="housing3" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette3" pos="0 0 0.35" gravcomp="1">
+            <joint name="z3" class="starlet_z"/>
+            <geom name="shaft3" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger3" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger3" class="starlet_plunger"/>
+              <geom name="plunger3" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject3" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject3" class="starlet_eject"/>
+              <geom name="eject3" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle3" pos="0 0 0.25" gravcomp="1">
+              <joint name="paddle3" class="starlet_paddle" ref="0.25"/>
+              <geom name="paddle3" class="starlet_paddle_geom" pos="0 0 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <body name="channel4" pos="0 -0.01 0" gravcomp="1">
+          <joint name="y4" class="starlet_y" ref="-0.01"/>
+          <geom name="housing4" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette4" pos="0 0 0.35" gravcomp="1">
+            <joint name="z4" class="starlet_z"/>
+            <geom name="shaft4" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger4" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger4" class="starlet_plunger"/>
+              <geom name="plunger4" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject4" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject4" class="starlet_eject"/>
+              <geom name="eject4" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle4" pos="0 0 0.25" gravcomp="1">
+              <joint name="paddle4" class="starlet_paddle" ref="0.25"/>
+              <geom name="paddle4" class="starlet_paddle_geom" pos="0 0 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <body name="channel5" pos="0 -0.04 0" gravcomp="1">
+          <joint name="y5" class="starlet_y" ref="-0.04"/>
+          <geom name="housing5" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette5" pos="0 0 0.35" gravcomp="1">
+            <joint name="z5" class="starlet_z"/>
+            <geom name="shaft5" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger5" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger5" class="starlet_plunger"/>
+              <geom name="plunger5" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject5" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject5" class="starlet_eject"/>
+              <geom name="eject5" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle5" pos="0 0 0.25" gravcomp="1">
+              <joint name="paddle5" class="starlet_paddle" ref="0.25"/>
+              <geom name="paddle5" class="starlet_paddle_geom" pos="0 0 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <!-- Channels 6 (+y, back) and 7 (-y, front) carry fitted CO-RE gripper paddles by default. -->
+        <body name="channel6" pos="0 -0.07 0" gravcomp="1">
+          <joint name="y6" class="starlet_y" ref="-0.07"/>
+          <geom name="housing6" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette6" pos="0 0 0.35" gravcomp="1">
+            <joint name="z6" class="starlet_z"/>
+            <geom name="shaft6" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger6" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger6" class="starlet_plunger"/>
+              <geom name="plunger6" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject6" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject6" class="starlet_eject"/>
+              <geom name="eject6" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle6" pos="0 0 0" gravcomp="1">
+              <joint name="paddle6" class="starlet_paddle" ref="0"/>
+              <geom name="paddle6" class="starlet_paddle_geom" pos="0 0.002 0.030"/>
+            </body>
+          </body>
+        </body>
+
+        <body name="channel7" pos="0 -0.10 0" gravcomp="1">
+          <joint name="y7" class="starlet_y" ref="-0.10"/>
+          <geom name="housing7" class="starlet_decor" size="0.028 0.004 0.045" pos="0 0 0.65" mass="0.2" material="starlet_dark"/>
+          <body name="pipette7" pos="0 0 0.35" gravcomp="1">
+            <joint name="z7" class="starlet_z"/>
+            <geom name="shaft7" class="starlet_decor" type="cylinder" size="0.0036 0.15" pos="0 0 0.15" mass="0.1" material="starlet_metal"/>
+            <body name="plunger7" pos="0 0 0.24" gravcomp="1">
+              <joint name="plunger7" class="starlet_plunger"/>
+              <geom name="plunger7" class="starlet_decor" type="cylinder" size="0.002 0.03" pos="0 0 0.03" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="eject7" pos="0 0 0.05" gravcomp="1">
+              <joint name="eject7" class="starlet_eject"/>
+              <geom name="eject7" class="starlet_decor" type="cylinder" size="0.0045 0.01" pos="0 0 0.01" mass="0.02" material="starlet_dark"/>
+            </body>
+            <body name="paddle7" pos="0 0 0" gravcomp="1">
+              <joint name="paddle7" class="starlet_paddle" ref="0"/>
+              <geom name="paddle7" class="starlet_paddle_geom" pos="0 -0.002 0.030"/>
+            </body>
+          </body>
+        </body>
+      </body>
     </body>
   </worldbody>
+
+  <!-- Position control. Units of ctrl: m for all linear axes. -->
+  <actuator>
+    <position name="x" joint="x" kp="800" kv="150" forcerange="-45 45"/>
+    <position name="y0" joint="y0" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y1" joint="y1" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y2" joint="y2" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y3" joint="y3" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y4" joint="y4" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y5" joint="y5" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y6" joint="y6" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="y7" joint="y7" kp="1500" kv="150" forcerange="-35 35"/>
+    <position name="z0" joint="z0" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z1" joint="z1" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z2" joint="z2" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z3" joint="z3" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z4" joint="z4" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z5" joint="z5" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z6" joint="z6" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="z7" joint="z7" kp="800" kv="140" forcerange="-15 15"/>
+    <position name="plunger0" joint="plunger0" kp="200" kv="20"/>
+    <position name="plunger1" joint="plunger1" kp="200" kv="20"/>
+    <position name="plunger2" joint="plunger2" kp="200" kv="20"/>
+    <position name="plunger3" joint="plunger3" kp="200" kv="20"/>
+    <position name="plunger4" joint="plunger4" kp="200" kv="20"/>
+    <position name="plunger5" joint="plunger5" kp="200" kv="20"/>
+    <position name="plunger6" joint="plunger6" kp="200" kv="20"/>
+    <position name="plunger7" joint="plunger7" kp="200" kv="20"/>
+    <position name="eject0" joint="eject0" kp="200" kv="20"/>
+    <position name="eject1" joint="eject1" kp="200" kv="20"/>
+    <position name="eject2" joint="eject2" kp="200" kv="20"/>
+    <position name="eject3" joint="eject3" kp="200" kv="20"/>
+    <position name="eject4" joint="eject4" kp="200" kv="20"/>
+    <position name="eject5" joint="eject5" kp="200" kv="20"/>
+    <position name="eject6" joint="eject6" kp="200" kv="20"/>
+    <position name="eject7" joint="eject7" kp="200" kv="20"/>
+    <position name="paddle0" joint="paddle0" kp="200" kv="20"/>
+    <position name="paddle1" joint="paddle1" kp="200" kv="20"/>
+    <position name="paddle2" joint="paddle2" kp="200" kv="20"/>
+    <position name="paddle3" joint="paddle3" kp="200" kv="20"/>
+    <position name="paddle4" joint="paddle4" kp="200" kv="20"/>
+    <position name="paddle5" joint="paddle5" kp="200" kv="20"/>
+    <position name="paddle6" joint="paddle6" kp="200" kv="20"/>
+    <position name="paddle7" joint="paddle7" kp="200" kv="20"/>
+  </actuator>
+
+  <!-- Arm centered at x = 0, channels spaced 30 mm apart at z = 0.35 m, paddles 6 and 7 fitted. This is also the default pose. -->
+  <keyframe>
+    <key name="home"
+         qpos="0
+               0.11 0.35 0 0 0.25
+               0.08 0.35 0 0 0.25
+               0.05 0.35 0 0 0.25
+               0.02 0.35 0 0 0.25
+               -0.01 0.35 0 0 0.25
+               -0.04 0.35 0 0 0.25
+               -0.07 0.35 0 0 0
+               -0.10 0.35 0 0 0"
+         ctrl="0
+               0.11 0.08 0.05 0.02 -0.01 -0.04 -0.07 -0.10
+               0.35 0.35 0.35 0.35 0.35 0.35 0.35 0.35
+               0 0 0 0 0 0 0 0
+               0 0 0 0 0 0 0 0
+               0.25 0.25 0.25 0.25 0.25 0.25 0 0"/>
+  </keyframe>
 </mujoco>
