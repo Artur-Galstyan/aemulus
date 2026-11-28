@@ -2,6 +2,7 @@ import asyncio
 import socket
 import threading
 import time
+from dataclasses import dataclass
 from importlib.resources import files
 
 import mujoco.viewer
@@ -32,9 +33,17 @@ from aemulus.sim.v1.sim_pb import (
 )
 
 
-def create_lab(devices: list[Device]) -> Lab:
-    lab = Lab(devices)
-    if any(device.address is None for device in devices):
+@dataclass(frozen=True)
+class Labware:
+    name: str
+    mjcf: str
+    pos: tuple[float, float, float]
+    free: bool = False
+
+
+def create_lab(devices: list[Device], labware: list[Labware] | None = None) -> Lab:
+    lab = Lab(devices, labware)
+    if labware or any(device.address is None for device in devices):
         lab.sim = SimServer(lab)
         run_sim(lab.sim)
     return lab
@@ -45,8 +54,9 @@ class Lab:
     model: MjModel
     sim: SimServer | None
 
-    def __init__(self, devices: list[Device]):
+    def __init__(self, devices: list[Device], labware: list[Labware] | None = None):
         self.devices = devices
+        self.sim = None
         spec = MjSpec.from_file(str(files("aemulus") / "assets/lab.xml"))
         for device in self.devices:
             if device.address is None:
@@ -56,6 +66,13 @@ class Lab:
                 frame = spec.worldbody.add_frame(pos=device.pos)
                 spec.attach(child, prefix=f"{device.device_name}/", frame=frame)
                 device.start_sim_server()
+
+        for item in labware or []:
+            child = MjSpec.from_file(item.mjcf)
+            if item.free:
+                child.worldbody.bodies[0].add_freejoint()
+            frame = spec.worldbody.add_frame(pos=item.pos)
+            spec.attach(child, prefix=f"{item.name}/", frame=frame)
 
         self.model = spec.compile()
 
