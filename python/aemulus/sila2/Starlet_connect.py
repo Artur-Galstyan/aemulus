@@ -20,7 +20,7 @@ from protobuf import DescService
 
 from . import Starlet_pb
 from .SiLAFramework_pb import CommandConfirmation, CommandExecutionUUID, ExecutionInfo
-from .Starlet_pb import MoveX_Parameters, MoveX_Responses, MoveY_Parameters, MoveY_Responses, MoveZ_Parameters, MoveZ_Responses
+from .Starlet_pb import MoveEject_Parameters, MoveEject_Responses, MovePlunger_Parameters, MovePlunger_Responses, MoveX_Parameters, MoveX_Responses, MoveY_Parameters, MoveY_Responses, MoveZ_Parameters, MoveZ_Responses
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, AsyncIterator, Iterable, Iterator, Mapping
@@ -86,6 +86,42 @@ class Starlet(Protocol):
     async def move_z_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveZ_Responses], /) -> MoveZ_Responses:
         """
         Retrieve result of MoveZ
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    async def move_plunger(self, request: MovePlunger_Parameters, ctx: RequestContext[MovePlunger_Parameters, CommandConfirmation], /) -> CommandConfirmation:
+        """
+        Moves a channel plunger to a target position.
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_plunger_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
+        """
+        Monitor the state of MovePlunger
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    async def move_plunger_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MovePlunger_Responses], /) -> MovePlunger_Responses:
+        """
+        Retrieve result of MovePlunger
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    async def move_eject(self, request: MoveEject_Parameters, ctx: RequestContext[MoveEject_Parameters, CommandConfirmation], /) -> CommandConfirmation:
+        """
+        Moves a channel tip eject sleeve to a target position.
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_eject_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> AsyncIterator[ExecutionInfo]:
+        """
+        Monitor the state of MoveEject
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    async def move_eject_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveEject_Responses], /) -> MoveEject_Responses:
+        """
+        Retrieve result of MoveEject
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -205,6 +241,72 @@ class StarletASGIApplication(ConnectASGIApplication[Starlet]):
                         stream_type=StreamType.UNARY,
                     ),
                     function=svc.move_z_result,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger": Endpoint.unary(
+                    method=MethodInfo(
+                        name="MovePlunger",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=MovePlunger_Parameters,
+                        output=CommandConfirmation,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=svc.move_plunger,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Info": Endpoint.server_stream(
+                    method=MethodInfo(
+                        name="MovePlunger_Info",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=ExecutionInfo,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.SERVER_STREAM,
+                    ),
+                    function=svc.move_plunger_info,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Result": Endpoint.unary(
+                    method=MethodInfo(
+                        name="MovePlunger_Result",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=MovePlunger_Responses,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=svc.move_plunger_result,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject": Endpoint.unary(
+                    method=MethodInfo(
+                        name="MoveEject",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=MoveEject_Parameters,
+                        output=CommandConfirmation,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=svc.move_eject,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Info": Endpoint.server_stream(
+                    method=MethodInfo(
+                        name="MoveEject_Info",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=ExecutionInfo,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.SERVER_STREAM,
+                    ),
+                    function=svc.move_eject_info,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Result": Endpoint.unary(
+                    method=MethodInfo(
+                        name="MoveEject_Result",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=MoveEject_Responses,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=svc.move_eject_result,
                 ),
             },
             interceptors=interceptors,
@@ -430,6 +532,144 @@ class StarletClient(ConnectClient):
             headers=headers,
             timeout_ms=timeout_ms,
         )
+    async def move_plunger(
+        self,
+        request: MovePlunger_Parameters,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> CommandConfirmation:
+        """
+        Moves a channel plunger to a target position.
+        """
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MovePlunger",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=MovePlunger_Parameters,
+                output=CommandConfirmation,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_plunger_info(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> AsyncIterator[ExecutionInfo]:
+        """
+        Monitor the state of MovePlunger
+        """
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="MovePlunger_Info",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=ExecutionInfo,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.SERVER_STREAM,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    async def move_plunger_result(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> MovePlunger_Responses:
+        """
+        Retrieve result of MovePlunger
+        """
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MovePlunger_Result",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=MovePlunger_Responses,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    async def move_eject(
+        self,
+        request: MoveEject_Parameters,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> CommandConfirmation:
+        """
+        Moves a channel tip eject sleeve to a target position.
+        """
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MoveEject",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=MoveEject_Parameters,
+                output=CommandConfirmation,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_eject_info(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> AsyncIterator[ExecutionInfo]:
+        """
+        Monitor the state of MoveEject
+        """
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="MoveEject_Info",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=ExecutionInfo,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.SERVER_STREAM,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    async def move_eject_result(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> MoveEject_Responses:
+        """
+        Retrieve result of MoveEject
+        """
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MoveEject_Result",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=MoveEject_Responses,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
 
 class StarletSync(Protocol):
     """
@@ -486,6 +726,42 @@ class StarletSync(Protocol):
     def move_z_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveZ_Responses], /) -> MoveZ_Responses:
         """
         Retrieve result of MoveZ
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_plunger(self, request: MovePlunger_Parameters, ctx: RequestContext[MovePlunger_Parameters, CommandConfirmation], /) -> CommandConfirmation:
+        """
+        Moves a channel plunger to a target position.
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_plunger_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
+        """
+        Monitor the state of MovePlunger
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_plunger_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MovePlunger_Responses], /) -> MovePlunger_Responses:
+        """
+        Retrieve result of MovePlunger
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_eject(self, request: MoveEject_Parameters, ctx: RequestContext[MoveEject_Parameters, CommandConfirmation], /) -> CommandConfirmation:
+        """
+        Moves a channel tip eject sleeve to a target position.
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_eject_info(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, ExecutionInfo], /) -> Iterator[ExecutionInfo]:
+        """
+        Monitor the state of MoveEject
+        """
+        raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
+
+    def move_eject_result(self, request: CommandExecutionUUID, ctx: RequestContext[CommandExecutionUUID, MoveEject_Responses], /) -> MoveEject_Responses:
+        """
+        Retrieve result of MoveEject
         """
         raise ConnectError(Code.UNIMPLEMENTED, 'Not implemented')
 
@@ -603,6 +879,72 @@ class StarletWSGIApplication(ConnectWSGIApplication):
                         stream_type=StreamType.UNARY,
                     ),
                     function=service.move_z_result,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="MovePlunger",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=MovePlunger_Parameters,
+                        output=CommandConfirmation,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=service.move_plunger,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Info": EndpointSync.server_stream(
+                    method=MethodInfo(
+                        name="MovePlunger_Info",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=ExecutionInfo,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.SERVER_STREAM,
+                    ),
+                    function=service.move_plunger_info,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Result": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="MovePlunger_Result",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=MovePlunger_Responses,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=service.move_plunger_result,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="MoveEject",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=MoveEject_Parameters,
+                        output=CommandConfirmation,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=service.move_eject,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Info": EndpointSync.server_stream(
+                    method=MethodInfo(
+                        name="MoveEject_Info",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=ExecutionInfo,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.SERVER_STREAM,
+                    ),
+                    function=service.move_eject_info,
+                ),
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Result": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="MoveEject_Result",
+                        service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        input=CommandExecutionUUID,
+                        output=MoveEject_Responses,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                        stream_type=StreamType.UNARY,
+                    ),
+                    function=service.move_eject_result,
                 ),
             },
             interceptors=interceptors,
@@ -822,6 +1164,144 @@ class StarletClientSync(ConnectClientSync):
                 service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
                 input=CommandExecutionUUID,
                 output=MoveZ_Responses,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_plunger(
+        self,
+        request: MovePlunger_Parameters,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> CommandConfirmation:
+        """
+        Moves a channel plunger to a target position.
+        """
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MovePlunger",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=MovePlunger_Parameters,
+                output=CommandConfirmation,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_plunger_info(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> Iterator[ExecutionInfo]:
+        """
+        Monitor the state of MovePlunger
+        """
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="MovePlunger_Info",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=ExecutionInfo,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.SERVER_STREAM,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_plunger_result(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> MovePlunger_Responses:
+        """
+        Retrieve result of MovePlunger
+        """
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MovePlunger_Result",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=MovePlunger_Responses,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_eject(
+        self,
+        request: MoveEject_Parameters,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> CommandConfirmation:
+        """
+        Moves a channel tip eject sleeve to a target position.
+        """
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MoveEject",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=MoveEject_Parameters,
+                output=CommandConfirmation,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.UNARY,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_eject_info(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> Iterator[ExecutionInfo]:
+        """
+        Monitor the state of MoveEject
+        """
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="MoveEject_Info",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=ExecutionInfo,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+                stream_type=StreamType.SERVER_STREAM,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+    def move_eject_result(
+        self,
+        request: CommandExecutionUUID,
+        *,
+        headers: Headers | Mapping[str, str] | None = None, 
+        timeout_ms: int | None = None,
+    ) -> MoveEject_Responses:
+        """
+        Retrieve result of MoveEject
+        """
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="MoveEject_Result",
+                service_name="sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                input=CommandExecutionUUID,
+                output=MoveEject_Responses,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
                 stream_type=StreamType.UNARY,
             ),

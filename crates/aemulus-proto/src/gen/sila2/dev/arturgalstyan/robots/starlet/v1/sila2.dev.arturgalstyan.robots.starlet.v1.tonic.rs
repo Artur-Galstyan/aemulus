@@ -353,6 +353,7 @@ pub mod starlet_client {
                 );
             self.inner.server_streaming(req, path, codec).await
         }
+        /// Retrieve result of MoveZ
         pub async fn move_z_result(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -377,6 +378,205 @@ pub mod starlet_client {
                     GrpcMethod::new(
                         "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
                         "MoveZ_Result",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Moves a channel plunger to a target position.
+        pub async fn move_plunger(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MovePlungerParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        "MovePlunger",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Monitor the state of MovePlunger
+        pub async fn move_plunger_info(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                >,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Info",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        "MovePlunger_Info",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        /// Retrieve result of MovePlunger
+        pub async fn move_plunger_result(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MovePlungerResponses>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Result",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        "MovePlunger_Result",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Moves a channel tip eject sleeve to a target position.
+        pub async fn move_eject(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MoveEjectParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        "MoveEject",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Monitor the state of MoveEject
+        pub async fn move_eject_info(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<
+                tonic::codec::Streaming<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                >,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Info",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        "MoveEject_Info",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn move_eject_result(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MoveEjectResponses>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Result",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "sila2.dev.arturgalstyan.robots.starlet.v1.Starlet",
+                        "MoveEject_Result",
                     ),
                 );
             self.inner.unary(req, path, codec).await
@@ -488,12 +688,90 @@ pub mod starlet_server {
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<Self::MoveZ_InfoStream>, tonic::Status>;
+        /// Retrieve result of MoveZ
         async fn move_z_result(
             &self,
             request: tonic::Request<
                 super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
             >,
         ) -> std::result::Result<tonic::Response<super::MoveZResponses>, tonic::Status>;
+        /// Moves a channel plunger to a target position.
+        async fn move_plunger(
+            &self,
+            request: tonic::Request<super::MovePlungerParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        >;
+        /// Server streaming response type for the MovePlunger_Info method.
+        type MovePlunger_InfoStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                    tonic::Status,
+                >,
+            >
+            + std::marker::Send
+            + 'static;
+        /// Monitor the state of MovePlunger
+        async fn move_plunger_info(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<Self::MovePlunger_InfoStream>,
+            tonic::Status,
+        >;
+        /// Retrieve result of MovePlunger
+        async fn move_plunger_result(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MovePlungerResponses>,
+            tonic::Status,
+        >;
+        /// Moves a channel tip eject sleeve to a target position.
+        async fn move_eject(
+            &self,
+            request: tonic::Request<super::MoveEjectParameters>,
+        ) -> std::result::Result<
+            tonic::Response<
+                super::super::super::super::super::super::org::silastandard::CommandConfirmation,
+            >,
+            tonic::Status,
+        >;
+        /// Server streaming response type for the MoveEject_Info method.
+        type MoveEject_InfoStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<
+                    super::super::super::super::super::super::org::silastandard::ExecutionInfo,
+                    tonic::Status,
+                >,
+            >
+            + std::marker::Send
+            + 'static;
+        /// Monitor the state of MoveEject
+        async fn move_eject_info(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<Self::MoveEject_InfoStream>,
+            tonic::Status,
+        >;
+        async fn move_eject_result(
+            &self,
+            request: tonic::Request<
+                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::MoveEjectResponses>,
+            tonic::Status,
+        >;
     }
     /// Controls a Hamilton Microlab STARlet liquid handler.
     #[derive(Debug)]
@@ -977,6 +1255,290 @@ pub mod starlet_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = MoveZ_ResultSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger" => {
+                    #[allow(non_camel_case_types)]
+                    struct MovePlungerSvc<T: Starlet>(pub Arc<T>);
+                    impl<
+                        T: Starlet,
+                    > tonic::server::UnaryService<super::MovePlungerParameters>
+                    for MovePlungerSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::CommandConfirmation;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MovePlungerParameters>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Starlet>::move_plunger(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MovePlungerSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Info" => {
+                    #[allow(non_camel_case_types)]
+                    struct MovePlunger_InfoSvc<T: Starlet>(pub Arc<T>);
+                    impl<
+                        T: Starlet,
+                    > tonic::server::ServerStreamingService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MovePlunger_InfoSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::ExecutionInfo;
+                        type ResponseStream = T::MovePlunger_InfoStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Starlet>::move_plunger_info(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MovePlunger_InfoSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MovePlunger_Result" => {
+                    #[allow(non_camel_case_types)]
+                    struct MovePlunger_ResultSvc<T: Starlet>(pub Arc<T>);
+                    impl<
+                        T: Starlet,
+                    > tonic::server::UnaryService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MovePlunger_ResultSvc<T> {
+                        type Response = super::MovePlungerResponses;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Starlet>::move_plunger_result(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MovePlunger_ResultSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveEjectSvc<T: Starlet>(pub Arc<T>);
+                    impl<
+                        T: Starlet,
+                    > tonic::server::UnaryService<super::MoveEjectParameters>
+                    for MoveEjectSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::CommandConfirmation;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MoveEjectParameters>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Starlet>::move_eject(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveEjectSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Info" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveEject_InfoSvc<T: Starlet>(pub Arc<T>);
+                    impl<
+                        T: Starlet,
+                    > tonic::server::ServerStreamingService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MoveEject_InfoSvc<T> {
+                        type Response = super::super::super::super::super::super::org::silastandard::ExecutionInfo;
+                        type ResponseStream = T::MoveEject_InfoStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Starlet>::move_eject_info(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveEject_InfoSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/sila2.dev.arturgalstyan.robots.starlet.v1.Starlet/MoveEject_Result" => {
+                    #[allow(non_camel_case_types)]
+                    struct MoveEject_ResultSvc<T: Starlet>(pub Arc<T>);
+                    impl<
+                        T: Starlet,
+                    > tonic::server::UnaryService<
+                        super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                    > for MoveEject_ResultSvc<T> {
+                        type Response = super::MoveEjectResponses;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::super::super::super::super::super::org::silastandard::CommandExecutionUuid,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Starlet>::move_eject_result(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = MoveEject_ResultSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

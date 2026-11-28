@@ -80,4 +80,64 @@
       </DataType>
     </Parameter>
   </Command>
+  <Command>
+    <Identifier>MovePlunger</Identifier>
+    <DisplayName>Move Plunger</DisplayName>
+    <Description>Moves a channel plunger to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target plunger position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>MoveEject</Identifier>
+    <DisplayName>Move Eject</DisplayName>
+    <Description>Moves a channel tip eject sleeve to a target position.</Description>
+    <Observable>Yes</Observable>
+    <Parameter>
+      <Identifier>Channel</Identifier>
+      <DisplayName>Channel</DisplayName>
+      <Description>The channel index (0 to 7).</Description>
+      <DataType>
+        <Constrained>
+          <DataType>
+            <Basic>Integer</Basic>
+          </DataType>
+          <Constraints>
+            <MinimalInclusive>0</MinimalInclusive>
+            <MaximalInclusive>7</MaximalInclusive>
+          </Constraints>
+        </Constrained>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Position</Identifier>
+      <DisplayName>Position</DisplayName>
+      <Description>The target eject sleeve position in meters.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
 </Feature>

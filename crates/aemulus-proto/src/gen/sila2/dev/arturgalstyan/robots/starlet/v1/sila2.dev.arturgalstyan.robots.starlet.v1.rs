@@ -41,5 +41,35 @@ pub struct MoveZParameters {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MoveZResponses {
 }
+/// Parameters for MovePlunger 
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MovePlungerParameters {
+    #[prost(message, optional, tag="1")]
+    pub channel: ::core::option::Option<super::super::super::super::super::org::silastandard::Integer>,
+    /// The channel index (0 to 7). 
+    ///
+    /// The target plunger position in meters. 
+    #[prost(message, optional, tag="2")]
+    pub position: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+}
+/// Responses of MovePlunger 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MovePlungerResponses {
+}
+/// Parameters for MoveEject 
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MoveEjectParameters {
+    #[prost(message, optional, tag="1")]
+    pub channel: ::core::option::Option<super::super::super::super::super::org::silastandard::Integer>,
+    /// The channel index (0 to 7). 
+    ///
+    /// The target eject sleeve position in meters. 
+    #[prost(message, optional, tag="2")]
+    pub position: ::core::option::Option<super::super::super::super::super::org::silastandard::Real>,
+}
+/// Responses of MoveEject 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MoveEjectResponses {
+}
 include!("sila2.dev.arturgalstyan.robots.starlet.v1.tonic.rs");
 // @@protoc_insertion_point(module)

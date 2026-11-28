@@ -24,6 +24,18 @@ service Starlet {
   rpc MoveZ_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
   /* Retrieve result of MoveZ */
   rpc MoveZ_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.MoveZ_Responses) {}
+  /* Moves a channel plunger to a target position. */
+  rpc MovePlunger (sila2.dev.arturgalstyan.robots.starlet.v1.MovePlunger_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MovePlunger */
+  rpc MovePlunger_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MovePlunger */
+  rpc MovePlunger_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.MovePlunger_Responses) {}
+  /* Moves a channel tip eject sleeve to a target position. */
+  rpc MoveEject (sila2.dev.arturgalstyan.robots.starlet.v1.MoveEject_Parameters) returns (sila2.org.silastandard.CommandConfirmation) {}
+  /* Monitor the state of MoveEject */
+  rpc MoveEject_Info (sila2.org.silastandard.CommandExecutionUUID) returns (stream sila2.org.silastandard.ExecutionInfo) {}
+  /* Retrieve result of MoveEject */
+  rpc MoveEject_Result(sila2.org.silastandard.CommandExecutionUUID) returns (sila2.dev.arturgalstyan.robots.starlet.v1.MoveEject_Responses) {}
 }
 
 /* Parameters for MoveX */
@@ -53,4 +65,24 @@ message MoveZ_Parameters {
 
 /* Responses of MoveZ */
 message MoveZ_Responses {
+}
+
+/* Parameters for MovePlunger */
+message MovePlunger_Parameters {
+  sila2.org.silastandard.Integer Channel = 1;  /* The channel index (0 to 7). */
+  sila2.org.silastandard.Real Position = 2;  /* The target plunger position in meters. */
+}
+
+/* Responses of MovePlunger */
+message MovePlunger_Responses {
+}
+
+/* Parameters for MoveEject */
+message MoveEject_Parameters {
+  sila2.org.silastandard.Integer Channel = 1;  /* The channel index (0 to 7). */
+  sila2.org.silastandard.Real Position = 2;  /* The target eject sleeve position in meters. */
+}
+
+/* Responses of MoveEject */
+message MoveEject_Responses {
 }
