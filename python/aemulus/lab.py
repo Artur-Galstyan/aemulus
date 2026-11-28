@@ -41,6 +41,20 @@ class Labware:
     free: bool = False
 
 
+def sbs_96_offset(well: str) -> tuple[float, float]:
+    """Return (dx, dy) in meters from labware center for a 96-position well/tip ('A1'..'H12')."""
+    if len(well) < 2:
+        raise ValueError(f"Invalid 96-well name: {well!r}")
+    row = ord(well[0].upper()) - ord("A")
+    try:
+        col = int(well[1:]) - 1
+    except ValueError as err:
+        raise ValueError(f"Invalid 96-well name: {well!r}") from err
+    if not (0 <= row < 8 and 0 <= col < 12):
+        raise ValueError(f"Invalid 96-well name: {well!r}")
+    return (-0.0495 + col * 0.009, 0.0315 - row * 0.009)
+
+
 def create_lab(devices: list[Device], labware: list[Labware] | None = None) -> Lab:
     lab = Lab(devices, labware)
     if labware or any(device.address is None for device in devices):
@@ -57,6 +71,8 @@ class Lab:
     def __init__(self, devices: list[Device], labware: list[Labware] | None = None):
         self.devices = devices
         self.sim = None
+        self._labware_bodies: dict[str, str] = {}
+        self._labware_pos: dict[str, tuple[float, float, float]] = {}
         spec = MjSpec.from_file(str(files("aemulus") / "assets/lab.xml"))
         for device in self.devices:
             if device.address is None:
@@ -69,12 +85,37 @@ class Lab:
 
         for item in labware or []:
             child = MjSpec.from_file(item.mjcf)
+            root_body = child.worldbody.bodies[0]
+            root_name = root_body.name
             if item.free:
-                child.worldbody.bodies[0].add_freejoint()
+                root_body.add_freejoint()
             frame = spec.worldbody.add_frame(pos=item.pos)
             spec.attach(child, prefix=f"{item.name}/", frame=frame)
+            self._labware_bodies[item.name] = f"{item.name}/{root_name}"
+            self._labware_pos[item.name] = item.pos
 
         self.model = spec.compile()
+
+    def labware_pos(self, name: str) -> np.ndarray:
+        """Return current world (x, y, z) position of a labware root body."""
+        if name not in self._labware_bodies:
+            raise KeyError(f"Unknown labware: {name!r}")
+        if self.sim is None:
+            return np.array(self._labware_pos[name], dtype=float)
+        data = MjData(self.model)
+        mj_setState(self.model, data, self.sim.state, mjtState.mjSTATE_FULLPHYSICS)
+        mj_forward(self.model, data)
+        return data.body(self._labware_bodies[name]).xpos.copy()
+
+    def well_xy(
+        self, labware_name: str, well: str | None = None
+    ) -> tuple[float, float]:
+        """Return current world (x, y) of a well/tip ('A1'..'H12') or labware center."""
+        pos = self.labware_pos(labware_name)
+        if well is None:
+            return (float(pos[0]), float(pos[1]))
+        dx, dy = sbs_96_offset(well)
+        return (float(pos[0] + dx), float(pos[1] + dy))
 
     def keep_alive(self):
         try:
@@ -110,6 +151,7 @@ class SimServer(SimService):
 
     def __init__(self, lab: Lab):
         self.model = lab.model
+        self.devices = lab.devices
         self.data = MjData(self.model)
         self.state = self.reset()
         joints = self.model.actuator_trnid[:, 0]
@@ -126,6 +168,8 @@ class SimServer(SimService):
         mj_setState(self.model, self.data, self.state, mjtState.mjSTATE_FULLPHYSICS)
         self.data.ctrl[:] = self.ctrl
         mj_step(self.model, self.data)
+        for device in self.devices:
+            device.on_step(self.model, self.data)
         next_state = np.empty_like(self.state)
         mj_getState(self.model, self.data, next_state, mjtState.mjSTATE_FULLPHYSICS)
         self.state = next_state

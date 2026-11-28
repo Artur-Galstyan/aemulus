@@ -80,8 +80,9 @@
       <!-- Full-footprint base block: x [-0.562, 0.562], y [-0.3975, 0.3975], z [0, 0.180]. -->
       <geom name="base" size="0.562 0.3975 0.090" pos="0 0 0.090" mass="65"/>
 
-      <!-- Deck surface box (0.675 x 0.465 x 0.020 m): z [0.180, 0.200], front edge 0.063 m behind housing front. -->
-      <geom name="deck" size="0.3375 0.2325 0.010" pos="0 -0.102 0.190" mass="15" material="starlet_deck"/>
+      <!-- Deck surface box (0.675 x 0.465 x 0.020 m): z [0.180, 0.200], front edge 0.063 m behind housing front.
+           contype="3" lets ejected tips (conaffinity="2") land on the deck without colliding with plates or racks. -->
+      <geom name="deck" size="0.3375 0.2325 0.010" pos="0 -0.102 0.190" mass="15" material="starlet_deck" contype="3"/>
 
       <!-- Back and side walls (0.030 m thick): z [0.180, 0.903], open at front (-y) and top. -->
       <geom name="back_wall" size="0.562 0.015 0.3615" pos="0 0.3825 0.5415" mass="14"/>
@@ -309,6 +310,17 @@
     <position name="paddle6" joint="paddle6" kp="200" kv="20"/>
     <position name="paddle7" joint="paddle7" kp="200" kv="20"/>
   </actuator>
+
+  <equality>
+    <weld name="tip_weld_0" body1="pipette0" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_1" body1="pipette1" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_2" body1="pipette2" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_3" body1="pipette3" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_4" body1="pipette4" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_5" body1="pipette5" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_6" body1="pipette6" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+    <weld name="tip_weld_7" body1="pipette7" body2="world" active="false" relpose="0 0 -0.0504 1 0 0 0"/>
+  </equality>
 
   <!-- Arm centered at x = 0, channels spaced 30 mm apart at z = 0.35 m, paddles 6 and 7 fitted. This is also the default pose. -->
   <keyframe>
